@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -36,6 +37,8 @@ public class PlayScreen implements Screen {
     public static final int SCREEN_HEIGHT = 800;
 
     private Defenders game;
+    private TextureAtlas atlas;
+
     private OrthographicCamera gameCam;
     private Viewport gamePort;
     private Hud hud;
@@ -49,6 +52,8 @@ public class PlayScreen implements Screen {
     private Defender player;
 
     public PlayScreen(Defenders game){
+        atlas = new TextureAtlas("player_and_enemy");
+
         this.game = game;
         gameCam = new OrthographicCamera();
         gamePort = new FitViewport(Defenders.V_WIDTH/ Defenders.PPM,Defenders.V_HEIGHT/ Defenders.PPM,gameCam);
@@ -63,10 +68,17 @@ public class PlayScreen implements Screen {
 
         //Box2d
         world = new World(new Vector2(0,-10),true);
-        player = new Defender(world);
 
         b2dr = new Box2DDebugRenderer();
         new B2WorldCreator(world,map);
+
+        player = new Defender(world,this);
+
+
+    }
+
+    public TextureAtlas getAtlas(){
+        return atlas;
     }
 
     @Override
@@ -88,6 +100,8 @@ public class PlayScreen implements Screen {
         handleInput(dt);
         world.step(1/60f,6,2);
 
+        player.update(dt);
+
         renderer.setView(gameCam);
 
     }
@@ -102,8 +116,14 @@ public class PlayScreen implements Screen {
 
         b2dr.render(world,gameCam.combined);
 
+
+        game.batch.begin();
+        player.draw(game.batch);
+        game.batch.end();
+
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
+
 
     }
 
