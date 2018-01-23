@@ -54,5 +54,7 @@ public class Dragon extends Enemy {
         CircleShape shape = new CircleShape();
         shape.setRadius(30 /Defenders.PPM);
         fdef.shape = shape;
+        b2body.createFixture(fdef);
+
     }
 }

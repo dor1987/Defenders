@@ -27,6 +27,7 @@ import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Scenes.Hud;
 import com.dorashush.defenders.Sprites.Defender;
 import com.dorashush.defenders.Sprites.Dragon;
+import com.dorashush.defenders.Sprites.SimpleBall;
 import com.dorashush.defenders.Tools.B2WorldCreator;
 import com.dorashush.defenders.Tools.WorldContactListener;
 
@@ -53,7 +54,7 @@ public class PlayScreen implements Screen {
     private Box2DDebugRenderer b2dr;
     private Defender player;
     private Dragon dragon;
-
+    private SimpleBall simpleBall;//for ball testing
 
     public PlayScreen(Defenders game){
         atlas = new TextureAtlas("player_and_enemy");
@@ -79,6 +80,7 @@ public class PlayScreen implements Screen {
 
         player = new Defender(this);
         dragon = new Dragon(this,40f,40f);
+        simpleBall = new SimpleBall(this,dragon.getX(),dragon.getY()); //for ball testing
 
         world.setContactListener(new WorldContactListener());
     }
@@ -116,6 +118,7 @@ public class PlayScreen implements Screen {
 
         player.update(dt);
         dragon.update(dt);
+        simpleBall.update(dt); //for ball testing
         game.batch.setProjectionMatrix(gameCam.combined);
         renderer.setView(gameCam);
 
@@ -135,6 +138,7 @@ public class PlayScreen implements Screen {
         game.batch.begin();
         player.draw(game.batch);
         dragon.draw(game.batch);
+        simpleBall.draw(game.batch);// for ball testing
         game.batch.end();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);

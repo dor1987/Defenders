@@ -16,6 +16,9 @@ public abstract class Ball extends Sprite {
     protected PlayScreen screen;
     public Body b2body;
     public Vector2 velocity;
+    public float ballAngle;
+    public float ballVelocity;
+
     private BodyUserData bodyUserData;
 
     public Ball(PlayScreen screen, float x, float y){
@@ -23,7 +26,9 @@ public abstract class Ball extends Sprite {
         this.screen = screen;
         setPosition(x,y);
         defineBall();
-        velocity = new Vector2(0,3); //starting Speed
+        velocity = new Vector2(0,0); //starting Speed
+        ballAngle = (float) (Math.random()*-1*Math.PI);//stating angle
+        ballVelocity = 4;
 
         //Testing for collision
         bodyUserData = new BodyUserData();

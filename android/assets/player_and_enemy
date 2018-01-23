@@ -1,33 +1,54 @@
 
 player_and_enemy.png
-size: 2048,512
+size: 2048,256
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-balls
+ball1
+  rotate: false
+  xy: 1055, 35
+  size: 478, 28
+  orig: 478, 28
+  offset: 0, 0
+  index: -1
+ball2
+  rotate: false
+  xy: 555, 45
+  size: 498, 48
+  orig: 498, 48
+  offset: 0, 0
+  index: -1
+ball3
+  rotate: false
+  xy: 1071, 65
+  size: 490, 40
+  orig: 490, 40
+  offset: 0, 0
+  index: -1
+ball4
+  rotate: false
+  xy: 555, 3
+  size: 490, 40
+  orig: 490, 40
+  offset: 0, 0
+  index: -1
+ball5
   rotate: false
   xy: 2, 2
-  size: 498, 184
-  orig: 498, 184
-  offset: 0, 0
-  index: -1
-dragon
-  rotate: false
-  xy: 1071, 200
-  size: 512, 143
-  orig: 512, 143
-  offset: 0, 0
-  index: -1
-fireballrdy
-  rotate: false
-  xy: 502, 95
   size: 551, 91
   orig: 551, 91
   offset: 0, 0
   index: -1
+dragon
+  rotate: false
+  xy: 1071, 107
+  size: 512, 143
+  orig: 512, 143
+  offset: 0, 0
+  index: -1
 playersheet
   rotate: false
-  xy: 2, 188
+  xy: 2, 95
   size: 1067, 155
   orig: 1067, 155
   offset: 0, 0

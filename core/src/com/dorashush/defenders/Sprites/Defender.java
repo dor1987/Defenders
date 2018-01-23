@@ -43,12 +43,12 @@ public class Defender extends Sprite{
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for(int i = 1; i<10 ;i++){
-            frames.add(new TextureRegion(getTexture(),i*107,188,106,155));
+            frames.add(new TextureRegion(getTexture(),i*107,95,106,155));
         }
         defenderWalk= new Animation(0.1f,frames);
         frames.clear();
 
-        defenderStand = new TextureRegion(getTexture(),2,188,106,155);
+        defenderStand = new TextureRegion(getTexture(),2,95,106,155);
 
         defineDefender();
         setBounds(0,0,50/Defenders.PPM,60/Defenders.PPM);

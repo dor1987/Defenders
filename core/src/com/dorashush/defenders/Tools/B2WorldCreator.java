@@ -17,6 +17,8 @@ import com.dorashush.defenders.Screens.PlayScreen;
  */
 
 public class B2WorldCreator {
+    private BodyUserData bodyUserData;
+
     public B2WorldCreator(PlayScreen screen){
         World world = screen.getWorld();
         TiledMap map =screen.getMap();
@@ -64,6 +66,11 @@ public class B2WorldCreator {
             body = world.createBody(bdef);
 
             shape.setAsBox(rect.getWidth()/2/ Defenders.PPM,rect.getHeight()/2/ Defenders.PPM);
+
+            bodyUserData = new BodyUserData();
+            bodyUserData.collisionType = BodyUserData.CollisionType.PLAYER;
+            body.setUserData(bodyUserData);
+
             fdef.shape= shape;
             body.createFixture(fdef);
         }
