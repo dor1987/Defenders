@@ -142,8 +142,10 @@ public class PlayScreen implements Screen {
         }
 
         for (SimpleBall ball : ballArray){
-            if(ball.removed)
+            if(ball.removed) {
+                //world.destroyBody(ball.b2body);
                 ballArray.removeValue(ball,true);
+            }
             ball.update(dt);
         }
 
@@ -172,7 +174,8 @@ public class PlayScreen implements Screen {
        // simpleBall.draw(game.batch);// for ball testing
 
         for (SimpleBall ball : ballArray){
-            ball.draw(game.batch);
+           if(ball!=null)
+             ball.draw(game.batch);
         }
 
         game.batch.end();

@@ -81,7 +81,7 @@ public class WorldContactListener implements ContactListener {
                 //((Ball)fixtureB.getUserData()).reverseVelocity(false,true);
                 ((Ball)fixtureB.getUserData()).removeFromGame();
             }
-            else if(fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.BALL)){
+            else if(fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.BALL)){
                if(fixtureA.getBody()!=null && fixtureB.getBody()!=null) {
                    ((Ball) fixtureA.getUserData()).reverseVelocity(true, true);
                    ((Ball) fixtureB.getUserData()).reverseVelocity(true, true);

@@ -41,7 +41,6 @@ public class SimpleBall extends Ball {
         stateTime += dt;
         if (setToRemove && !removed) {
             world.destroyBody(b2body);
-
             removed = true;
         } else if (!removed) {
             setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
