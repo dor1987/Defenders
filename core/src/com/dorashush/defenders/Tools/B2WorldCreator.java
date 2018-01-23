@@ -28,6 +28,7 @@ public class B2WorldCreator {
         FixtureDef fdef = new FixtureDef();
         Body body;
 
+
         //ground bodies
         for(MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
@@ -38,6 +39,7 @@ public class B2WorldCreator {
             body = world.createBody(bdef);
 
             shape.setAsBox(rect.getWidth()/2/ Defenders.PPM,rect.getHeight()/2/ Defenders.PPM);
+
             fdef.shape= shape;
             body.createFixture(fdef);
         }
@@ -52,8 +54,13 @@ public class B2WorldCreator {
             body = world.createBody(bdef);
 
             shape.setAsBox(rect.getWidth()/2/ Defenders.PPM,rect.getHeight()/2/ Defenders.PPM);
+
             fdef.shape= shape;
             body.createFixture(fdef);
+
+            bodyUserData = new BodyUserData();
+            bodyUserData.collisionType = BodyUserData.CollisionType.WALL;
+            body.setUserData(bodyUserData);
         }
 
         //enemy bound bodies
@@ -67,12 +74,13 @@ public class B2WorldCreator {
 
             shape.setAsBox(rect.getWidth()/2/ Defenders.PPM,rect.getHeight()/2/ Defenders.PPM);
 
-            bodyUserData = new BodyUserData();
-            bodyUserData.collisionType = BodyUserData.CollisionType.PLAYER;
-            body.setUserData(bodyUserData);
-
             fdef.shape= shape;
             body.createFixture(fdef);
+
+            bodyUserData = new BodyUserData();
+            bodyUserData.collisionType = BodyUserData.CollisionType.ENEMY_BOUNDARIES;
+            body.setUserData(bodyUserData);
+
         }
 
     }

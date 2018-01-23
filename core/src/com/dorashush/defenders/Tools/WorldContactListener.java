@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.dorashush.defenders.Sprites.Ball;
 import com.dorashush.defenders.Sprites.Enemy;
 import com.dorashush.defenders.Sprites.SimpleBall;
 
@@ -21,6 +22,8 @@ public class WorldContactListener implements ContactListener {
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
 
+
+        //Ball movment
         if (fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.BALL)) {
             Gdx.app.log("Start Contact with BALL","");
 
@@ -29,19 +32,28 @@ public class WorldContactListener implements ContactListener {
 
             } else if (fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.PLAYER)) {
                 //BALL HIT PLAYER
-                // ballHit(fixtureA.getBody());
+                ((Ball)fixtureA.getUserData()).reverseVelocity(false,true);
             } else if (fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.ENEMY)) {
+                ((Enemy)fixtureB.getUserData()).onBallHit();
+                Gdx.app.log("Enemy touched ball","");
                 //Ball hit Enemy ,Destory Enemey
             }
             else if (fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.WALL)) {
                 Gdx.app.log("Ball Touched wall","");
-
-                Vector2 currentVelocity = fixtureB.getBody().getLinearVelocity();
-                currentVelocity.x *=-1;
-                fixtureB.getBody().setLinearVelocity(currentVelocity);
+                ((Ball)fixtureA.getUserData()).reverseVelocity(true,false);
+            }
+            else if(fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.ENEMY_BOUNDARIES)){
+                //Need to implment ball remove here
+                //((Ball)fixtureA.getUserData()).reverseVelocity(false,true);
+                ((Ball)fixtureA.getUserData()).removeFromGame();
             }
 
-
+            else if(fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.BALL)){
+                if(fixtureA.getBody()!=null && fixtureB.getBody()!=null) {
+                    ((Ball) fixtureA.getUserData()).reverseVelocity(true, true);
+                    ((Ball) fixtureB.getUserData()).reverseVelocity(true, true);
+                }
+            }
 
         } else if (fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.BALL)) {
             Gdx.app.log("Start Contact with BALL","");
@@ -51,17 +63,47 @@ public class WorldContactListener implements ContactListener {
 
             } else if (fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.PLAYER)) {
                 //BALL HIT PLAYER
-                // ballHit(fixtureA.getBody());            }
+                ((Ball)fixtureB.getUserData()).reverseVelocity(false,true);
             } else if (fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.ENEMY)) {
                 //Ball hit Enemy ,Destory Enemey
+                Gdx.app.log("Enemy touched ball","");
+
+                ((Enemy)fixtureA.getUserData()).onBallHit();
             }
 
             else if (fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.WALL)) {
                 Gdx.app.log("Ball Touched wall","");
+                ((Ball)fixtureB.getUserData()).reverseVelocity(true,false);
+            }
 
-                Vector2 currentVelocity = fixtureA.getBody().getLinearVelocity();
-                currentVelocity.x *=-1;
-                fixtureB.getBody().setLinearVelocity(currentVelocity);
+            else if(fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.ENEMY_BOUNDARIES)){
+                //Need to implment ball remove here
+                //((Ball)fixtureB.getUserData()).reverseVelocity(false,true);
+                ((Ball)fixtureB.getUserData()).removeFromGame();
+            }
+            else if(fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.BALL)){
+               if(fixtureA.getBody()!=null && fixtureB.getBody()!=null) {
+                   ((Ball) fixtureA.getUserData()).reverseVelocity(true, true);
+                   ((Ball) fixtureB.getUserData()).reverseVelocity(true, true);
+               }
+            }
+        }
+        //Enemy movment
+        if(fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.ENEMY)){
+            Gdx.app.log("Enemy  Touched something","");
+            if (fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.WALL)) {
+                Gdx.app.log("Enemy  Touched wall","");
+                ((Enemy)fixtureA.getUserData()).reverseVelocity(true,false);
+            }
+        }
+
+        else if(fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.ENEMY)){
+            Gdx.app.log("Enemy  Touched something","");
+
+            if (fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.WALL)) {
+                Gdx.app.log("Enemy  Touched wall","");
+                ((Enemy)fixtureB.getUserData()).reverseVelocity(true,false);
+
             }
         }
     }

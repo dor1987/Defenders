@@ -19,6 +19,8 @@ public class SimpleBall extends Ball {
     private float stateTime;
     private Animation moveAnimation;
     private Array<TextureRegion> frames;
+    private boolean setToRemove;
+    public boolean removed;
 
 
 
@@ -31,26 +33,34 @@ public class SimpleBall extends Ball {
         moveAnimation = new Animation(0.2f,frames);
         stateTime = 0;
         setBounds(getX(),getY(),48 / Defenders.PPM,48/Defenders.PPM);
-
+        setToRemove = false;
+        removed = false;
     }
 
-    public void update(float dt){
-        stateTime+=dt;
-        setPosition(b2body.getPosition().x - getWidth()/2,b2body.getPosition().y - getHeight()/2);
-        setRegion((TextureRegion) moveAnimation.getKeyFrame(stateTime,true));
+    public void update(float dt) {
+        stateTime += dt;
+        if (setToRemove && !removed) {
+            world.destroyBody(b2body);
 
-        if(velocity.x == 0 && velocity.y ==0) {
-             velocity.x = (float) (ballVelocity*Math.cos(ballAngle));
-            velocity.y = (float) (ballVelocity*Math.sin(ballAngle));
+            removed = true;
+        } else if (!removed) {
+            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
+            setRegion((TextureRegion) moveAnimation.getKeyFrame(stateTime, true));
 
-        }
+            if (velocity.x == 0 && velocity.y == 0) {
+                velocity.x = (float) (ballVelocity * Math.cos(ballAngle));
+                velocity.y = (float) (ballVelocity * Math.sin(ballAngle));
+
+            }
             b2body.setLinearVelocity(velocity);
+        }
     }
 
     @Override
     protected void defineBall() {
         BodyDef bdef = new BodyDef();
-        bdef.position.set(240/ Defenders.PPM,500/Defenders.PPM);//need 2 change by enemy spot
+       // bdef.position.set(240/ Defenders.PPM,500/Defenders.PPM);//need 2 change by enemy spot
+         bdef.position.set(getX(),getY());//need 2 change by enemy spot
 
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
@@ -59,7 +69,13 @@ public class SimpleBall extends Ball {
         CircleShape shape = new CircleShape();
         shape.setRadius(24 /Defenders.PPM);
         fdef.shape = shape;
-        b2body.createFixture(fdef);
+        b2body.createFixture(fdef).setUserData(this);
+
+    }
+
+    @Override
+    public void removeFromGame() {
+        this.setToRemove=true;
 
     }
 

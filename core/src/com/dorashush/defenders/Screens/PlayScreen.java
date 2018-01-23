@@ -20,11 +20,13 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Scenes.Hud;
+import com.dorashush.defenders.Sprites.Ball;
 import com.dorashush.defenders.Sprites.Defender;
 import com.dorashush.defenders.Sprites.Dragon;
 import com.dorashush.defenders.Sprites.SimpleBall;
@@ -38,6 +40,7 @@ import com.dorashush.defenders.Tools.WorldContactListener;
 public class PlayScreen implements Screen {
     public static final int SCREEN_WIDTH = 480;
     public static final int SCREEN_HEIGHT = 800;
+    public static final int TIME_BETWEEN_BALL_SPAWN = 4;
 
     private Defenders game;
     private TextureAtlas atlas;
@@ -55,6 +58,11 @@ public class PlayScreen implements Screen {
     private Defender player;
     private Dragon dragon;
     private SimpleBall simpleBall;//for ball testing
+    private Vector2 positionToSpawnBall;
+
+    //Ball control
+    Array<SimpleBall> ballArray;
+    private float timeCount;
 
     public PlayScreen(Defenders game){
         atlas = new TextureAtlas("player_and_enemy");
@@ -77,10 +85,14 @@ public class PlayScreen implements Screen {
 
         b2dr = new Box2DDebugRenderer();
         new B2WorldCreator(this);
+        //Ball Control
+        ballArray = new Array<SimpleBall>();
+        timeCount = 0;
+
 
         player = new Defender(this);
-        dragon = new Dragon(this,40f,40f);
-        simpleBall = new SimpleBall(this,dragon.getX(),dragon.getY()); //for ball testing
+        dragon = new Dragon(this,240/ Defenders.PPM,750/Defenders.PPM);
+       // simpleBall = new SimpleBall(this,dragon.getX(),dragon.getY()-dragon.getHeight()/2); //for ball testing
 
         world.setContactListener(new WorldContactListener());
     }
@@ -105,11 +117,11 @@ public class PlayScreen implements Screen {
     public void handleInput(float dt){
         Vector3 touchPos = new Vector3(Gdx.input.getX(),Gdx.input.getY(),0);
         if((touchPos.x > Defenders.V_WIDTH/2) && player.b2body.getLinearVelocity().x<=2){ //move right
-            player.b2body.applyLinearImpulse(new Vector2(0.1f,0),player.b2body.getWorldCenter(),true);
+            player.b2body.applyLinearImpulse(new Vector2(0.1f,0-0.1f),player.b2body.getWorldCenter(),true);
         }
 
         else if((touchPos.x < Defenders.V_WIDTH/2) && player.b2body.getLinearVelocity().x>=-2){ //move left
-            player.b2body.applyLinearImpulse(new Vector2(-0.1f,0),player.b2body.getWorldCenter(),true);
+            player.b2body.applyLinearImpulse(new Vector2(-0.1f,-0.1f),player.b2body.getWorldCenter(),true);
         }
     }
     public void update(float dt){
@@ -117,8 +129,27 @@ public class PlayScreen implements Screen {
         world.step(1/60f,6,2);
 
         player.update(dt);
+        hud.update(dt);
+
+        //The to find better way to update this
         dragon.update(dt);
-        simpleBall.update(dt); //for ball testing
+        //////////////////////////////////
+
+        timeCount += dt;
+        if(timeCount>=TIME_BETWEEN_BALL_SPAWN) {
+            ballArray.add(new SimpleBall(this,dragon.getX()-dragon.getWidth()/Defenders.PPM,dragon.getY()-dragon.getHeight()/Defenders.PPM));
+            timeCount=0;
+        }
+
+        for (SimpleBall ball : ballArray){
+            if(ball.removed)
+                ballArray.removeValue(ball,true);
+            ball.update(dt);
+        }
+
+      //  simpleBall.update(dt); //for ball testing
+
+        ///////////////////////////
         game.batch.setProjectionMatrix(gameCam.combined);
         renderer.setView(gameCam);
 
@@ -138,7 +169,12 @@ public class PlayScreen implements Screen {
         game.batch.begin();
         player.draw(game.batch);
         dragon.draw(game.batch);
-        simpleBall.draw(game.batch);// for ball testing
+       // simpleBall.draw(game.batch);// for ball testing
+
+        for (SimpleBall ball : ballArray){
+            ball.draw(game.batch);
+        }
+
         game.batch.end();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);

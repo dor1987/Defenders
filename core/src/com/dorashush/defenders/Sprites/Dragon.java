@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
 import com.dorashush.defenders.Defenders;
+import com.dorashush.defenders.Scenes.Hud;
 import com.dorashush.defenders.Screens.PlayScreen;
 
 /**
@@ -46,7 +47,7 @@ public class Dragon extends Enemy {
     @Override
     protected void defineEnemy() {
         BodyDef bdef = new BodyDef();
-        bdef.position.set(240/ Defenders.PPM,750/Defenders.PPM);
+        bdef.position.set(getX(),getY());
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
@@ -54,7 +55,12 @@ public class Dragon extends Enemy {
         CircleShape shape = new CircleShape();
         shape.setRadius(30 /Defenders.PPM);
         fdef.shape = shape;
-        b2body.createFixture(fdef);
+        b2body.createFixture(fdef).setUserData(this);
 
+    }
+
+    @Override
+    public void onBallHit() {
+        Hud.addScore(600);
     }
 }

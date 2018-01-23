@@ -11,7 +11,8 @@ public class BodyUserData {
         BALL,
         PLAYER,
         ENEMY,
-        VILLAGE
+        VILLAGE,
+        ENEMY_BOUNDARIES
 
     }
 
