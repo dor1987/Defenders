@@ -10,13 +10,16 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dorashush.defenders.Defenders;
+import com.dorashush.defenders.Screens.PlayScreen;
 
 /**
  * Created by Dor on 01/22/18.
  */
 
 public class B2WorldCreator {
-    public B2WorldCreator(World world, TiledMap map){
+    public B2WorldCreator(PlayScreen screen){
+        World world = screen.getWorld();
+        TiledMap map =screen.getMap();
 
         BodyDef bdef = new BodyDef();
         PolygonShape shape = new PolygonShape();

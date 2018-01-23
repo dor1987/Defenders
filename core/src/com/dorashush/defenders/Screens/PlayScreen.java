@@ -26,7 +26,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Scenes.Hud;
 import com.dorashush.defenders.Sprites.Defender;
+import com.dorashush.defenders.Sprites.Dragon;
 import com.dorashush.defenders.Tools.B2WorldCreator;
+import com.dorashush.defenders.Tools.WorldContactListener;
 
 /**
  * Created by Dor on 01/22/18.
@@ -50,6 +52,8 @@ public class PlayScreen implements Screen {
     private World world;
     private Box2DDebugRenderer b2dr;
     private Defender player;
+    private Dragon dragon;
+
 
     public PlayScreen(Defenders game){
         atlas = new TextureAtlas("player_and_enemy");
@@ -67,19 +71,29 @@ public class PlayScreen implements Screen {
 
 
         //Box2d
-        world = new World(new Vector2(0,-10),true);
+        world = new World(new Vector2(0,0),true);
+
 
         b2dr = new Box2DDebugRenderer();
-        new B2WorldCreator(world,map);
+        new B2WorldCreator(this);
 
-        player = new Defender(world,this);
+        player = new Defender(this);
+        dragon = new Dragon(this,40f,40f);
 
-
+        world.setContactListener(new WorldContactListener());
     }
 
     public TextureAtlas getAtlas(){
         return atlas;
     }
+
+    public TiledMap getMap(){
+        return map;
+    }
+    public World getWorld(){
+        return world;
+    }
+
 
     @Override
     public void show() {
@@ -101,7 +115,8 @@ public class PlayScreen implements Screen {
         world.step(1/60f,6,2);
 
         player.update(dt);
-
+        dragon.update(dt);
+        game.batch.setProjectionMatrix(gameCam.combined);
         renderer.setView(gameCam);
 
     }
@@ -119,6 +134,7 @@ public class PlayScreen implements Screen {
 
         game.batch.begin();
         player.draw(game.batch);
+        dragon.draw(game.batch);
         game.batch.end();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
