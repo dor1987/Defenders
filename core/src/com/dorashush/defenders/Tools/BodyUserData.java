@@ -12,6 +12,7 @@ public class BodyUserData {
         PLAYER,
         ENEMY,
         VILLAGE,
+        POWER_UP,
         ENEMY_BOUNDARIES
 
     }

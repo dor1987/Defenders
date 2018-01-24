@@ -21,37 +21,49 @@ public class SimpleBall extends Ball {
     private Array<TextureRegion> frames;
     private boolean setToRemove;
     public boolean removed;
-
-
+    private boolean setToHitVillage;
+    public boolean hitedTheVillage;
 
     public SimpleBall(PlayScreen screen, float x, float y) {
         super(screen, x, y);
 
         frames = new Array<TextureRegion>();
-        for(int i = 0; i<10 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("ball2"), i *50,0,48,48));
+        for(int i = 0; i<6 ; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("ball5"), i *91,0,91,91));
         moveAnimation = new Animation(0.2f,frames);
         stateTime = 0;
-        setBounds(getX(),getY(),48 / Defenders.PPM,48/Defenders.PPM);
+        setBounds(getX(),getY(),91 / Defenders.PPM,91/Defenders.PPM);
         setToRemove = false;
         removed = false;
-    }
+
+      setToHitVillage = false;
+      hitedTheVillage = false;
+
+     }
 
     public void update(float dt) {
         stateTime += dt;
-        if (setToRemove && !removed) {
+        if(setToHitVillage && !hitedTheVillage){ //removing the body but the texture will stay
             world.destroyBody(b2body);
-            removed = true;
-        } else if (!removed) {
-            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
-            setRegion((TextureRegion) moveAnimation.getKeyFrame(stateTime, true));
+            hitedTheVillage = true;
+        }
+        else if(!hitedTheVillage) {
 
-            if (velocity.x == 0 && velocity.y == 0) {
-                velocity.x = (float) (ballVelocity * Math.cos(ballAngle));
-                velocity.y = (float) (ballVelocity * Math.sin(ballAngle));
+            if (setToRemove && !removed) {
+                world.destroyBody(b2body);
+                removed = true;
+            } else if (!removed) {
+                setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
+                setRegion((TextureRegion) moveAnimation.getKeyFrame(stateTime, true));
 
+                if (velocity.x == 0 && velocity.y == 0) {
+                    velocity.x = (float) (ballVelocity * Math.cos(ballAngle));
+                    velocity.y = (float) (ballVelocity * Math.sin(ballAngle));
+                }
+                setOriginCenter();
+                setRotation(velocity.angle());
+                b2body.setLinearVelocity(velocity);
             }
-            b2body.setLinearVelocity(velocity);
         }
     }
 
@@ -75,7 +87,10 @@ public class SimpleBall extends Ball {
     @Override
     public void removeFromGame() {
         this.setToRemove=true;
+    }
 
+    public void hitTheVillage() {
+        this.setToHitVillage=true;
     }
 
 }

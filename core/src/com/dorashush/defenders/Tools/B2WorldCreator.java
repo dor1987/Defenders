@@ -29,7 +29,7 @@ public class B2WorldCreator {
         Body body;
 
 
-        //ground bodies
+        //village bodies
         for(MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
@@ -42,6 +42,10 @@ public class B2WorldCreator {
 
             fdef.shape= shape;
             body.createFixture(fdef);
+
+            bodyUserData = new BodyUserData();
+            bodyUserData.collisionType = BodyUserData.CollisionType.VILLAGE;
+            body.setUserData(bodyUserData);
         }
 
         //side bounds bodies

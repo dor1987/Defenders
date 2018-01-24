@@ -9,39 +9,40 @@ import com.dorashush.defenders.Screens.PlayScreen;
 import com.dorashush.defenders.Tools.BodyUserData;
 
 /**
- * Created by Dor on 01/23/18.
+ * Created by Dor on 01/25/18.
  */
 
-public abstract class Ball extends Sprite {
+public abstract class PowerUp extends Sprite{
     protected World world;
     protected PlayScreen screen;
     public Body b2body;
     public Vector2 velocity;
-    public float ballAngle;
-    public float ballVelocity;
-
+    public float powerUpAngle;
+    public float powerUpVelocity;
     private BodyUserData bodyUserData;
 
-    public Ball(PlayScreen screen, float x, float y){
+
+
+
+
+    public PowerUp(PlayScreen screen){
         this.world = screen.getWorld();
         this.screen = screen;
-        setPosition(x,y);
-        defineBall();
+        definePowerUp();
         velocity = new Vector2(0,0); //starting Speed
-        ballAngle = (float) (Math.random()*-0.8*Math.PI);//stating angle
-        ballVelocity = 1;
+        powerUpAngle = (float) (Math.random()*-0.6*Math.PI);//stating angle
+        powerUpVelocity = 4;
 
         //Testing for collision
         bodyUserData = new BodyUserData();
-        bodyUserData.collisionType = BodyUserData.CollisionType.BALL;
+        bodyUserData.collisionType = BodyUserData.CollisionType.POWER_UP;
         b2body.setUserData(bodyUserData);
         ///////////////////////////////////////
-
     }
 
-    protected abstract void defineBall();
+
+    protected abstract void definePowerUp();
     public abstract void removeFromGame();
-    public abstract void hitTheVillage();
 
     public void reverseVelocity(boolean x,boolean y){
         Gdx.app.log("Inside reverseVelocity","");
@@ -55,7 +56,5 @@ public abstract class Ball extends Sprite {
             velocity.y = -velocity.y;
         }
     }
-
-
 
 }

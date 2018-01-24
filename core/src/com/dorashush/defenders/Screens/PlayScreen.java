@@ -40,11 +40,11 @@ import com.dorashush.defenders.Tools.WorldContactListener;
 public class PlayScreen implements Screen {
     public static final int SCREEN_WIDTH = 480;
     public static final int SCREEN_HEIGHT = 800;
-    public static final int TIME_BETWEEN_BALL_SPAWN = 4;
+    public static final int TIME_BETWEEN_BALL_SPAWN = 2;
+    public static boolean godMode = true; //for debugging
 
     private Defenders game;
     private TextureAtlas atlas;
-
     private OrthographicCamera gameCam;
     private Viewport gamePort;
     private Hud hud;
@@ -57,8 +57,8 @@ public class PlayScreen implements Screen {
     private Box2DDebugRenderer b2dr;
     private Defender player;
     private Dragon dragon;
-    private SimpleBall simpleBall;//for ball testing
-    private Vector2 positionToSpawnBall;
+    //private SimpleBall simpleBall;//for ball testing
+    //private Vector2 positionToSpawnBall;
 
     //Ball control
     Array<SimpleBall> ballArray;
@@ -142,10 +142,12 @@ public class PlayScreen implements Screen {
         }
 
         for (SimpleBall ball : ballArray){
+           /*
             if(ball.removed) {
                 //world.destroyBody(ball.b2body);
                 ballArray.removeValue(ball,true);
             }
+*/
             ball.update(dt);
         }
 
@@ -174,16 +176,29 @@ public class PlayScreen implements Screen {
        // simpleBall.draw(game.batch);// for ball testing
 
         for (SimpleBall ball : ballArray){
-           if(ball!=null)
-             ball.draw(game.batch);
+            if(ball.removed)
+                ballArray.removeValue(ball,true);
+
+           if(ball!=null) {
+               ball.draw(game.batch);
+           }
         }
+
+
+
 
         game.batch.end();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
 
-
+        for (SimpleBall ball : ballArray){
+            if(ball.hitedTheVillage){
+                //will send to Game over screen but need to consider adding move lives
+                game.setScreen(new EndGameScreen(game));
+                dispose();
+            }
+        }
     }
 
     @Override

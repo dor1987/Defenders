@@ -12,6 +12,8 @@ import com.dorashush.defenders.Sprites.Ball;
 import com.dorashush.defenders.Sprites.Enemy;
 import com.dorashush.defenders.Sprites.SimpleBall;
 
+import static com.dorashush.defenders.Screens.PlayScreen.godMode;
+
 /**
  * Created by Dor on 01/22/18.
  */
@@ -28,6 +30,13 @@ public class WorldContactListener implements ContactListener {
             Gdx.app.log("Start Contact with BALL","");
 
             if (fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.VILLAGE)) {
+               if(!godMode) {
+                   ((Ball) fixtureA.getUserData()).hitTheVillage();
+               }
+               else{
+                   ((Ball)fixtureA.getUserData()).removeFromGame();
+
+               }
                 //TO-DO Reduce Player Live if no Life End game method
 
             } else if (fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.PLAYER)) {
@@ -60,7 +69,12 @@ public class WorldContactListener implements ContactListener {
 
             if (fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.VILLAGE)) {
                 //TO-DO Reduce Player Live if no Life End game method
-
+                if(!godMode) {
+                    ((Ball) fixtureB.getUserData()).hitTheVillage();
+                }
+                else{
+                    ((Ball)fixtureB.getUserData()).removeFromGame();
+                }
             } else if (fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.PLAYER)) {
                 //BALL HIT PLAYER
                 ((Ball)fixtureB.getUserData()).reverseVelocity(false,true);
