@@ -137,7 +137,7 @@ public class PlayScreen implements Screen {
 
         timeCount += dt;
         if(timeCount>=TIME_BETWEEN_BALL_SPAWN) {
-            ballArray.add(new SimpleBall(this,dragon.getX()-dragon.getWidth()/Defenders.PPM,dragon.getY()-dragon.getHeight()/Defenders.PPM));
+            ballArray.add(new SimpleBall(this,dragon.getX()+(dragon.getWidth()*50)/Defenders.PPM,dragon.getY()-dragon.getHeight()/Defenders.PPM));
             timeCount=0;
         }
 
