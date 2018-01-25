@@ -32,7 +32,7 @@ public abstract class PowerUp extends Sprite{
         this.screen = screen;
         definePowerUp();
         velocity = new Vector2(0,0); //starting Speed
-        powerUpAngle = (float) (Math.random()*-0.6*Math.PI);//stating angle
+        powerUpAngle = (float) (Math.random()*-0.5*Math.PI);//stating angle
         powerUpVelocity = 2;
 
         //Testing for collision

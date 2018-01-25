@@ -33,6 +33,9 @@ public class Defender extends Sprite{
 
     private BodyUserData bodyUserData;
 
+    //power ups
+
+
     public Defender(PlayScreen screen){
         super(screen.getAtlas().findRegion("playersheet"));
         this.world = screen.getWorld();
@@ -119,5 +122,9 @@ public class Defender extends Sprite{
 
         fdef.shape = shape;
         b2body.createFixture(fdef);
+    }
+
+    public void turnOnPowerUp(){
+
     }
 }

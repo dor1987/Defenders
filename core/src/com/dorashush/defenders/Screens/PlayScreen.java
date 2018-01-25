@@ -35,6 +35,8 @@ import com.dorashush.defenders.Sprites.SimpleBall;
 import com.dorashush.defenders.Tools.B2WorldCreator;
 import com.dorashush.defenders.Tools.WorldContactListener;
 
+import java.util.Random;
+
 /**
  * Created by Dor on 01/22/18.
  */
@@ -65,10 +67,16 @@ public class PlayScreen implements Screen {
     //private Vector2 positionToSpawnBall;
 
     //Ball control
-    Array<Ball> ballArray;
-    Array<PowerUp> powerUpArray;
+    private Array<Ball> ballArray;
     private float ballTimeCount;
+    //Power Ups
+    private Array<PowerUp> powerUpArray;
     private float powerUpTimeCount;
+    private boolean godMod;
+    private boolean speed;
+    private boolean points;
+    private boolean extraLife;
+
 
     public PlayScreen(Defenders game){
         atlas = new TextureAtlas("player_and_enemy");
@@ -250,5 +258,11 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
+    }
+
+    public int generateNumber() {
+        Random random = new Random();
+        int result = random.nextInt(3);
+        return result;
     }
 }

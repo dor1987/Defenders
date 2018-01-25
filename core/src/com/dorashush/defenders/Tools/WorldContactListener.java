@@ -60,6 +60,7 @@ public class WorldContactListener implements ContactListener {
 
             else if(fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.BALL)){
                 if(fixtureA.getBody()!=null && fixtureB.getBody()!=null) {
+                    //TO-DO Make Balls mechnic more realistic
                     ((Ball) fixtureA.getUserData()).reverseVelocity(true, true);
                     ((Ball) fixtureB.getUserData()).reverseVelocity(true, true);
                 }
@@ -73,6 +74,7 @@ public class WorldContactListener implements ContactListener {
                 if(!godMode) {
                     ((Ball) fixtureB.getUserData()).hitTheVillage();
                 }
+
                 else{
                     ((Ball)fixtureB.getUserData()).removeFromGame();
                 }
@@ -98,6 +100,8 @@ public class WorldContactListener implements ContactListener {
             }
             else if(fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.BALL)){
                if(fixtureA.getBody()!=null && fixtureB.getBody()!=null) {
+                   //TO-DO Make Balls mechnic more realistic
+
                    ((Ball) fixtureA.getUserData()).reverseVelocity(true, true);
                    ((Ball) fixtureB.getUserData()).reverseVelocity(true, true);
                }
