@@ -19,6 +19,8 @@ public abstract class PowerUp extends Sprite{
     public Vector2 velocity;
     public float powerUpAngle;
     public float powerUpVelocity;
+    public boolean removed;
+
     private BodyUserData bodyUserData;
 
 
@@ -31,7 +33,7 @@ public abstract class PowerUp extends Sprite{
         definePowerUp();
         velocity = new Vector2(0,0); //starting Speed
         powerUpAngle = (float) (Math.random()*-0.6*Math.PI);//stating angle
-        powerUpVelocity = 4;
+        powerUpVelocity = 2;
 
         //Testing for collision
         bodyUserData = new BodyUserData();
@@ -40,10 +42,9 @@ public abstract class PowerUp extends Sprite{
         ///////////////////////////////////////
     }
 
-
+    public abstract void update(float dt);
     protected abstract void definePowerUp();
-    public abstract void removeFromGame();
-
+    public abstract void setToRemove();
     public void reverseVelocity(boolean x,boolean y){
         Gdx.app.log("Inside reverseVelocity","");
 

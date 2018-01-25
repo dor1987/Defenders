@@ -29,6 +29,8 @@ import com.dorashush.defenders.Scenes.Hud;
 import com.dorashush.defenders.Sprites.Ball;
 import com.dorashush.defenders.Sprites.Defender;
 import com.dorashush.defenders.Sprites.Dragon;
+import com.dorashush.defenders.Sprites.GodPowerUp;
+import com.dorashush.defenders.Sprites.PowerUp;
 import com.dorashush.defenders.Sprites.SimpleBall;
 import com.dorashush.defenders.Tools.B2WorldCreator;
 import com.dorashush.defenders.Tools.WorldContactListener;
@@ -40,8 +42,9 @@ import com.dorashush.defenders.Tools.WorldContactListener;
 public class PlayScreen implements Screen {
     public static final int SCREEN_WIDTH = 480;
     public static final int SCREEN_HEIGHT = 800;
-    public static final int TIME_BETWEEN_BALL_SPAWN = 2;
     public static boolean godMode = true; //for debugging
+    public static final int TIME_BETWEEN_BALL_SPAWN = 2;
+    public static final int TIME_BETWEEN_POWER_UP_SPAWN = 10;
 
     private Defenders game;
     private TextureAtlas atlas;
@@ -57,12 +60,15 @@ public class PlayScreen implements Screen {
     private Box2DDebugRenderer b2dr;
     private Defender player;
     private Dragon dragon;
+   // private GodPowerUp godPowerUP;
     //private SimpleBall simpleBall;//for ball testing
     //private Vector2 positionToSpawnBall;
 
     //Ball control
-    Array<SimpleBall> ballArray;
-    private float timeCount;
+    Array<Ball> ballArray;
+    Array<PowerUp> powerUpArray;
+    private float ballTimeCount;
+    private float powerUpTimeCount;
 
     public PlayScreen(Defenders game){
         atlas = new TextureAtlas("player_and_enemy");
@@ -86,12 +92,14 @@ public class PlayScreen implements Screen {
         b2dr = new Box2DDebugRenderer();
         new B2WorldCreator(this);
         //Ball Control
-        ballArray = new Array<SimpleBall>();
-        timeCount = 0;
-
+        ballArray = new Array<Ball>();
+        powerUpArray = new Array<PowerUp>();
+        ballTimeCount = 0;
+        powerUpTimeCount=0;
 
         player = new Defender(this);
         dragon = new Dragon(this,240/ Defenders.PPM,750/Defenders.PPM);
+        //godPowerUP = new GodPowerUp(this);
        // simpleBall = new SimpleBall(this,dragon.getX(),dragon.getY()-dragon.getHeight()/2); //for ball testing
 
         world.setContactListener(new WorldContactListener());
@@ -135,25 +143,29 @@ public class PlayScreen implements Screen {
         dragon.update(dt);
         //////////////////////////////////
 
-        timeCount += dt;
-        if(timeCount>=TIME_BETWEEN_BALL_SPAWN) {
+        //add balls to game
+        ballTimeCount+= dt;
+        if(ballTimeCount>=TIME_BETWEEN_BALL_SPAWN) {
             ballArray.add(new SimpleBall(this,dragon.getX()+(dragon.getWidth()*50)/Defenders.PPM,dragon.getY()-dragon.getHeight()/Defenders.PPM));
-            timeCount=0;
+            ballTimeCount=0;
         }
 
-        for (SimpleBall ball : ballArray){
-           /*
-            if(ball.removed) {
-                //world.destroyBody(ball.b2body);
-                ballArray.removeValue(ball,true);
-            }
-*/
+        //add powerups to game
+
+        powerUpTimeCount+= dt;
+        if(powerUpTimeCount>=TIME_BETWEEN_POWER_UP_SPAWN) {
+            powerUpArray.add(new GodPowerUp(this));
+            powerUpTimeCount=0;
+        }
+
+        for (Ball ball : ballArray){
             ball.update(dt);
         }
 
-      //  simpleBall.update(dt); //for ball testing
+        for(PowerUp powerUp : powerUpArray){
+            powerUp.update(dt);
+        }
 
-        ///////////////////////////
         game.batch.setProjectionMatrix(gameCam.combined);
         renderer.setView(gameCam);
 
@@ -173,9 +185,13 @@ public class PlayScreen implements Screen {
         game.batch.begin();
         player.draw(game.batch);
         dragon.draw(game.batch);
+
+
        // simpleBall.draw(game.batch);// for ball testing
 
-        for (SimpleBall ball : ballArray){
+
+
+        for (Ball ball : ballArray){
             if(ball.removed)
                 ballArray.removeValue(ball,true);
 
@@ -184,15 +200,21 @@ public class PlayScreen implements Screen {
            }
         }
 
+        for (PowerUp powerUp : powerUpArray){
+            if(powerUp.removed)
+                powerUpArray.removeValue(powerUp,true);
 
-
+            if(powerUp!=null) {
+                powerUp.draw(game.batch);
+            }
+        }
 
         game.batch.end();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
 
-        for (SimpleBall ball : ballArray){
+        for (Ball ball : ballArray){
             if(ball.hitedTheVillage){
                 //will send to Game over screen but need to consider adding move lives
                 game.setScreen(new EndGameScreen(game));

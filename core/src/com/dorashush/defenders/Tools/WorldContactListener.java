@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.dorashush.defenders.Sprites.Ball;
 import com.dorashush.defenders.Sprites.Enemy;
+import com.dorashush.defenders.Sprites.PowerUp;
 import com.dorashush.defenders.Sprites.SimpleBall;
 
 import static com.dorashush.defenders.Screens.PlayScreen.godMode;
@@ -51,13 +52,13 @@ public class WorldContactListener implements ContactListener {
                 Gdx.app.log("Ball Touched wall","");
                 ((Ball)fixtureA.getUserData()).reverseVelocity(true,false);
             }
-            else if(fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.ENEMY_BOUNDARIES)){
+            else if(fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.ENEMY_BOUNDARIES)){
                 //Need to implment ball remove here
                 //((Ball)fixtureA.getUserData()).reverseVelocity(false,true);
                 ((Ball)fixtureA.getUserData()).removeFromGame();
             }
 
-            else if(fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.BALL)){
+            else if(fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.BALL)){
                 if(fixtureA.getBody()!=null && fixtureB.getBody()!=null) {
                     ((Ball) fixtureA.getUserData()).reverseVelocity(true, true);
                     ((Ball) fixtureB.getUserData()).reverseVelocity(true, true);
@@ -119,6 +120,41 @@ public class WorldContactListener implements ContactListener {
                 ((Enemy)fixtureB.getUserData()).reverseVelocity(true,false);
 
             }
+        }
+            //Power up movement
+        if(fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.POWER_UP)) {
+            if (fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.WALL)) {
+                //if hit wall change direction
+                ((PowerUp)fixtureA.getUserData()).reverseVelocity(true,false);
+            }
+            else if(fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.PLAYER)) {
+                //if hit player
+                ((PowerUp)fixtureA.getUserData()).setToRemove();
+                //TO-DO set godmod
+            }
+
+            else if(fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.VILLAGE)) {
+                //if hit VILLAGE
+                ((PowerUp)fixtureA.getUserData()).setToRemove();
+            }
+
+        }
+        else if(fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.POWER_UP)) {
+            if (fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.WALL)) {
+                //if hit wall change direction
+                ((PowerUp)fixtureB.getUserData()).reverseVelocity(true,false);
+                }
+            else if(fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.PLAYER)) {
+                //if hit player
+                ((PowerUp)fixtureB.getUserData()).setToRemove();
+                //TO-DO set godmod
+            }
+
+            else if(fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.VILLAGE)) {
+                //if hit VILLAGE
+                ((PowerUp)fixtureB.getUserData()).setToRemove();
+            }
+
         }
     }
 

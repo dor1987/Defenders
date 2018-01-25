@@ -19,6 +19,8 @@ public abstract class Ball extends Sprite {
     public Vector2 velocity;
     public float ballAngle;
     public float ballVelocity;
+    public boolean removed;
+    public boolean hitedTheVillage;
 
     private BodyUserData bodyUserData;
 
@@ -42,7 +44,7 @@ public abstract class Ball extends Sprite {
     protected abstract void defineBall();
     public abstract void removeFromGame();
     public abstract void hitTheVillage();
-
+    public abstract void update(float dt);
     public void reverseVelocity(boolean x,boolean y){
         Gdx.app.log("Inside reverseVelocity","");
 
