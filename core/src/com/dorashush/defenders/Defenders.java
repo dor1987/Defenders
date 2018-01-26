@@ -13,12 +13,14 @@ public class Defenders extends Game {
 	public static final int V_WIDTH = 480;
 	public static final int V_HEIGHT = 800;
 	public static final float PPM = 100;
+	public static final int FIRST_LEVEL = 0;
+	public static final int STARTING_SCORE = 0;
 
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		setScreen(new PlayScreen(this));
+		setScreen(new PlayScreen(this,FIRST_LEVEL,STARTING_SCORE));
 
 	}
 

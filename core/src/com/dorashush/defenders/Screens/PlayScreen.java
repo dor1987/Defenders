@@ -4,35 +4,28 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Scenes.Hud;
 import com.dorashush.defenders.Sprites.Ball;
 import com.dorashush.defenders.Sprites.Defender;
 import com.dorashush.defenders.Sprites.Dragon;
-import com.dorashush.defenders.Sprites.GodPowerUp;
+import com.dorashush.defenders.Sprites.Enemy;
+import com.dorashush.defenders.Sprites.BarrierPowerUp;
 import com.dorashush.defenders.Sprites.PowerUp;
 import com.dorashush.defenders.Sprites.SimpleBall;
 import com.dorashush.defenders.Tools.B2WorldCreator;
+import com.dorashush.defenders.Tools.LevelsInfoData;
 import com.dorashush.defenders.Tools.WorldContactListener;
 
 import java.util.Random;
@@ -61,7 +54,9 @@ public class PlayScreen implements Screen {
     private World world;
     private Box2DDebugRenderer b2dr;
     private Defender player;
-    private Dragon dragon;
+
+    private Enemy enemy; //testing
+    //private Dragon dragon;
    // private GodPowerUp godPowerUP;
     //private SimpleBall simpleBall;//for ball testing
     //private Vector2 positionToSpawnBall;
@@ -72,13 +67,18 @@ public class PlayScreen implements Screen {
     //Power Ups
     private Array<PowerUp> powerUpArray;
     private float powerUpTimeCount;
+
     private boolean godMod;
     private boolean speed;
     private boolean points;
     private boolean extraLife;
 
 
-    public PlayScreen(Defenders game){
+    //Stage managment
+    private LevelsInfoData levelManager;
+    private int[] currentLevelInfo;
+
+    public PlayScreen(Defenders game ,int levelNumber , int score){
         atlas = new TextureAtlas("player_and_enemy");
 
         this.game = game;
@@ -106,9 +106,14 @@ public class PlayScreen implements Screen {
         powerUpTimeCount=0;
 
         player = new Defender(this);
-        dragon = new Dragon(this,240/ Defenders.PPM,750/Defenders.PPM);
-        //godPowerUP = new GodPowerUp(this);
-       // simpleBall = new SimpleBall(this,dragon.getX(),dragon.getY()-dragon.getHeight()/2); //for ball testing
+
+        //Stage managment
+        levelManager = new LevelsInfoData();
+        currentLevelInfo = levelManager.getCurrentLevelInfo(levelNumber);
+        Hud.levelNumber(currentLevelInfo[3]);
+        Hud.addScore(score); //to carry score from last level
+        enemy = initlizeEnemy(currentLevelInfo[0]);
+
 
         world.setContactListener(new WorldContactListener());
     }
@@ -148,13 +153,13 @@ public class PlayScreen implements Screen {
         hud.update(dt);
 
         //The to find better way to update this
-        dragon.update(dt);
+        enemy.update(dt);
         //////////////////////////////////
 
         //add balls to game
         ballTimeCount+= dt;
         if(ballTimeCount>=TIME_BETWEEN_BALL_SPAWN) {
-            ballArray.add(new SimpleBall(this,dragon.getX()+(dragon.getWidth()*50)/Defenders.PPM,dragon.getY()-dragon.getHeight()/Defenders.PPM));
+            ballArray.add(initlizeBall(currentLevelInfo[1]));
             ballTimeCount=0;
         }
 
@@ -162,7 +167,7 @@ public class PlayScreen implements Screen {
 
         powerUpTimeCount+= dt;
         if(powerUpTimeCount>=TIME_BETWEEN_POWER_UP_SPAWN) {
-            powerUpArray.add(new GodPowerUp(this));
+            powerUpArray.add(initlizePowerUp(currentLevelInfo[2]));
             powerUpTimeCount=0;
         }
 
@@ -192,7 +197,7 @@ public class PlayScreen implements Screen {
 
         game.batch.begin();
         player.draw(game.batch);
-        dragon.draw(game.batch);
+        enemy.draw(game.batch);
 
 
        // simpleBall.draw(game.batch);// for ball testing
@@ -260,9 +265,73 @@ public class PlayScreen implements Screen {
         hud.dispose();
     }
 
-    public int generateNumber() {
+    public int generateNumber(int maxNum) {
         Random random = new Random();
-        int result = random.nextInt(3);
+        int result = random.nextInt(maxNum+1); //to avoid maxnum been 0
         return result;
+    }
+
+    public Enemy initlizeEnemy(int enemyToInitilize){
+        //need to update new enemys
+        Enemy enemy;
+
+        switch (enemyToInitilize){
+            case 0:
+                enemy = new Dragon(this,240/ Defenders.PPM,750/Defenders.PPM);
+                break;
+
+            case 1:
+                enemy = new Dragon(this,240/ Defenders.PPM,750/Defenders.PPM);
+
+                break;
+
+            default:
+                enemy = new Dragon(this,240/ Defenders.PPM,750/Defenders.PPM);
+
+                break;
+        }
+
+        return enemy;
+    }
+
+    public Ball initlizeBall(int ballToInitilize){
+        //need to update new Balls
+        Ball ball;
+
+        switch (ballToInitilize){
+            case 0:
+                ball = new SimpleBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
+                break;
+
+            case 1:
+                ball = new SimpleBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
+
+                break;
+
+            default:
+                ball = new SimpleBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
+                break;
+        }
+        return ball;
+    }
+
+    public PowerUp initlizePowerUp(int powerUpToInitilize){
+        //need to update new PowerUps
+        PowerUp powerUp;
+
+        powerUpToInitilize = generateNumber(powerUpToInitilize);
+
+        switch (powerUpToInitilize){
+            case 0:
+                powerUp = new BarrierPowerUp(this);
+                break;
+            case 1:
+                powerUp = new BarrierPowerUp(this);
+                break;
+            default:
+                powerUp = new BarrierPowerUp(this);
+                break;
+        }
+        return powerUp;
     }
 }

@@ -22,19 +22,20 @@ public class Hud implements Disposable{
     private Integer worldTimer;
     private float timeCount;
     private static Integer score; // Need to think of a better way, maybe pass hud to objects
+    private static Integer levelNumber;
 
     private Label countDownLabel;
     private Label worldLabel;
     private static Label scoreLabel;
     private Label timeLabel;
-    private Label levelLabel;
+    private static Label levelLabel;
     private Label defenderLabel;
 
     public Hud(SpriteBatch sb){
         worldTimer = 300;
         timeCount = 0;
         score = 0;
-
+        levelNumber = 1;
         viewPort = new FitViewport(Defenders.V_WIDTH,Defenders.V_HEIGHT,new OrthographicCamera());
         stage = new Stage(viewPort,sb);
 
@@ -45,7 +46,7 @@ public class Hud implements Disposable{
         countDownLabel = new Label(String.format("%03d",worldTimer),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         scoreLabel= new Label(String.format("%06d",score),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         timeLabel= new Label("TIME",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        levelLabel= new Label("1",new Label.LabelStyle(new BitmapFont(), Color.WHITE)); // need to update it each level
+        levelLabel= new Label(String.format("%02d",levelNumber),new Label.LabelStyle(new BitmapFont(), Color.WHITE)); // need to update it each level
         worldLabel = new Label("LEVEL",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         defenderLabel= new Label("SCORE",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
@@ -73,6 +74,10 @@ public class Hud implements Disposable{
     public static void addScore(int value){
         score+=value;
         scoreLabel.setText(String.format("%06d",score));
+    }
+
+    public static void levelNumber(int levelNumber){
+        levelLabel.setText(String.format("%02d",levelNumber));
     }
 
     @Override

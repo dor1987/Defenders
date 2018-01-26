@@ -13,14 +13,14 @@ import com.dorashush.defenders.Screens.PlayScreen;
  * Created by Dor on 01/25/18.
  */
 
-public class GodPowerUp extends PowerUp{
+public class BarrierPowerUp extends PowerUp{
     private float stateTime;
     private Animation moveAnimation;
     private Array<TextureRegion> frames;
     private boolean setToRemove;
     //private boolean setGotCollected;
 
-    public GodPowerUp(PlayScreen screen) {
+    public BarrierPowerUp(PlayScreen screen) {
         super(screen);
         frames = new Array<TextureRegion>();
         for(int i = 0; i<6 ; i++)
