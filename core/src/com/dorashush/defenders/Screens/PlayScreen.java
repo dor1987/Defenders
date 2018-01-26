@@ -88,7 +88,7 @@ public class PlayScreen implements Screen {
         hud = new Hud(game.batch);
 
         mapLoader = new TmxMapLoader();
-        map = mapLoader.load("stage.tmx");
+        map = mapLoader.load("stage2.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1/ Defenders.PPM);
         gameCam.position.set(gamePort.getWorldWidth()/2,gamePort.getWorldHeight()/2,0);
 
