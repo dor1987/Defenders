@@ -35,7 +35,11 @@ public class EndGameScreen implements Screen {
         table.setFillParent(true);
 
         Label gameOverLabel = new Label("GAME OVER",font);
+        Label playAgain = new Label("Click to play again",font);
+
         table.add(gameOverLabel).expandX();
+        table.row();
+        table.add(playAgain).expandX().padTop(10f);
 
         stage.addActor(table);
     }
@@ -49,6 +53,10 @@ public class EndGameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        if(Gdx.input.justTouched()){
+            game.setScreen(new PlayScreen((Defenders)game,0,0));
+            dispose();
+        }
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.draw();

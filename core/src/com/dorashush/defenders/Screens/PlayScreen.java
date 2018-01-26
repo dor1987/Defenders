@@ -138,7 +138,7 @@ public class PlayScreen implements Screen {
     public void handleInput(float dt){
         Vector3 touchPos = new Vector3(Gdx.input.getX(),Gdx.input.getY(),0);
         if((touchPos.x > Defenders.V_WIDTH/2) && player.b2body.getLinearVelocity().x<=2){ //move right
-            player.b2body.applyLinearImpulse(new Vector2(0.1f,0-0.1f),player.b2body.getWorldCenter(),true);
+            player.b2body.applyLinearImpulse(new Vector2(0.1f,-0.1f),player.b2body.getWorldCenter(),true);
         }
 
         else if((touchPos.x < Defenders.V_WIDTH/2) && player.b2body.getLinearVelocity().x>=-2){ //move left
@@ -344,4 +344,7 @@ public class PlayScreen implements Screen {
         }
         return powerUp;
     }
+
+
 }
+
