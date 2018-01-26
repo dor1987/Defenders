@@ -6,6 +6,7 @@ package com.dorashush.defenders.Tools;
 
 
 public class LevelsInfoData {
+    public static final int AMOUNT_OF_LEVELS = 2;
     private int enemy;
     private int ball;
     private int powerUps;
@@ -24,6 +25,10 @@ public class LevelsInfoData {
 
           case 1:
               //implment level 2
+              enemy = 0;
+              ball = 0;
+              powerUps = 0;
+              levelNum = 2;
              break;
 
           default:
@@ -33,7 +38,7 @@ public class LevelsInfoData {
               break;
         }
 
-      levelInfo = new int[]{enemy,ball,powerUps,levelNum};
+      levelInfo = new int[]{enemy,ball,powerUps,levelNum,AMOUNT_OF_LEVELS};
         return levelInfo;
     }
 }

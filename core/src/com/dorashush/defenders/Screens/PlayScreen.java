@@ -145,6 +145,7 @@ public class PlayScreen implements Screen {
             player.b2body.applyLinearImpulse(new Vector2(-0.1f,-0.1f),player.b2body.getWorldCenter(),true);
         }
     }
+
     public void update(float dt){
         handleInput(dt);
         world.step(1/60f,6,2);
@@ -153,6 +154,7 @@ public class PlayScreen implements Screen {
         hud.update(dt);
 
         //The to find better way to update this
+
         enemy.update(dt);
         //////////////////////////////////
 
@@ -197,7 +199,15 @@ public class PlayScreen implements Screen {
 
         game.batch.begin();
         player.draw(game.batch);
+
         enemy.draw(game.batch);
+        if(enemy.removed && enemy.getTimer() >3 ) {
+            if(currentLevelInfo[4]==currentLevelInfo[3])//check if last stage
+                game.setScreen(new EndGameScreen(game));
+            else
+                game.setScreen(new PlayScreen(game,currentLevelInfo[3],Hud.getScore())); //move to next level
+            dispose();
+        }
 
 
        // simpleBall.draw(game.batch);// for ball testing

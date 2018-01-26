@@ -19,6 +19,10 @@ public abstract class Enemy extends Sprite {
     public Body b2body;
     public Vector2 velocity;
     private BodyUserData bodyUserData;
+    public boolean removed;
+    public boolean gotHit;
+    public float stateTime;
+
 
     public Enemy(PlayScreen screen, float x, float y){
         this.world = screen.getWorld();
@@ -26,7 +30,7 @@ public abstract class Enemy extends Sprite {
         setPosition(x,y);
         defineEnemy();
         velocity = new Vector2(1,0);
-
+       // stateTime =0;
         //Testing for collision
         bodyUserData = new BodyUserData();
         bodyUserData.collisionType = BodyUserData.CollisionType.ENEMY;
@@ -37,15 +41,12 @@ public abstract class Enemy extends Sprite {
 
     protected abstract void defineEnemy();
     public abstract void update(float dt);
-
-
     public void reverseVelocity(boolean x,boolean y){
         if(x)
             velocity.x= -velocity.x;
     }
-
     public abstract void onBallHit();
-
+    public abstract float getTimer();
 
 
 }

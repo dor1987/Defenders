@@ -3,6 +3,7 @@ package com.dorashush.defenders.Sprites;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -18,7 +19,7 @@ import com.dorashush.defenders.Screens.PlayScreen;
  */
 
 public class Dragon extends Enemy {
-    private float stateTime;
+    //private float stateTime;
     private Animation flyAnimation;
     private Array<TextureRegion> frames;
 
@@ -30,19 +31,42 @@ public class Dragon extends Enemy {
         flyAnimation = new Animation(0.2f,frames);
         stateTime = 0;
         setBounds(getX(),getY(),128 /Defenders.PPM,143/Defenders.PPM);
+        removed = false;
+        gotHit = false;
 
     }
 
-    public void update(float dt){
-        stateTime+=dt;
+    public void update(float dt) {
+        stateTime += dt;
+       /*
         setPosition(b2body.getPosition().x - getWidth()/2,b2body.getPosition().y - getHeight()/2);
         setRegion((TextureRegion) flyAnimation.getKeyFrame(stateTime,true));
 
         b2body.setLinearVelocity(velocity);
+*/
 
+        if (!gotHit) {
+            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
+            setRegion((TextureRegion) flyAnimation.getKeyFrame(stateTime, true));
+            b2body.setLinearVelocity(velocity);
 
+        } else if (gotHit ) {
+            if (!removed) {
+                world.destroyBody(b2body);
+                removed = true;
+                stateTime = 0;
+            }
 
+        }
     }
+
+
+public void draw(Batch batch){
+    if(!removed || stateTime < 2)
+       super.draw(batch);
+}
+
+
 
     @Override
     protected void defineEnemy() {
@@ -62,5 +86,11 @@ public class Dragon extends Enemy {
     @Override
     public void onBallHit() {
         Hud.addScore(600);
+        gotHit = true;
+    }
+
+    @Override
+    public float getTimer() {
+        return stateTime;
     }
 }
