@@ -19,7 +19,7 @@ import com.dorashush.defenders.Defenders;
 public class Hud implements Disposable{
     public Stage stage;
     private Viewport viewPort;
-    private Integer worldTimer;
+    private static Integer worldTimer;
     private float timeCount;
     private static Integer score; // Need to think of a better way, maybe pass hud to objects
     private static Integer levelNumber;
@@ -78,6 +78,9 @@ public class Hud implements Disposable{
 
     public static int getScore(){
         return score;
+    }
+    public static int getTimeLeft(){
+        return worldTimer;
     }
 
     public static void levelNumber(int levelNumber){

@@ -23,7 +23,7 @@ public class EndGameScreen implements Screen {
     private Stage stage;
     private Game game;
 
-    public EndGameScreen(Game game){
+    public EndGameScreen(Game game,int score){
         this.game = game;
         viewport = new FitViewport(Defenders.V_WIDTH,Defenders.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport,((Defenders)game).batch);
@@ -36,10 +36,16 @@ public class EndGameScreen implements Screen {
 
         Label gameOverLabel = new Label("GAME OVER",font);
         Label playAgain = new Label("Click to play again",font);
+        Label scoreLabel = new Label("Your Score is:",font);
+        Label scoreLabelInNumber= new Label(String.format("%06d",score),font);
 
-        table.add(gameOverLabel).expandX();
+
+        table.add(gameOverLabel).uniform();
         table.row();
-        table.add(playAgain).expandX().padTop(10f);
+        table.add(playAgain).padTop(10f).uniform();
+        table.row();
+        table.add(scoreLabel).uniform();
+        table.add(scoreLabelInNumber).uniform();
 
         stage.addActor(table);
     }
