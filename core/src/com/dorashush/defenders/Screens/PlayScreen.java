@@ -30,6 +30,8 @@ import com.dorashush.defenders.Sprites.Enemy;
 import com.dorashush.defenders.Sprites.BarrierPowerUp;
 import com.dorashush.defenders.Sprites.PowerUp;
 import com.dorashush.defenders.Sprites.SimpleBall;
+import com.dorashush.defenders.Sprites.WingedBull;
+import com.dorashush.defenders.Sprites.WingedBullFireBall;
 import com.dorashush.defenders.Tools.B2WorldCreator;
 import com.dorashush.defenders.Tools.LevelsInfoData;
 import com.dorashush.defenders.Tools.WorldContactListener;
@@ -182,6 +184,7 @@ public class PlayScreen implements Screen {
             if (ballTimeCount >= TIME_BETWEEN_BALL_SPAWN) {
                 ballArray.add(initlizeBall(currentLevelInfo[1]));
                 ballTimeCount = 0;
+                //enemy.doShootAnimation();
             }
 
             //add powerups to game
@@ -230,7 +233,6 @@ public class PlayScreen implements Screen {
 
         if(gameStatus!=GameStatus.MID_GAME){
             endLevelHudRender();
-
             waitInputSetNextScreen();
         }
     }
@@ -288,7 +290,7 @@ public class PlayScreen implements Screen {
 
         switch (enemyToInitilize){
             case 0:
-                enemy = new Dragon(this,240/ Defenders.PPM,750/Defenders.PPM);
+                enemy = new WingedBull(this,240/ Defenders.PPM,750/Defenders.PPM);
                 break;
 
             case 1:
@@ -311,7 +313,7 @@ public class PlayScreen implements Screen {
 
         switch (ballToInitilize){
             case 0:
-                ball = new SimpleBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
+                ball = new WingedBullFireBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
                 break;
 
             case 1:

@@ -48,5 +48,4 @@ public abstract class Enemy extends Sprite {
     public abstract void onBallHit();
     public abstract float getTimer();
 
-
 }

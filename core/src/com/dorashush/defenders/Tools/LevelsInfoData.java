@@ -25,8 +25,8 @@ public class LevelsInfoData {
 
           case 1:
               //implment level 2
-              enemy = 0;
-              ball = 0;
+              enemy = 1;
+              ball = 1;
               powerUps = 0;
               levelNum = 2;
              break;

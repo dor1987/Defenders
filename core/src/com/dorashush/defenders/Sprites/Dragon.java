@@ -93,4 +93,5 @@ public void draw(Batch batch){
     public float getTimer() {
         return stateTime;
     }
+
 }
