@@ -26,6 +26,8 @@ public class EndGameScreen implements Screen {
     public EndGameScreen(Game game,int score){
         this.game = game;
         viewport = new FitViewport(Defenders.V_WIDTH,Defenders.V_HEIGHT, new OrthographicCamera());
+        //viewport = new FitViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(), new OrthographicCamera());
+
         stage = new Stage(viewport,((Defenders)game).batch);
 
         Label.LabelStyle font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
@@ -60,7 +62,7 @@ public class EndGameScreen implements Screen {
     @Override
     public void render(float delta) {
         if(Gdx.input.justTouched()){
-            game.setScreen(new PlayScreen((Defenders)game,0,0));
+            game.setScreen(new PlayScreen((Defenders)game,0,0,((Defenders) game).STARTING_LIVES));
             dispose();
         }
         Gdx.gl.glClearColor(0,0,0,1);

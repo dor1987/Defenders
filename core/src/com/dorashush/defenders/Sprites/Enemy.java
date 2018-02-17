@@ -22,6 +22,7 @@ public abstract class Enemy extends Sprite {
     public boolean removed;
     public boolean gotHit;
     public float stateTime;
+    private float healthBar; //testing health bar
 
 
     public Enemy(PlayScreen screen, float x, float y){
@@ -31,12 +32,24 @@ public abstract class Enemy extends Sprite {
         defineEnemy();
         velocity = new Vector2(1,0);
        // stateTime =0;
+
+        //testing health bar
+        healthBar =1;
+        //
         //Testing for collision
         bodyUserData = new BodyUserData();
         bodyUserData.collisionType = BodyUserData.CollisionType.ENEMY;
         b2body.setUserData(bodyUserData);
         ///////////////////////////////////////
 
+    }
+
+    public float getHealthBar() {
+        return healthBar;
+    }
+
+    public void setHealthBar(float healthBar) {
+        this.healthBar = healthBar;
     }
 
     protected abstract void defineEnemy();

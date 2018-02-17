@@ -1,5 +1,6 @@
 package com.dorashush.defenders.Scenes;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -37,7 +38,9 @@ public class HudForEndLevel implements Disposable {
     public HudForEndLevel(SpriteBatch sb){
 
         font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
-        viewPort = new FitViewport(Defenders.V_WIDTH,Defenders.V_HEIGHT,new OrthographicCamera());
+      viewPort = new FitViewport(Defenders.V_WIDTH,Defenders.V_HEIGHT,new OrthographicCamera());
+       // viewPort = new FitViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(),new OrthographicCamera());
+
         stage = new Stage(viewPort,sb);
 
         Table table =new Table();

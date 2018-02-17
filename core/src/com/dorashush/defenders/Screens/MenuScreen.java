@@ -62,6 +62,8 @@ public class MenuScreen implements Screen{
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
         viewport = new FitViewport(Defenders.V_WIDTH,Defenders.V_HEIGHT, camera);
+        //viewport = new FitViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(), camera);
+
         viewport.apply();
 
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
@@ -94,7 +96,7 @@ public class MenuScreen implements Screen{
         playButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new PlayScreen((Defenders)game,0,0));
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new PlayScreen((Defenders)game,0,0,((Defenders) game).STARTING_LIVES));
                 dispose();
             }
         });

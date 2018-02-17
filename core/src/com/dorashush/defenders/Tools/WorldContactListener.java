@@ -34,16 +34,15 @@ public class WorldContactListener implements ContactListener {
                if(!godMode) {
                    ((Ball) fixtureA.getUserData()).hitTheVillage();
                }
-               else{
                    ((Ball)fixtureA.getUserData()).removeFromGame();
 
-               }
                 //TO-DO Reduce Player Live if no Life End game method
 
             } else if (fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.PLAYER)) {
                 //BALL HIT PLAYER
                 ((Ball)fixtureA.getUserData()).reverseVelocity(false,true);
             } else if (fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.ENEMY)) {
+                ((Ball)fixtureA.getUserData()).removeFromGame(); // remove ball after hit enemy
                 ((Enemy)fixtureB.getUserData()).onBallHit();
                 Gdx.app.log("Enemy touched ball","");
                 //Ball hit Enemy ,Destory Enemey
@@ -87,15 +86,14 @@ public class WorldContactListener implements ContactListener {
                 if(!godMode) {
                     ((Ball) fixtureB.getUserData()).hitTheVillage();
                 }
-
-                else{
                     ((Ball)fixtureB.getUserData()).removeFromGame();
-                }
+
             } else if (fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.PLAYER)) {
                 //BALL HIT PLAYER
                 ((Ball)fixtureB.getUserData()).reverseVelocity(false,true);
             } else if (fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.ENEMY)) {
                 //Ball hit Enemy ,Destory Enemey
+                ((Ball)fixtureB.getUserData()).removeFromGame();//remove after hitting the enemy
                 ((Enemy)fixtureA.getUserData()).onBallHit();
             }
 

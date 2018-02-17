@@ -20,7 +20,7 @@ public class WingedBullFireBall extends Ball {
     private boolean setToRemove;
     // public boolean removed;
     private boolean setToHitVillage;
-    public boolean hitedTheVillage;
+    //public boolean hitedTheVillage;
 
     public WingedBullFireBall(PlayScreen screen, float x, float y) {
         super(screen, x, y);
@@ -41,10 +41,15 @@ public class WingedBullFireBall extends Ball {
 
     public void update(float dt) {
         stateTime += dt;
+
         if(setToHitVillage && !hitedTheVillage){ //removing the body but the texture will stay
             world.destroyBody(b2body);
             hitedTheVillage = true;
+            removed = true;
         }
+
+
+
         else if(!hitedTheVillage) {
 
             if (setToRemove && !removed) {

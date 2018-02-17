@@ -18,7 +18,7 @@ public class LevelsInfoData {
           case 0:
               enemy = 0;
               ball = 0;
-              powerUps = 0;
+              powerUps = 1;
               levelNum = 1;
 
              break;
@@ -27,7 +27,7 @@ public class LevelsInfoData {
               //implment level 2
               enemy = 1;
               ball = 1;
-              powerUps = 0;
+              powerUps = 1;
               levelNum = 2;
              break;
 

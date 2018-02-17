@@ -165,9 +165,14 @@ public class WingedBull extends Enemy {
 
     @Override
     public void onBallHit() {
-        Hud.addScore(600);
-        gotHit = true;
+            setHealthBar((float)(getHealthBar()-0.5));
+
+        if(getHealthBar() <= 0) {
+            Hud.addScore(600);
+            gotHit = true;
+        }
     }
+
 
     @Override
     public float getTimer() {

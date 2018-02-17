@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -18,7 +19,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Scenes.Hud;
@@ -28,6 +31,7 @@ import com.dorashush.defenders.Sprites.Defender;
 import com.dorashush.defenders.Sprites.Dragon;
 import com.dorashush.defenders.Sprites.Enemy;
 import com.dorashush.defenders.Sprites.BarrierPowerUp;
+import com.dorashush.defenders.Sprites.LifePowerUp;
 import com.dorashush.defenders.Sprites.PowerUp;
 import com.dorashush.defenders.Sprites.SimpleBall;
 import com.dorashush.defenders.Sprites.WingedBull;
@@ -45,7 +49,7 @@ import java.util.Random;
 public class PlayScreen implements Screen {
     public static final int SCREEN_WIDTH = 480;
     public static final int SCREEN_HEIGHT = 800;
-    public static boolean godMode = true; //for debugging
+    public static boolean godMode = false; //for debugging
     public static final int TIME_BETWEEN_BALL_SPAWN = 4;
     public static final int TIME_BETWEEN_POWER_UP_SPAWN = 10;
     public enum GameStatus {
@@ -95,16 +99,18 @@ public class PlayScreen implements Screen {
     private int[] currentLevelInfo;
     private GameStatus gameStatus;
 
+    //Enemy hp bar - testing new method
+  //  float health = 1; // 0 = dead , 1 = full hp
+    Texture blank;
 
 
-
-
-    public PlayScreen(Defenders game ,int levelNumber , int score){
+    public PlayScreen(Defenders game ,int levelNumber , int score , int lives){
         atlas = new TextureAtlas("player_and_enemy");
 
         this.game = game;
         gameCam = new OrthographicCamera();
         gamePort = new FitViewport(Defenders.V_WIDTH/ Defenders.PPM,Defenders.V_HEIGHT/ Defenders.PPM,gameCam);
+
         gamePort.apply();
         hud = new Hud(game.batch);
         hudForEndLevel = new HudForEndLevel(game.batch);//delete if doesnt work
@@ -134,7 +140,13 @@ public class PlayScreen implements Screen {
         currentLevelInfo = levelManager.getCurrentLevelInfo(levelNumber);
         Hud.levelNumber(currentLevelInfo[3]);
         Hud.addScore(score); //to carry score from last level
+        Hud.setLives(lives);
         enemy = initlizeEnemy(currentLevelInfo[0]);
+
+        //Testing hp bar
+        blank = new Texture("blank.png");
+
+        //
 
         world.setContactListener(new WorldContactListener());
     }
@@ -158,11 +170,15 @@ public class PlayScreen implements Screen {
 
     public void handleInput(float dt){
         Vector3 touchPos = new Vector3(Gdx.input.getX(),Gdx.input.getY(),0);
-        if((touchPos.x > Defenders.V_WIDTH/2) && player.b2body.getLinearVelocity().x<=2){ //move right
+       // if((touchPos.x > Defenders.V_WIDTH/2) && player.b2body.getLinearVelocity().x<=2){ //move right
+        if((touchPos.x > Gdx.graphics.getWidth()/2) && player.b2body.getLinearVelocity().x<=2){ //move right
+
             player.b2body.applyLinearImpulse(new Vector2(0.1f,-0.1f),player.b2body.getWorldCenter(),true);
         }
 
-        else if((touchPos.x < Defenders.V_WIDTH/2) && player.b2body.getLinearVelocity().x>=-2){ //move left
+        //else if((touchPos.x < Defenders.V_WIDTH/2) && player.b2body.getLinearVelocity().x>=-2){ //move left
+        else if((touchPos.x < Gdx.graphics.getWidth()/2) && player.b2body.getLinearVelocity().x>=-2){ //move left
+
             player.b2body.applyLinearImpulse(new Vector2(-0.1f,-0.1f),player.b2body.getWorldCenter(),true);
         }
     }
@@ -223,13 +239,13 @@ public class PlayScreen implements Screen {
         b2dr.render(world, gameCam.combined);
 
         game.batch.setProjectionMatrix(gameCam.combined);
+
         gamePlayRender();
 
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
 
-        checkIfLost();
 
         if(gameStatus!=GameStatus.MID_GAME){
             endLevelHudRender();
@@ -339,7 +355,7 @@ public class PlayScreen implements Screen {
                 powerUp = new BarrierPowerUp(this);
                 break;
             case 1:
-                powerUp = new BarrierPowerUp(this);
+                powerUp = new LifePowerUp(this);
                 break;
             default:
                 powerUp = new BarrierPowerUp(this);
@@ -361,6 +377,7 @@ public class PlayScreen implements Screen {
         player.draw(game.batch);
         enemy.draw(game.batch);
 
+        checkIfLost();
         checkIfWin();
 
         for (Ball ball : ballArray) {
@@ -380,13 +397,36 @@ public class PlayScreen implements Screen {
                 powerUp.draw(game.batch);
             }
         }
+
+        //Hp bar testing
+        game.batch.setColor(Color.BLACK);
+        game.batch.draw(blank,0,(Defenders.V_HEIGHT-7)/Defenders.PPM,Defenders.V_WIDTH/Defenders.PPM,1/Defenders.PPM);
+        game.batch.setColor(Color.WHITE);
+
+
+        if(enemy.getHealthBar() > 0.7f){
+            game.batch.setColor(Color.GREEN);
+        }
+        else if(enemy.getHealthBar() > 0.4f)
+            game.batch.setColor(Color.ORANGE);
+        else
+            game.batch.setColor(Color.RED);
+
+
+        game.batch.draw(blank,0,(Defenders.V_HEIGHT-6)/Defenders.PPM,Defenders.V_WIDTH*enemy.getHealthBar()/Defenders.PPM,6/Defenders.PPM);
+        game.batch.setColor(Color.WHITE);
+        //
+
         game.batch.end();
     }
     public void checkIfLost(){
         for (Ball ball : ballArray) {
+
             if (ball.hitedTheVillage) {
-                gameStatus=GameStatus.LOOSE;
+                hud.reduceLive();
             }
+            if(hud.getLives()<=0)
+                gameStatus=GameStatus.LOOSE;
         }
     }
     public void checkIfWin(){
@@ -400,7 +440,7 @@ public class PlayScreen implements Screen {
                 if (currentLevelInfo[4] == currentLevelInfo[3])//check if last stage
                     game.setScreen(new EndGameScreen(game, Hud.getScore()+Hud.getTimeLeft()));
                 else
-                    game.setScreen(new PlayScreen(game, currentLevelInfo[3], Hud.getScore()+Hud.getTimeLeft())); //move to next level
+                    game.setScreen(new PlayScreen(game, currentLevelInfo[3], Hud.getScore()+Hud.getTimeLeft(),Hud.getLives())); //move to next level
             }
 
             else if(gameStatus==GameStatus.LOOSE){

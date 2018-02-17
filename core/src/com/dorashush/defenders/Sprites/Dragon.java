@@ -80,13 +80,16 @@ public void draw(Batch batch){
         shape.setRadius(30 /Defenders.PPM);
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
-
     }
 
     @Override
     public void onBallHit() {
-        Hud.addScore(600);
-        gotHit = true;
+        setHealthBar((float)(getHealthBar()-0.3));
+
+        if(getHealthBar() <= 0) {
+            Hud.addScore(600);
+            gotHit = true;
+        }
     }
 
     @Override
