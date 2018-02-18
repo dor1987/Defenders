@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -50,6 +52,7 @@ public class PlayScreen implements Screen {
         LOOSE,
         WIN,
         MID_GAME,
+        PAUSED,
 
     }
 
@@ -92,6 +95,10 @@ public class PlayScreen implements Screen {
     private LevelsInfoData levelManager;
     private int[] currentLevelInfo;
     private GameStatus gameStatus;
+
+    //Pause
+    Texture pause;
+
 
     //Enemy hp bar - testing new method
   //  float health = 1; // 0 = dead , 1 = full hp
@@ -145,6 +152,11 @@ public class PlayScreen implements Screen {
         blank = new Texture("blank.png");
 
         //
+
+        //pause
+        pause = new Texture("pausescreen.png");
+        //
+
 
         world.setContactListener(new WorldContactListener());
     }
@@ -230,6 +242,10 @@ public class PlayScreen implements Screen {
         if(gameStatus==GameStatus.MID_GAME) {
             update(delta);
         }
+
+        if(gameStatus==GameStatus.PAUSED){
+            waitInputSetNextScreen();
+        }
         //render the game map
         renderer.render();
 
@@ -245,7 +261,7 @@ public class PlayScreen implements Screen {
         hud.stage.draw();
 
 
-        if(gameStatus!=GameStatus.MID_GAME){
+        if(gameStatus!=GameStatus.MID_GAME && gameStatus!=GameStatus.PAUSED){
             endLevelHudRender();
             waitInputSetNextScreen();
         }
@@ -269,7 +285,7 @@ public class PlayScreen implements Screen {
 
     @Override
     public void pause() {
-
+    gameStatus=GameStatus.PAUSED;
     }
 
     @Override
@@ -419,6 +435,13 @@ public class PlayScreen implements Screen {
         game.batch.setColor(Color.WHITE);
         //
 
+        if(gameStatus==GameStatus.PAUSED){
+        //what would be shown when paused
+            game.batch.draw(pause,(Defenders.V_WIDTH/2-pause.getWidth()/3)/Defenders.PPM,Defenders.V_HEIGHT/2/Defenders.PPM,Defenders.V_WIDTH/2/Defenders.PPM,20/Defenders.PPM);
+
+
+        }
+
         game.batch.end();
     }
     public void checkIfLost(){
@@ -443,12 +466,19 @@ public class PlayScreen implements Screen {
                     game.setScreen(new EndGameScreen(game, Hud.getScore()+Hud.getTimeLeft()));
                 else
                     game.setScreen(new PlayScreen(game, currentLevelInfo[3], Hud.getScore()+Hud.getTimeLeft(),Hud.getLives())); //move to next level
+                dispose();
+
             }
 
             else if(gameStatus==GameStatus.LOOSE){
                 game.setScreen(new EndGameScreen(game, Hud.getScore()));
+                dispose();
+
             }
-            dispose();
+
+            else if(gameStatus==GameStatus.PAUSED){
+                gameStatus=GameStatus.MID_GAME;
+            }
         }
     }
 
