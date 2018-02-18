@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -15,13 +14,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Scenes.Hud;
@@ -30,7 +24,7 @@ import com.dorashush.defenders.Sprites.Ball;
 import com.dorashush.defenders.Sprites.Defender;
 import com.dorashush.defenders.Sprites.Dragon;
 import com.dorashush.defenders.Sprites.Enemy;
-import com.dorashush.defenders.Sprites.BarrierPowerUp;
+import com.dorashush.defenders.Sprites.BombPowerUp;
 import com.dorashush.defenders.Sprites.LifePowerUp;
 import com.dorashush.defenders.Sprites.PowerUp;
 import com.dorashush.defenders.Sprites.SimpleBall;
@@ -89,7 +83,7 @@ public class PlayScreen implements Screen {
     private float powerUpTimeCount;
 
     private boolean godMod;
-    private boolean speed;
+    private boolean bomb;
     private boolean points;
     private boolean extraLife;
 
@@ -119,6 +113,10 @@ public class PlayScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(map, 1/ Defenders.PPM);
         gameCam.position.set(gamePort.getWorldWidth()/2,gamePort.getWorldHeight()/2,0);
 
+        //power ups
+            bomb = false;
+
+        //
 
         //Box2d
         world = new World(new Vector2(0,0),true);
@@ -352,13 +350,13 @@ public class PlayScreen implements Screen {
 
         switch (powerUpToInitilize){
             case 0:
-                powerUp = new BarrierPowerUp(this);
+                powerUp = new BombPowerUp(this);
                 break;
             case 1:
                 powerUp = new LifePowerUp(this);
                 break;
             default:
-                powerUp = new BarrierPowerUp(this);
+                powerUp = new BombPowerUp(this);
                 break;
         }
         return powerUp;
@@ -379,6 +377,10 @@ public class PlayScreen implements Screen {
 
         checkIfLost();
         checkIfWin();
+
+        if(bomb){
+            removeAllBalls();
+        }
 
         for (Ball ball : ballArray) {
             if (ball.removed)
@@ -450,5 +452,15 @@ public class PlayScreen implements Screen {
         }
     }
 
+    public void removeAllBalls(){
+        for (Ball ball : ballArray) {
+                ball.removeFromGame();
+        }
+        bomb = false;
+    }
+
+    public void setBomb(boolean bomb) {
+        this.bomb = bomb;
+    }
 }
 

@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
 import com.dorashush.defenders.Defenders;
+import com.dorashush.defenders.Scenes.Hud;
 import com.dorashush.defenders.Screens.PlayScreen;
 
 /**
@@ -84,6 +85,11 @@ public class LifePowerUp extends PowerUp {
     @Override
     public void setToRemove() {
         this.setToRemove = true;
+    }
+
+    @Override
+    public void onPlayerCaught() {
+        Hud.addLive();
     }
 
 }

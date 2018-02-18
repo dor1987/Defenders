@@ -40,7 +40,16 @@ public class WorldContactListener implements ContactListener {
 
             } else if (fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.PLAYER)) {
                 //BALL HIT PLAYER
-                ((Ball)fixtureA.getUserData()).reverseVelocity(false,true);
+                if(fixtureB.getUserData()=="shield"){
+                    ((Ball)fixtureA.getUserData()).reverseVelocity(false,true);
+                }
+                else if(fixtureB.getUserData()=="body"){
+                    if(!godMode) {
+                        ((Ball) fixtureA.getUserData()).hitTheVillage();
+                    }
+                    ((Ball)fixtureA.getUserData()).removeFromGame();
+                }
+
             } else if (fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.ENEMY)) {
                 ((Ball)fixtureA.getUserData()).removeFromGame(); // remove ball after hit enemy
                 ((Enemy)fixtureB.getUserData()).onBallHit();
@@ -90,7 +99,20 @@ public class WorldContactListener implements ContactListener {
 
             } else if (fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.PLAYER)) {
                 //BALL HIT PLAYER
-                ((Ball)fixtureB.getUserData()).reverseVelocity(false,true);
+
+                //((Ball)fixtureB.getUserData()).reverseVelocity(false,true);
+
+                if(fixtureA.getUserData()=="shield"){
+                    ((Ball)fixtureB.getUserData()).reverseVelocity(false,true);
+                }
+                else if(fixtureA.getUserData()=="body"){
+                    if(!godMode) {
+                        ((Ball) fixtureB.getUserData()).hitTheVillage();
+                    }
+                    ((Ball)fixtureB.getUserData()).removeFromGame();
+                }
+
+
             } else if (fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.ENEMY)) {
                 //Ball hit Enemy ,Destory Enemey
                 ((Ball)fixtureB.getUserData()).removeFromGame();//remove after hitting the enemy
@@ -150,6 +172,8 @@ public class WorldContactListener implements ContactListener {
             }
             else if(fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.PLAYER)) {
                 //if hit player
+                ((PowerUp)fixtureA.getUserData()).onPlayerCaught();
+
                 ((PowerUp)fixtureA.getUserData()).setToRemove();
                 //TO-DO set godmod
             }
@@ -167,6 +191,8 @@ public class WorldContactListener implements ContactListener {
                 }
             else if(fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.PLAYER)) {
                 //if hit player
+                ((PowerUp)fixtureB.getUserData()).onPlayerCaught();
+
                 ((PowerUp)fixtureB.getUserData()).setToRemove();
                 //TO-DO set godmod
             }

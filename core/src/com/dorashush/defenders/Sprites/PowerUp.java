@@ -57,5 +57,5 @@ public abstract class PowerUp extends Sprite{
             velocity.y = -velocity.y;
         }
     }
-
+    public abstract void onPlayerCaught();
 }
