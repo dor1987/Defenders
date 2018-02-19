@@ -84,7 +84,7 @@ public void draw(Batch batch){
 
     @Override
     public void onBallHit() {
-        setHealthBar((float)(getHealthBar()-0.3));
+        setHealthBar((float)(getHealthBar()-0.25));
 
         if(getHealthBar() <= 0) {
             Hud.addScore(800);

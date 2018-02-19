@@ -60,7 +60,7 @@ public class Hud implements Disposable{
         countDownLabel = new Label(String.format("%03d",worldTimer),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         scoreLabel= new Label(String.format("%06d",score),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         timeLabel= new Label("TIME",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        levelLabel= new Label(String.format("%02d",levelNumber),new Label.LabelStyle(new BitmapFont(), Color.WHITE)); // need to update it each level
+        levelLabel= new Label(String.format("%03d",levelNumber),new Label.LabelStyle(new BitmapFont(), Color.WHITE)); // need to update it each level
         worldLabel = new Label("LEVEL",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         defenderLabel= new Label("SCORE",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
@@ -117,7 +117,7 @@ public class Hud implements Disposable{
         return worldTimer;
     }
     public static void levelNumber(int levelNumber){
-        levelLabel.setText(String.format("%02d",levelNumber));
+        levelLabel.setText(String.format("%03d",levelNumber));
     }
 
     @Override

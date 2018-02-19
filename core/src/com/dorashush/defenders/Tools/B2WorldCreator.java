@@ -38,7 +38,7 @@ public class B2WorldCreator {
 
             body = world.createBody(bdef);
 
-            shape.setAsBox(rect.getWidth()/2/ Defenders.PPM,rect.getHeight()/2/ Defenders.PPM);
+            shape.setAsBox(rect.getWidth()/2/ Defenders.PPM,(rect.getHeight())/2/ Defenders.PPM);
 
             fdef.shape= shape;
             body.createFixture(fdef);

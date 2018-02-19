@@ -45,7 +45,7 @@ public class DinoRaider extends Enemy{
         frames.clear();
 
         for(int i = 0; i<11 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("dinoraiderhit"), i *206,0,206,188));
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("dinoraiderhit"), i *204,0,204,188));
         shootAnimation = new Animation(0.2f,frames);
 
 
@@ -98,9 +98,15 @@ public class DinoRaider extends Enemy{
         TextureRegion region;
         switch(currentState){
             case WALKING:
+                setBounds(getX(),getY(),70 / Defenders.PPM,74/Defenders.PPM);
+
                 region = (TextureRegion) flyAnimation.getKeyFrame(stateTimer,true);
                 break;
             case FIREING:
+                setBounds(getX(),getY(),100 / Defenders.PPM,84/Defenders.PPM);
+                region = (TextureRegion) shootAnimation.getKeyFrame(stateTimer,true);
+                break;
+
             default:
                 region = (TextureRegion) shootAnimation.getKeyFrame(stateTimer,true);
                 break;
@@ -172,7 +178,7 @@ public class DinoRaider extends Enemy{
 
     @Override
     public void onBallHit() {
-        setHealthBar((float)(getHealthBar()-0.5));
+        setHealthBar((float)(getHealthBar()-0.2));
 
         if(getHealthBar() <= 0) {
             Hud.addScore(1000);

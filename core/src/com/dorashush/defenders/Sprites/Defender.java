@@ -58,7 +58,7 @@ public class Defender extends Sprite{
         defenderStand = new TextureRegion(getTexture(),655,106,106,155);
 
         defineDefender();
-        setBounds(0,0,50/Defenders.PPM,60/Defenders.PPM);
+        setBounds(0,0,60/Defenders.PPM,72/Defenders.PPM);
         setRegion(defenderStand);
 
         //Testing for collision
@@ -126,9 +126,8 @@ public class Defender extends Sprite{
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData("body");
 
-
         EdgeShape shield = new EdgeShape();
-        shield.set(new Vector2(-20/Defenders.PPM,26/Defenders.PPM),new Vector2(20/Defenders.PPM,26/Defenders.PPM));
+        shield.set(new Vector2(-25/Defenders.PPM,30/Defenders.PPM),new Vector2(25/Defenders.PPM,30/Defenders.PPM));
         fdef.shape = shield;
 
         b2body.createFixture(fdef).setUserData("shield");

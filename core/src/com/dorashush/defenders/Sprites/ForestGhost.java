@@ -172,10 +172,10 @@ public class ForestGhost extends Enemy{
 
     @Override
     public void onBallHit() {
-        setHealthBar((float)(getHealthBar()-0.5));
+        setHealthBar((float)(getHealthBar()-0.15));
 
         if(getHealthBar() <= 0) {
-            Hud.addScore(1000);
+            Hud.addScore(2000);
             gotHit = true;
         }
     }

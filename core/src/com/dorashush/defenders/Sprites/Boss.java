@@ -250,10 +250,10 @@ public class Boss  extends Enemy {
 
     @Override
     public void onBallHit() {
-        setHealthBar((float) (getHealthBar() - 0.3));
+        setHealthBar((float) (getHealthBar() - 0.1));
 
         if (getHealthBar() <= 0) {
-            Hud.addScore(1000);
+            Hud.addScore(9000);
             gotHit = true;
         }
     }

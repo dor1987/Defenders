@@ -6,7 +6,7 @@ package com.dorashush.defenders.Tools;
 
 
 public class LevelsInfoData {
-    public static final int AMOUNT_OF_LEVELS = 8;
+    public static final int AMOUNT_OF_LEVELS = 9;
     private int enemy;
     private int ball;
     private int powerUps;
@@ -27,6 +27,7 @@ public class LevelsInfoData {
               timeBetweenBalls=4;
               amountOfBallsPerShoot = 1;
               timeBetweenPowerUps = 5;
+
              break;
 
           case 1:
