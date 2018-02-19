@@ -80,7 +80,7 @@ public class SimpleBall extends Ball {
 
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(24 /Defenders.PPM);
+        shape.setRadius(19 /Defenders.PPM);
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
 

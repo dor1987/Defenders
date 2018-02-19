@@ -10,10 +10,10 @@ import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Screens.PlayScreen;
 
 /**
- * Created by Dor on 01/27/18.
+ * Created by Dor on 02/19/18.
  */
 
-public class WingedBullFireBall extends Ball {
+public class DinoRaiderBall extends Ball{
     private float stateTime;
     private Animation moveAnimation;
     private Array<TextureRegion> frames;
@@ -22,15 +22,15 @@ public class WingedBullFireBall extends Ball {
     private boolean setToHitVillage;
     //public boolean hitedTheVillage;
 
-    public WingedBullFireBall(PlayScreen screen, float x, float y) {
+    public DinoRaiderBall(PlayScreen screen, float x, float y) {
         super(screen, x, y);
 
         frames = new Array<TextureRegion>();
-        for(int i = 0; i<3 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("bull_shot"), i *76,0,76,34));
+        for(int i = 0; i<4 ; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("dinoraiderball"), i *108,0,108,49));
         moveAnimation = new Animation(0.2f,frames);
         stateTime = 0;
-        setBounds(getX(),getY(),70 / Defenders.PPM,34/Defenders.PPM);
+        setBounds(getX(),getY(),108 / Defenders.PPM,49/Defenders.PPM);
         setToRemove = false;
         removed = false;
 
@@ -57,8 +57,8 @@ public class WingedBullFireBall extends Ball {
                 removed = true;
             } else if (!removed) {
                 setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
-              //  TextureRegion frame =(TextureRegion) moveAnimation.getKeyFrame(stateTime, true);
-              //  frame.flip(true,false);
+                //  TextureRegion frame =(TextureRegion) moveAnimation.getKeyFrame(stateTime, true);
+                //  frame.flip(true,false);
                 setRegion((TextureRegion) moveAnimation.getKeyFrame(stateTime, true));
                 //setRegion(frame);
 
@@ -85,7 +85,7 @@ public class WingedBullFireBall extends Ball {
 
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(12 /Defenders.PPM);
+        shape.setRadius(14 /Defenders.PPM);
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
 

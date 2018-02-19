@@ -22,14 +22,22 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Scenes.Hud;
 import com.dorashush.defenders.Scenes.HudForEndLevel;
+import com.dorashush.defenders.Sprites.Alien;
+import com.dorashush.defenders.Sprites.AlienBall;
 import com.dorashush.defenders.Sprites.Ball;
 import com.dorashush.defenders.Sprites.Defender;
+import com.dorashush.defenders.Sprites.DinoRaider;
+import com.dorashush.defenders.Sprites.DinoRaiderBall;
 import com.dorashush.defenders.Sprites.Dragon;
 import com.dorashush.defenders.Sprites.Enemy;
 import com.dorashush.defenders.Sprites.BombPowerUp;
+import com.dorashush.defenders.Sprites.ForestWitch;
 import com.dorashush.defenders.Sprites.LifePowerUp;
+import com.dorashush.defenders.Sprites.LightingPowerUp;
+import com.dorashush.defenders.Sprites.PointsPowerUp;
 import com.dorashush.defenders.Sprites.PowerUp;
 import com.dorashush.defenders.Sprites.SimpleBall;
+import com.dorashush.defenders.Sprites.SpeedChangingBall;
 import com.dorashush.defenders.Sprites.WingedBull;
 import com.dorashush.defenders.Sprites.WingedBullFireBall;
 import com.dorashush.defenders.Tools.B2WorldCreator;
@@ -45,9 +53,12 @@ import java.util.Random;
 public class PlayScreen implements Screen {
     public static final int SCREEN_WIDTH = 480;
     public static final int SCREEN_HEIGHT = 800;
-    public static boolean godMode = false; //for debugging
+    public static boolean godMode = true; //for debugging
     public static final int TIME_BETWEEN_BALL_SPAWN = 4;
     public static final int TIME_BETWEEN_POWER_UP_SPAWN = 10;
+
+
+
     public enum GameStatus {
         LOOSE,
         WIN,
@@ -96,6 +107,14 @@ public class PlayScreen implements Screen {
     private int[] currentLevelInfo;
     private GameStatus gameStatus;
 
+    private int enemyType;
+    private int ballType;
+    private int powerUpsType;
+    private int levelNum;
+    private int timeBetweenBalls;
+    private int amountOfBallsPerShoot;
+    private int timeBetweenPowerUps;
+    private int amountOfLevel;
     //Pause
     Texture pause;
 
@@ -106,7 +125,7 @@ public class PlayScreen implements Screen {
 
 
     public PlayScreen(Defenders game ,int levelNumber , int score , int lives){
-        atlas = new TextureAtlas("player_and_enemy");
+        atlas = new TextureAtlas("final_animation_for_game.atlas");
 
         this.game = game;
         gameCam = new OrthographicCamera();
@@ -143,10 +162,22 @@ public class PlayScreen implements Screen {
         gameStatus=GameStatus.MID_GAME;
         levelManager = new LevelsInfoData();
         currentLevelInfo = levelManager.getCurrentLevelInfo(levelNumber);
-        Hud.levelNumber(currentLevelInfo[3]);
+
+        //From the level info array to variables
+        enemyType = currentLevelInfo[0];
+        ballType = currentLevelInfo[1];
+        powerUpsType = currentLevelInfo[2];
+        levelNum = currentLevelInfo[3];
+        amountOfLevel = currentLevelInfo[4];
+        timeBetweenBalls=currentLevelInfo[5];
+        amountOfBallsPerShoot = currentLevelInfo[6];
+        timeBetweenPowerUps = currentLevelInfo[7];
+
+
+        Hud.levelNumber(levelNum);
         Hud.addScore(score); //to carry score from last level
         Hud.setLives(lives);
-        enemy = initlizeEnemy(currentLevelInfo[0]);
+        enemy = initlizeEnemy(enemyType);
 
         //Testing hp bar
         blank = new Texture("blank.png");
@@ -183,13 +214,18 @@ public class PlayScreen implements Screen {
        // if((touchPos.x > Defenders.V_WIDTH/2) && player.b2body.getLinearVelocity().x<=2){ //move right
         if((touchPos.x > Gdx.graphics.getWidth()/2) && player.b2body.getLinearVelocity().x<=2){ //move right
 
-            player.b2body.applyLinearImpulse(new Vector2(0.1f,-0.1f),player.b2body.getWorldCenter(),true);
+           player.b2body.applyLinearImpulse(new Vector2(0.1f,-0.1f),player.b2body.getWorldCenter(),true);
+           // player.b2body.applyForce(new Vector2(2f,0),player.b2body.getWorldCenter(),true);
+            //player.b2body.setLinearVelocity(5f,0);
         }
 
         //else if((touchPos.x < Defenders.V_WIDTH/2) && player.b2body.getLinearVelocity().x>=-2){ //move left
         else if((touchPos.x < Gdx.graphics.getWidth()/2) && player.b2body.getLinearVelocity().x>=-2){ //move left
 
             player.b2body.applyLinearImpulse(new Vector2(-0.1f,-0.1f),player.b2body.getWorldCenter(),true);
+           // player.b2body.applyForce(new Vector2(-2f,0),player.b2body.getWorldCenter(),true);
+          //  player.b2body.setLinearVelocity(-5f,0);
+
         }
     }
 
@@ -207,8 +243,9 @@ public class PlayScreen implements Screen {
 
             //add balls to game
             ballTimeCount += dt;
-            if (ballTimeCount >= TIME_BETWEEN_BALL_SPAWN) {
-                ballArray.add(initlizeBall(currentLevelInfo[1]));
+            if (ballTimeCount >= timeBetweenBalls) {
+                for(int i = 0 ; i<amountOfBallsPerShoot;i++)
+                    ballArray.add(initlizeBall(ballType));
                 ballTimeCount = 0;
                 //enemy.doShootAnimation();
             }
@@ -216,8 +253,8 @@ public class PlayScreen implements Screen {
             //add powerups to game
 
             powerUpTimeCount += dt;
-            if (powerUpTimeCount >= TIME_BETWEEN_POWER_UP_SPAWN) {
-                powerUpArray.add(initlizePowerUp(currentLevelInfo[2]));
+            if (powerUpTimeCount >= timeBetweenPowerUps) {
+                powerUpArray.add(initlizePowerUp(powerUpsType));
                 powerUpTimeCount = 0;
             }
 
@@ -328,6 +365,21 @@ public class PlayScreen implements Screen {
 
                 break;
 
+            case 2:
+                enemy = new DinoRaider(this,240/ Defenders.PPM,750/Defenders.PPM);
+
+                break;
+
+            case 3:
+                enemy = new Alien(this,240/ Defenders.PPM,750/Defenders.PPM);
+
+                break;
+
+            case 4:
+                enemy = new ForestWitch(this,240/ Defenders.PPM,750/Defenders.PPM);
+
+                break;
+
             default:
                 enemy = new Dragon(this,240/ Defenders.PPM,750/Defenders.PPM);
 
@@ -351,6 +403,21 @@ public class PlayScreen implements Screen {
 
                 break;
 
+            case 2:
+                ball = new DinoRaiderBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
+
+                break;
+
+            case 3:
+                ball = new AlienBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
+
+                break;
+
+            case 4:
+                ball = new SpeedChangingBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
+
+                break;
+
             default:
                 ball = new SimpleBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
                 break;
@@ -363,7 +430,7 @@ public class PlayScreen implements Screen {
         PowerUp powerUp;
 
         powerUpToInitilize = generateNumber(powerUpToInitilize);
-
+       // powerUpToInitilize = 3;
         switch (powerUpToInitilize){
             case 0:
                 powerUp = new BombPowerUp(this);
@@ -371,6 +438,15 @@ public class PlayScreen implements Screen {
             case 1:
                 powerUp = new LifePowerUp(this);
                 break;
+
+            case 2:
+                powerUp = new PointsPowerUp(this);
+                break;
+
+            case 3:
+                powerUp = new LightingPowerUp(this);
+                break;
+
             default:
                 powerUp = new BombPowerUp(this);
                 break;
@@ -462,12 +538,11 @@ public class PlayScreen implements Screen {
     public void waitInputSetNextScreen(){
         if(Gdx.input.justTouched()){
             if(gameStatus==GameStatus.WIN){
-                if (currentLevelInfo[4] == currentLevelInfo[3])//check if last stage
+                if (amountOfLevel == levelNum)//check if last stage
                     game.setScreen(new EndGameScreen(game, Hud.getScore()+Hud.getTimeLeft()));
                 else
-                    game.setScreen(new PlayScreen(game, currentLevelInfo[3], Hud.getScore()+Hud.getTimeLeft(),Hud.getLives())); //move to next level
+                    game.setScreen(new PlayScreen(game, levelNum, Hud.getScore()+Hud.getTimeLeft(),Hud.getLives())); //move to next level
                 dispose();
-
             }
 
             else if(gameStatus==GameStatus.LOOSE){

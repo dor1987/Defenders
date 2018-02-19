@@ -23,6 +23,8 @@ public abstract class Enemy extends Sprite {
     public boolean gotHit;
     public float stateTime;
     private float healthBar; //testing health bar
+    public Vector2 velocity2; //for standing
+    public Vector2 velocity3; //for sprinting
 
 
     public Enemy(PlayScreen screen, float x, float y){
@@ -31,7 +33,10 @@ public abstract class Enemy extends Sprite {
         setPosition(x,y);
         defineEnemy();
         velocity = new Vector2(1,0);
-       // stateTime =0;
+        velocity2 = new Vector2(0,0);
+        velocity3 = new Vector2(0,0);
+
+        // stateTime =0;
 
         //testing health bar
         healthBar =1;
@@ -54,11 +59,13 @@ public abstract class Enemy extends Sprite {
 
     protected abstract void defineEnemy();
     public abstract void update(float dt);
+    public abstract void onBallHit();
+    public abstract float getTimer();
     public void reverseVelocity(boolean x,boolean y){
         if(x)
             velocity.x= -velocity.x;
     }
-    public abstract void onBallHit();
-    public abstract float getTimer();
+
+
 
 }

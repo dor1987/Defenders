@@ -1,5 +1,6 @@
 package com.dorashush.defenders.Sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -9,11 +10,13 @@ import com.badlogic.gdx.utils.Array;
 import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Screens.PlayScreen;
 
+import java.util.Random;
+
 /**
- * Created by Dor on 01/27/18.
+ * Created by Dor on 02/18/18.
  */
 
-public class WingedBullFireBall extends Ball {
+public class SpeedChangingBall extends Ball{
     private float stateTime;
     private Animation moveAnimation;
     private Array<TextureRegion> frames;
@@ -21,26 +24,32 @@ public class WingedBullFireBall extends Ball {
     // public boolean removed;
     private boolean setToHitVillage;
     //public boolean hitedTheVillage;
+    private float speedChangeTimer;
+    private boolean toIncreaseSpeed;
 
-    public WingedBullFireBall(PlayScreen screen, float x, float y) {
+    public SpeedChangingBall(PlayScreen screen, float x, float y) {
         super(screen, x, y);
 
         frames = new Array<TextureRegion>();
         for(int i = 0; i<3 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("bull_shot"), i *76,0,76,34));
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("forestwitchball2"), i *91,0,91,80));
         moveAnimation = new Animation(0.2f,frames);
         stateTime = 0;
-        setBounds(getX(),getY(),70 / Defenders.PPM,34/Defenders.PPM);
+        setBounds(getX(),getY(),91 / Defenders.PPM,80/Defenders.PPM);
         setToRemove = false;
         removed = false;
 
         setToHitVillage = false;
         hitedTheVillage = false;
 
+        speedChangeTimer=0;
+        toIncreaseSpeed = true;
+
     }
 
     public void update(float dt) {
         stateTime += dt;
+        speedChangeTimer+=dt;
 
         if(setToHitVillage && !hitedTheVillage){ //removing the body but the texture will stay
             world.destroyBody(b2body);
@@ -57,10 +66,15 @@ public class WingedBullFireBall extends Ball {
                 removed = true;
             } else if (!removed) {
                 setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
-              //  TextureRegion frame =(TextureRegion) moveAnimation.getKeyFrame(stateTime, true);
-              //  frame.flip(true,false);
+                //  TextureRegion frame =(TextureRegion) moveAnimation.getKeyFrame(stateTime, true);
+                //  frame.flip(true,false);
                 setRegion((TextureRegion) moveAnimation.getKeyFrame(stateTime, true));
                 //setRegion(frame);
+
+
+
+
+
 
                 if (velocity.x == 0 && velocity.y == 0) {
                     velocity.x = (float) (ballVelocity * Math.cos(ballAngle));
@@ -70,6 +84,23 @@ public class WingedBullFireBall extends Ball {
                 setFlip(true,false);
                 setRotation(velocity.angle());
                 b2body.setLinearVelocity(velocity);
+
+                //TO-DO  ADD FUNCTION TO CHANGE SPEED DEPENDS ON DELTA TIME
+
+                if(speedChangeTimer>=1){
+                    if(toIncreaseSpeed) {
+                        velocity.x *= 2;
+                        velocity.y *= 2;
+                        toIncreaseSpeed = false;
+                    }
+                    else if(!toIncreaseSpeed){
+                        velocity.x /= 2;
+                        velocity.y /= 2;
+                        toIncreaseSpeed = true;
+                    }
+                    Gdx.app.log("Speed Changed","");
+                    speedChangeTimer=0;
+                }
             }
         }
     }
@@ -85,7 +116,7 @@ public class WingedBullFireBall extends Ball {
 
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(12 /Defenders.PPM);
+        shape.setRadius(16 /Defenders.PPM);
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
 
@@ -100,4 +131,10 @@ public class WingedBullFireBall extends Ball {
         this.setToHitVillage=true;
     }
 
+
+    public int generateNumber(int maxNum) {
+        Random random = new Random();
+        int result = random.nextInt(maxNum); //to avoid maxnum been 0
+        return result;
+    }
 }

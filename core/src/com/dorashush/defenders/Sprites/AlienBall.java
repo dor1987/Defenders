@@ -1,5 +1,9 @@
 package com.dorashush.defenders.Sprites;
 
+/**
+ * Created by Dor on 02/19/18.
+ */
+
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -9,11 +13,7 @@ import com.badlogic.gdx.utils.Array;
 import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Screens.PlayScreen;
 
-/**
- * Created by Dor on 01/27/18.
- */
-
-public class WingedBullFireBall extends Ball {
+public class AlienBall extends Ball {
     private float stateTime;
     private Animation moveAnimation;
     private Array<TextureRegion> frames;
@@ -22,15 +22,15 @@ public class WingedBullFireBall extends Ball {
     private boolean setToHitVillage;
     //public boolean hitedTheVillage;
 
-    public WingedBullFireBall(PlayScreen screen, float x, float y) {
+    public AlienBall(PlayScreen screen, float x, float y) {
         super(screen, x, y);
 
         frames = new Array<TextureRegion>();
         for(int i = 0; i<3 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("bull_shot"), i *76,0,76,34));
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("allienball"), i *90,0,90,76));
         moveAnimation = new Animation(0.2f,frames);
         stateTime = 0;
-        setBounds(getX(),getY(),70 / Defenders.PPM,34/Defenders.PPM);
+        setBounds(getX(),getY(),90 / Defenders.PPM,76/Defenders.PPM);
         setToRemove = false;
         removed = false;
 
@@ -57,8 +57,8 @@ public class WingedBullFireBall extends Ball {
                 removed = true;
             } else if (!removed) {
                 setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
-              //  TextureRegion frame =(TextureRegion) moveAnimation.getKeyFrame(stateTime, true);
-              //  frame.flip(true,false);
+                //  TextureRegion frame =(TextureRegion) moveAnimation.getKeyFrame(stateTime, true);
+                //  frame.flip(true,false);
                 setRegion((TextureRegion) moveAnimation.getKeyFrame(stateTime, true));
                 //setRegion(frame);
 
@@ -87,6 +87,7 @@ public class WingedBullFireBall extends Ball {
         CircleShape shape = new CircleShape();
         shape.setRadius(12 /Defenders.PPM);
         fdef.shape = shape;
+        fdef.isSensor = true;
         b2body.createFixture(fdef).setUserData(this);
 
     }

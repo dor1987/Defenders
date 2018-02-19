@@ -25,11 +25,11 @@ public class LifePowerUp extends PowerUp {
     public LifePowerUp(PlayScreen screen) {
         super(screen);
         frames = new Array<TextureRegion>();
-        for(int i = 0; i<6 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("ball3"), i *49,0,49,40));
+        for(int i = 0; i<8 ; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("heartcoin"), i *40,0,40,40));
         moveAnimation = new Animation(0.2f,frames);
         stateTime = 0;
-        setBounds(getX(),getY(),49 / Defenders.PPM,40/Defenders.PPM);
+        setBounds(getX(),getY(),30 / Defenders.PPM,30/Defenders.PPM);
         setToRemove = false;
         removed = false;
 
@@ -76,7 +76,7 @@ public class LifePowerUp extends PowerUp {
 
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(24 /Defenders.PPM);
+        shape.setRadius(18 /Defenders.PPM);
         fdef.shape = shape;
         fdef.isSensor = true;
         b2body.createFixture(fdef).setUserData(this);

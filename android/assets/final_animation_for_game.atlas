@@ -1,0 +1,314 @@
+
+final_animation_for_game.png
+size: 4096,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+allienball
+  rotate: false
+  xy: 3736, 817
+  size: 270, 76
+  orig: 270, 76
+  offset: 0, 0
+  index: -1
+alliendie
+  rotate: false
+  xy: 3449, 608
+  size: 641, 98
+  orig: 641, 98
+  offset: 0, 0
+  index: -1
+allienhit
+  rotate: false
+  xy: 3596, 38
+  size: 470, 109
+  orig: 470, 109
+  offset: 0, 0
+  index: -1
+allienwalk
+  rotate: false
+  xy: 624, 436
+  size: 445, 103
+  orig: 445, 103
+  offset: 0, 0
+  index: -1
+ball3
+  rotate: false
+  xy: 3596, 149
+  size: 490, 40
+  orig: 490, 40
+  offset: 0, 0
+  index: -1
+ball5
+  rotate: false
+  xy: 3043, 9
+  size: 551, 91
+  orig: 551, 91
+  offset: 0, 0
+  index: -1
+bombcoin
+  rotate: false
+  xy: 2, 608
+  size: 750, 36
+  orig: 750, 36
+  offset: 0, 0
+  index: -1
+bossball1
+  rotate: false
+  xy: 3736, 779
+  size: 257, 36
+  orig: 257, 36
+  offset: 0, 0
+  index: -1
+bosshit1
+  rotate: false
+  xy: 2238, 102
+  size: 936, 87
+  orig: 936, 87
+  offset: 0, 0
+  index: -1
+bosshit2
+  rotate: false
+  xy: 2, 2
+  size: 2364, 95
+  orig: 2364, 95
+  offset: 0, 0
+  index: -1
+bossstand
+  rotate: false
+  xy: 2686, 407
+  size: 730, 87
+  orig: 730, 87
+  offset: 0, 0
+  index: -1
+bosswalk
+  rotate: false
+  xy: 1071, 446
+  size: 745, 93
+  orig: 745, 93
+  offset: 0, 0
+  index: -1
+bull_attack
+  rotate: false
+  xy: 2, 435
+  size: 620, 171
+  orig: 620, 171
+  offset: 0, 0
+  index: -1
+bull_death
+  rotate: false
+  xy: 2, 99
+  size: 651, 162
+  orig: 651, 162
+  offset: 0, 0
+  index: -1
+bull_shot
+  rotate: false
+  xy: 1890, 789
+  size: 240, 34
+  orig: 240, 34
+  offset: 0, 0
+  index: -1
+bull_walk
+  rotate: false
+  xy: 2, 263
+  size: 915, 170
+  orig: 915, 170
+  offset: 0, 0
+  index: -1
+dinoradierdeath
+  rotate: false
+  xy: 2, 666
+  size: 1886, 157
+  orig: 1886, 157
+  offset: 0, 0
+  index: -1
+dinoradierwalk
+  rotate: false
+  xy: 919, 282
+  size: 1067, 152
+  orig: 1067, 152
+  offset: 0, 0
+  index: -1
+dinoraiderball
+  rotate: false
+  xy: 3449, 728
+  size: 432, 49
+  orig: 432, 49
+  offset: 0, 0
+  index: -1
+dinoraiderhit
+  rotate: false
+  xy: 2, 825
+  size: 2227, 188
+  orig: 2227, 188
+  offset: 0, 0
+  index: -1
+dinoraiderstand
+  rotate: false
+  xy: 2368, 496
+  size: 1072, 148
+  orig: 1072, 148
+  offset: 0, 0
+  index: -1
+dollarcoin
+  rotate: false
+  xy: 2252, 446
+  size: 432, 48
+  orig: 432, 48
+  offset: 0, 0
+  index: -1
+firedragonwalk
+  rotate: false
+  xy: 1724, 137
+  size: 512, 143
+  orig: 512, 143
+  offset: 0, 0
+  index: -1
+forestghostball
+  rotate: false
+  xy: 1890, 704
+  size: 229, 83
+  orig: 229, 83
+  offset: 0, 0
+  index: -1
+forestghostdeath
+  rotate: false
+  xy: 1862, 514
+  size: 495, 130
+  orig: 495, 130
+  offset: 0, 0
+  index: -1
+forestghosthit
+  rotate: false
+  xy: 754, 541
+  size: 1106, 123
+  orig: 1106, 123
+  offset: 0, 0
+  index: -1
+forestghostwalk
+  rotate: false
+  xy: 3442, 394
+  size: 569, 123
+  orig: 569, 123
+  offset: 0, 0
+  index: -1
+forestwhichball1
+  rotate: false
+  xy: 1890, 682
+  size: 184, 20
+  orig: 184, 20
+  offset: 0, 0
+  index: -1
+forestwitchball2
+  rotate: false
+  xy: 3743, 895
+  size: 273, 80
+  orig: 273, 80
+  offset: 0, 0
+  index: -1
+forestwitchdeath
+  rotate: false
+  xy: 3995, 708
+  size: 97, 107
+  orig: 97, 107
+  offset: 0, 0
+  index: -1
+forestwitchhit
+  rotate: false
+  xy: 3331, 191
+  size: 760, 106
+  orig: 760, 106
+  offset: 0, 0
+  index: -1
+forestwitchwalk
+  rotate: false
+  xy: 2368, 8
+  size: 673, 92
+  orig: 673, 92
+  offset: 0, 0
+  index: -1
+forestwitchwalk2
+  rotate: false
+  xy: 3400, 299
+  size: 684, 93
+  orig: 684, 93
+  offset: 0, 0
+  index: -1
+heartcoin
+  rotate: false
+  xy: 3743, 977
+  size: 320, 36
+  orig: 320, 36
+  offset: 0, 0
+  index: -1
+icedinoball
+  rotate: false
+  xy: 1890, 646
+  size: 163, 34
+  orig: 163, 34
+  offset: 0, 0
+  index: -1
+icedinodeath
+  rotate: false
+  xy: 2238, 214
+  size: 1091, 84
+  orig: 1091, 84
+  offset: 0, 0
+  index: -1
+icedinohit
+  rotate: false
+  xy: 2121, 646
+  size: 1326, 133
+  orig: 1326, 133
+  offset: 0, 0
+  index: -1
+icedinowalk
+  rotate: false
+  xy: 3442, 519
+  size: 571, 87
+  orig: 571, 87
+  offset: 0, 0
+  index: -1
+normalbullball
+  rotate: false
+  xy: 1988, 313
+  size: 565, 131
+  orig: 565, 131
+  offset: 0, 0
+  index: -1
+normalbulldeath
+  rotate: false
+  xy: 2231, 905
+  size: 1510, 108
+  orig: 1510, 108
+  offset: 0, 0
+  index: -1
+normalbullhit
+  rotate: false
+  xy: 2231, 781
+  size: 1503, 122
+  orig: 1503, 122
+  offset: 0, 0
+  index: -1
+normalbullwalk
+  rotate: false
+  xy: 2555, 300
+  size: 843, 105
+  orig: 843, 105
+  offset: 0, 0
+  index: -1
+playersheet
+  rotate: false
+  xy: 655, 106
+  size: 1067, 155
+  orig: 1067, 155
+  offset: 0, 0
+  index: -1
+speedcoin
+  rotate: false
+  xy: 1818, 446
+  size: 432, 48
+  orig: 432, 48
+  offset: 0, 0
+  index: -1

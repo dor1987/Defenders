@@ -10,24 +10,24 @@ import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Screens.PlayScreen;
 
 /**
- * Created by Dor on 01/25/18.
+ * Created by Dor on 02/19/18.
  */
 
-public class BombPowerUp extends PowerUp{
+public class LightingPowerUp extends PowerUp{
     private float stateTime;
     private Animation moveAnimation;
     private Array<TextureRegion> frames;
     private boolean setToRemove;
     //private boolean setGotCollected;
 
-    public BombPowerUp(PlayScreen screen) {
+    public LightingPowerUp(PlayScreen screen) {
         super(screen);
         frames = new Array<TextureRegion>();
-        for(int i = 0; i<12 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("bombcoin"), i *52,0,52,36));
+        for(int i = 0; i<9 ; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("speedcoin"), i *48,0,48,48));
         moveAnimation = new Animation(0.2f,frames);
         stateTime = 0;
-        setBounds(getX(),getY(),52 / Defenders.PPM,36/Defenders.PPM);
+        setBounds(getX(),getY(),40 / Defenders.PPM,40/Defenders.PPM);
         setToRemove = false;
         removed = false;
 
@@ -43,23 +43,23 @@ public class BombPowerUp extends PowerUp{
             removed = true;
         }
 
-            if (setToRemove && !removed) {
-                world.destroyBody(b2body);
-                removed = true;
-            }
+        if (setToRemove && !removed) {
+            world.destroyBody(b2body);
+            removed = true;
+        }
 
-            else if (!removed) {
-                setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
-                setRegion((TextureRegion) moveAnimation.getKeyFrame(stateTime, true));
+        else if (!removed) {
+            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
+            setRegion((TextureRegion) moveAnimation.getKeyFrame(stateTime, true));
 
-                if (velocity.x == 0 && velocity.y == 0) {
-                    velocity.x = (float) (powerUpVelocity * Math.cos(powerUpAngle));
-                    velocity.y = (float) (powerUpVelocity * Math.sin(powerUpAngle));
-                }
-                //setOriginCenter();
-                //setRotation(velocity.angle());
-                b2body.setLinearVelocity(velocity);
+            if (velocity.x == 0 && velocity.y == 0) {
+                velocity.x = (float) (powerUpVelocity * Math.cos(powerUpAngle));
+                velocity.y = (float) (powerUpVelocity * Math.sin(powerUpAngle));
             }
+            //setOriginCenter();
+            //setRotation(velocity.angle());
+            b2body.setLinearVelocity(velocity);
+        }
 
     }
 
@@ -91,3 +91,4 @@ public class BombPowerUp extends PowerUp{
     }
 
 }
+

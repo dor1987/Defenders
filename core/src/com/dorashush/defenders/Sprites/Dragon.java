@@ -27,7 +27,7 @@ public class Dragon extends Enemy {
         super(screen, x, y);
         frames = new Array<TextureRegion>();
         for(int i = 0; i<4 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("dragon"), i *128,0,128,143));
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("firedragonwalk"), i *128,0,128,143));
         flyAnimation = new Animation(0.2f,frames);
         stateTime = 0;
         setBounds(getX(),getY(),128 /Defenders.PPM,143/Defenders.PPM);
@@ -87,7 +87,7 @@ public void draw(Batch batch){
         setHealthBar((float)(getHealthBar()-0.3));
 
         if(getHealthBar() <= 0) {
-            Hud.addScore(600);
+            Hud.addScore(800);
             gotHit = true;
         }
     }

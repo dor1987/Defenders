@@ -25,8 +25,6 @@ public abstract class PowerUp extends Sprite{
 
 
 
-
-
     public PowerUp(PlayScreen screen){
         this.world = screen.getWorld();
         this.screen = screen;
