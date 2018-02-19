@@ -9,11 +9,13 @@ import com.badlogic.gdx.utils.Array;
 import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Screens.PlayScreen;
 
+import java.util.Random;
+
 /**
  * Created by Dor on 02/19/18.
  */
 
-public class ForestGhostBall  extends Ball {
+public class IceDinoBall  extends Ball {
     private float stateTime;
     private Animation moveAnimation;
     private Array<TextureRegion> frames;
@@ -21,26 +23,32 @@ public class ForestGhostBall  extends Ball {
     // public boolean removed;
     private boolean setToHitVillage;
     //public boolean hitedTheVillage;
+    private float speedChangeTimer;
+    private boolean toIncreaseSpeed;
+    private float RandomTime;
 
-    public ForestGhostBall(PlayScreen screen, float x, float y) {
+    public IceDinoBall(PlayScreen screen, float x, float y) {
         super(screen, x, y);
 
         frames = new Array<TextureRegion>();
         for(int i = 0; i<3 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("forestghostball"), i *80,0,80,83));
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("icedinoball"), i *62,0,62,34));
         moveAnimation = new Animation(0.2f,frames);
         stateTime = 0;
-        setBounds(getX(),getY(),77 / Defenders.PPM,83/Defenders.PPM);
+        setBounds(getX(),getY(),55 / Defenders.PPM,34/Defenders.PPM);
         setToRemove = false;
         removed = false;
 
         setToHitVillage = false;
         hitedTheVillage = false;
-
+        speedChangeTimer =0;
+        toIncreaseSpeed = true;
+        RandomTime = generateNumber(4);
     }
 
     public void update(float dt) {
         stateTime += dt;
+        speedChangeTimer +=dt;
 
         if(setToHitVillage && !hitedTheVillage){ //removing the body but the texture will stay
             world.destroyBody(b2body);
@@ -69,7 +77,24 @@ public class ForestGhostBall  extends Ball {
                 setOriginCenter();
                 setFlip(true,false);
                 setRotation(velocity.angle());
+
+
                 b2body.setLinearVelocity(velocity);
+
+                if(speedChangeTimer>=RandomTime){
+                    if(toIncreaseSpeed) {
+                        velocity.x *= 2;
+                        velocity.y *= 2;
+                        toIncreaseSpeed = false;
+                    }
+                    else if(!toIncreaseSpeed){
+                        velocity.x /= 2;
+                        velocity.y /= 2;
+                        toIncreaseSpeed = true;
+                    }
+                    RandomTime = generateNumber(4);
+                    speedChangeTimer=0;
+                }
             }
         }
     }
@@ -78,16 +103,15 @@ public class ForestGhostBall  extends Ball {
     protected void defineBall() {
         BodyDef bdef = new BodyDef();
         // bdef.position.set(240/ Defenders.PPM,500/Defenders.PPM);//need 2 change by enemy spot
-        bdef.position.set(getX(),getY());//need 2 change by enemy spot
+        bdef.position.set(getX(),getY()-(5/Defenders.PPM));//need 2 change by enemy spot
 
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(16 /Defenders.PPM);
+        shape.setRadius(15 /Defenders.PPM);
         fdef.shape = shape;
-        fdef.isSensor = true;
         b2body.createFixture(fdef).setUserData(this);
 
     }
@@ -101,4 +125,10 @@ public class ForestGhostBall  extends Ball {
         this.setToHitVillage=true;
     }
 
+    public int generateNumber(int maxNum) {
+        Random random = new Random();
+        int result = random.nextInt(maxNum+1); //to avoid maxnum been 0
+
+        return result;
+    }
 }

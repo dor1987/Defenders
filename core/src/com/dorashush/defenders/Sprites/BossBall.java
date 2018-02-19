@@ -13,7 +13,7 @@ import com.dorashush.defenders.Screens.PlayScreen;
  * Created by Dor on 02/19/18.
  */
 
-public class ForestGhostBall  extends Ball {
+public class BossBall extends Ball{
     private float stateTime;
     private Animation moveAnimation;
     private Array<TextureRegion> frames;
@@ -22,15 +22,15 @@ public class ForestGhostBall  extends Ball {
     private boolean setToHitVillage;
     //public boolean hitedTheVillage;
 
-    public ForestGhostBall(PlayScreen screen, float x, float y) {
+    public BossBall(PlayScreen screen, float x, float y) {
         super(screen, x, y);
 
         frames = new Array<TextureRegion>();
-        for(int i = 0; i<3 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("forestghostball"), i *80,0,80,83));
+        for(int i = 0; i<4 ; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("dinoraiderball"), i *108,0,108,49));
         moveAnimation = new Animation(0.2f,frames);
         stateTime = 0;
-        setBounds(getX(),getY(),77 / Defenders.PPM,83/Defenders.PPM);
+        setBounds(getX(),getY(),108 / Defenders.PPM,49/Defenders.PPM);
         setToRemove = false;
         removed = false;
 
@@ -85,9 +85,8 @@ public class ForestGhostBall  extends Ball {
 
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(16 /Defenders.PPM);
+        shape.setRadius(14 /Defenders.PPM);
         fdef.shape = shape;
-        fdef.isSensor = true;
         b2body.createFixture(fdef).setUserData(this);
 
     }

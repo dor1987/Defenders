@@ -3,6 +3,7 @@ package com.dorashush.defenders.Sprites;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.particles.values.RectangleSpawnShapeValue;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -121,7 +122,6 @@ public class Defender extends Sprite{
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(20 /Defenders.PPM);
-
 
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData("body");

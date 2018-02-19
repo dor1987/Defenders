@@ -25,15 +25,23 @@ import com.dorashush.defenders.Scenes.HudForEndLevel;
 import com.dorashush.defenders.Sprites.Alien;
 import com.dorashush.defenders.Sprites.AlienBall;
 import com.dorashush.defenders.Sprites.Ball;
+import com.dorashush.defenders.Sprites.Boss;
+import com.dorashush.defenders.Sprites.BossBall;
 import com.dorashush.defenders.Sprites.Defender;
 import com.dorashush.defenders.Sprites.DinoRaider;
 import com.dorashush.defenders.Sprites.DinoRaiderBall;
 import com.dorashush.defenders.Sprites.Dragon;
 import com.dorashush.defenders.Sprites.Enemy;
 import com.dorashush.defenders.Sprites.BombPowerUp;
+import com.dorashush.defenders.Sprites.ForestGhost;
+import com.dorashush.defenders.Sprites.ForestGhostBall;
 import com.dorashush.defenders.Sprites.ForestWitch;
+import com.dorashush.defenders.Sprites.IceDino;
+import com.dorashush.defenders.Sprites.IceDinoBall;
 import com.dorashush.defenders.Sprites.LifePowerUp;
 import com.dorashush.defenders.Sprites.LightingPowerUp;
+import com.dorashush.defenders.Sprites.NormalBull;
+import com.dorashush.defenders.Sprites.NormalBullBall;
 import com.dorashush.defenders.Sprites.PointsPowerUp;
 import com.dorashush.defenders.Sprites.PowerUp;
 import com.dorashush.defenders.Sprites.SimpleBall;
@@ -243,11 +251,27 @@ public class PlayScreen implements Screen {
 
             //add balls to game
             ballTimeCount += dt;
+        //boss
+        if(enemyType==666){
+            if(enemy.getHealthBar()>0.7){
+                timeBetweenBalls=4;
+            }
+
+            else if(enemy.getHealthBar()>0.4){
+                timeBetweenBalls=4;
+                amountOfBallsPerShoot=2;
+            }
+            else{
+                timeBetweenBalls=3;
+                amountOfBallsPerShoot=3;
+            }
+
+        }
+        //////////////////////////////////////////
             if (ballTimeCount >= timeBetweenBalls) {
                 for(int i = 0 ; i<amountOfBallsPerShoot;i++)
                     ballArray.add(initlizeBall(ballType));
                 ballTimeCount = 0;
-                //enemy.doShootAnimation();
             }
 
             //add powerups to game
@@ -380,6 +404,27 @@ public class PlayScreen implements Screen {
 
                 break;
 
+            case 5:
+                enemy = new ForestGhost(this,240/ Defenders.PPM,750/Defenders.PPM);
+
+                break;
+
+            case 6:
+                enemy = new NormalBull(this,240/ Defenders.PPM,750/Defenders.PPM);
+
+                break;
+
+            case 7:
+                enemy = new IceDino(this,240/ Defenders.PPM,750/Defenders.PPM);
+
+                break;
+
+            case 666:
+                enemy = new Boss(this,240/ Defenders.PPM,750/Defenders.PPM);
+
+                break;
+
+
             default:
                 enemy = new Dragon(this,240/ Defenders.PPM,750/Defenders.PPM);
 
@@ -417,6 +462,36 @@ public class PlayScreen implements Screen {
                 ball = new SpeedChangingBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
 
                 break;
+
+            case 5:
+                ball = new ForestGhostBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
+
+                break;
+
+            case 6:
+                ball = new NormalBullBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
+
+                break;
+
+            case 7:
+                ball = new IceDinoBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
+
+                break;
+
+            case 666:
+                if(enemy.getHealthBar()>0.7){
+                    ball = initlizeBall(generateNumber(4)-1); //init random ball for phase 1
+                }
+
+                else if(enemy.getHealthBar()>0.4){
+                    ball = initlizeBall(generateNumber(4)+3); //init random ball for phase 1
+                }
+                else{
+                    ball = new BossBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
+                }
+
+                break;
+
 
             default:
                 ball = new SimpleBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);

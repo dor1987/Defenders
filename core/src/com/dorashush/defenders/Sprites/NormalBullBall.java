@@ -13,7 +13,7 @@ import com.dorashush.defenders.Screens.PlayScreen;
  * Created by Dor on 02/19/18.
  */
 
-public class ForestGhostBall  extends Ball {
+public class NormalBullBall extends Ball {
     private float stateTime;
     private Animation moveAnimation;
     private Array<TextureRegion> frames;
@@ -22,15 +22,15 @@ public class ForestGhostBall  extends Ball {
     private boolean setToHitVillage;
     //public boolean hitedTheVillage;
 
-    public ForestGhostBall(PlayScreen screen, float x, float y) {
+    public NormalBullBall(PlayScreen screen, float x, float y) {
         super(screen, x, y);
 
         frames = new Array<TextureRegion>();
-        for(int i = 0; i<3 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("forestghostball"), i *80,0,80,83));
+        for(int i = 0; i<4 ; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("normalbullball"), i *142,0,142,131));
         moveAnimation = new Animation(0.2f,frames);
         stateTime = 0;
-        setBounds(getX(),getY(),77 / Defenders.PPM,83/Defenders.PPM);
+        setBounds(getX(),getY(),140 / Defenders.PPM,130/Defenders.PPM);
         setToRemove = false;
         removed = false;
 
@@ -78,16 +78,15 @@ public class ForestGhostBall  extends Ball {
     protected void defineBall() {
         BodyDef bdef = new BodyDef();
         // bdef.position.set(240/ Defenders.PPM,500/Defenders.PPM);//need 2 change by enemy spot
-        bdef.position.set(getX(),getY());//need 2 change by enemy spot
+        bdef.position.set(getX(),getY()-(10/Defenders.PPM));//need 2 change by enemy spot
 
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(16 /Defenders.PPM);
+        shape.setRadius(25 /Defenders.PPM);
         fdef.shape = shape;
-        fdef.isSensor = true;
         b2body.createFixture(fdef).setUserData(this);
 
     }

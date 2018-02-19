@@ -98,7 +98,6 @@ public class SpeedChangingBall extends Ball{
                         velocity.y /= 2;
                         toIncreaseSpeed = true;
                     }
-                    Gdx.app.log("Speed Changed","");
                     speedChangeTimer=0;
                 }
             }
