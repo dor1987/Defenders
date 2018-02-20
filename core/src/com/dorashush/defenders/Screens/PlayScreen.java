@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dorashush.defenders.Defenders;
+import com.dorashush.defenders.Scenes.Controller;
 import com.dorashush.defenders.Scenes.Hud;
 import com.dorashush.defenders.Scenes.HudForEndLevel;
 import com.dorashush.defenders.Sprites.Alien;
@@ -104,11 +105,12 @@ public class PlayScreen implements Screen {
     private Array<PowerUp> powerUpArray;
     private float powerUpTimeCount;
 
-    private boolean godMod;
+    private boolean speed;
     private boolean bomb;
     private boolean points;
     private boolean extraLife;
-
+    private float bombCoolDownTimer;
+    private float speedCoolDownTimer;
 
     //Stage managment
     private LevelsInfoData levelManager;
@@ -123,6 +125,11 @@ public class PlayScreen implements Screen {
     private int amountOfBallsPerShoot;
     private int timeBetweenPowerUps;
     private int amountOfLevel;
+
+    //testing Controller
+    Controller controller;
+
+    //
     //Pause
     Texture pause;
 
@@ -131,6 +138,13 @@ public class PlayScreen implements Screen {
   //  float health = 1; // 0 = dead , 1 = full hp
     Texture blank;
 
+    //Player movment speeds
+    Vector2 normalSpeedLeft;
+    Vector2 lightingSpeedLeft;
+    Vector2 normalSpeedRight;
+    Vector2 lightingSpeedRight;
+    Vector2 speedToUseRight;
+    Vector2 speedToUseLeft;
 
     public PlayScreen(Defenders game ,int levelNumber , int score , int lives){
         atlas = new TextureAtlas("final_animation_for_game.atlas");
@@ -149,7 +163,7 @@ public class PlayScreen implements Screen {
 
         //power ups
             bomb = false;
-
+            speed = false;
         //
 
         //Box2d
@@ -196,6 +210,18 @@ public class PlayScreen implements Screen {
         pause = new Texture("pausescreen.png");
         //
 
+        //Controller
+        controller = new Controller();
+
+
+        //player movement speed
+        normalSpeedLeft = new Vector2(-1.5f,-1);
+        lightingSpeedLeft = new Vector2(-2.5f,-1);
+        normalSpeedRight = new Vector2(1.5f,-1);
+        lightingSpeedRight = new Vector2(2.5f,-1);
+        speedToUseLeft= normalSpeedLeft;
+        speedToUseRight=normalSpeedRight;
+        //
 
         world.setContactListener(new WorldContactListener());
     }
@@ -217,24 +243,70 @@ public class PlayScreen implements Screen {
 
     }
 
-    public void handleInput(float dt){
+    public void handleInput(float dt){/*
         Vector3 touchPos = new Vector3(Gdx.input.getX(),Gdx.input.getY(),0);
        // if((touchPos.x > Defenders.V_WIDTH/2) && player.b2body.getLinearVelocity().x<=2){ //move right
         if((touchPos.x > Gdx.graphics.getWidth()/2) && player.b2body.getLinearVelocity().x<=2){ //move right
 
-           player.b2body.applyLinearImpulse(new Vector2(0.1f,-0.1f),player.b2body.getWorldCenter(),true);
-           // player.b2body.applyForce(new Vector2(2f,0),player.b2body.getWorldCenter(),true);
-            //player.b2body.setLinearVelocity(5f,0);
+           //player.b2body.applyLinearImpulse(new Vector2(0.1f,-0.1f),player.b2body.getWorldCenter(),true);
+            //player.b2body.applyForce(new Vector2(2f,-0.1f),player.b2body.getWorldCenter(),true);
+            player.b2body.setLinearVelocity(new Vector2(1.5f,0));
         }
 
         //else if((touchPos.x < Defenders.V_WIDTH/2) && player.b2body.getLinearVelocity().x>=-2){ //move left
         else if((touchPos.x < Gdx.graphics.getWidth()/2) && player.b2body.getLinearVelocity().x>=-2){ //move left
 
-            player.b2body.applyLinearImpulse(new Vector2(-0.1f,-0.1f),player.b2body.getWorldCenter(),true);
-           // player.b2body.applyForce(new Vector2(-2f,0),player.b2body.getWorldCenter(),true);
-          //  player.b2body.setLinearVelocity(-5f,0);
+           // player.b2body.applyLinearImpulse(new Vector2(-0.1f,-0.1f),player.b2body.getWorldCenter(),true);
+            //player.b2body.applyForce(new Vector2(-2f,-0.1f),player.b2body.getWorldCenter(),true);
+            player.b2body.setLinearVelocity(new Vector2(-1.5f,0));
+        }
+        */
+        bombCoolDownTimer+=dt;
+        speedCoolDownTimer+=dt;
+
+        if(controller.isSpeedPressed()) {
+            if(controller.getAmountOfSpeeds()>0&& speedCoolDownTimer>=8){
+                speed = true;
+                speedToUseRight = lightingSpeedRight;
+                speedToUseLeft = lightingSpeedLeft;
+                controller.setAmountOfSpeeds(controller.getAmountOfSpeeds() - 1);
+
+                speedCoolDownTimer = 0;
+            }
+        }
+
+        else if(speedCoolDownTimer>=8){
+            speed=false;
+            speedToUseRight= normalSpeedRight;
+            speedToUseLeft= normalSpeedLeft;
+        }
+
+        if(controller.isRightPressed()){
+            player.b2body.setLinearVelocity(speedToUseRight);
 
         }
+        else if(controller.isLeftPressed()) {
+            player.b2body.setLinearVelocity(speedToUseLeft);
+        }
+            else{
+                player.b2body.setLinearVelocity(new Vector2(0,0));
+            }
+
+            if(controller.isBombedPressed()){
+                if(controller.getAmountOfBombs()>0 && bombCoolDownTimer >=2) {
+                    setBomb(true);
+                    controller.setAmountOfBombs(controller.getAmountOfBombs() - 1);
+                    bombCoolDownTimer=0;
+                }
+
+            }
+
+            if(controller.isPausePressed()){
+                pause();
+            }
+
+
+
     }
 
     public void update(float dt){
@@ -313,6 +385,8 @@ public class PlayScreen implements Screen {
         //render the 2dbox debug lines
         b2dr.render(world, gameCam.combined);
 
+        controller.draw();
+
         game.batch.setProjectionMatrix(gameCam.combined);
 
         gamePlayRender();
@@ -342,6 +416,7 @@ public class PlayScreen implements Screen {
     @Override
     public void resize(int width, int height) {
     gamePort.update(width,height);
+        controller.resize(width,height);
     }
 
     @Override
@@ -505,7 +580,7 @@ public class PlayScreen implements Screen {
         PowerUp powerUp;
 
         powerUpToInitilize = generateNumber(powerUpToInitilize);
-       // powerUpToInitilize = 3;
+        //powerUpToInitilize = 2;
         switch (powerUpToInitilize){
             case 0:
                 powerUp = new BombPowerUp(this);

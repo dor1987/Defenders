@@ -7,7 +7,10 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
 import com.dorashush.defenders.Defenders;
+import com.dorashush.defenders.Scenes.Hud;
 import com.dorashush.defenders.Screens.PlayScreen;
+
+import java.util.Random;
 
 /**
  * Created by Dor on 02/19/18.
@@ -87,8 +90,13 @@ public class PointsPowerUp extends PowerUp{
 
     @Override
     public void onPlayerCaught() {
-
+        Hud.addScore(generateNumber(2800));
     }
 
+    public int generateNumber(int maxNum) {
+        Random random = new Random();
+        int result = random.nextInt(maxNum+200); //to avoid maxnum been 0
+        return result;
+    }
 }
 

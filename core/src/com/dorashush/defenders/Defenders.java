@@ -11,7 +11,7 @@ import com.dorashush.defenders.Screens.MenuScreen;
 import com.dorashush.defenders.Screens.PlayScreen;
 
 public class Defenders extends Game {
-	public SpriteBatch batch;
+	public static SpriteBatch batch;
 
 	public static final int V_WIDTH = 480;
 	public static final int V_HEIGHT = 800;
@@ -26,6 +26,7 @@ public class Defenders extends Game {
 	public void create () {
 		batch = new SpriteBatch();
 		setScreen(new PlayScreen(this,FIRST_LEVEL,STARTING_SCORE,STARTING_LIVES));
+
 		//setScreen(new EndGameScreen(this,STARTING_SCORE));
 		//setScreen(new MenuScreen(this));
 	}

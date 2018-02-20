@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
 import com.dorashush.defenders.Defenders;
+import com.dorashush.defenders.Scenes.Controller;
 import com.dorashush.defenders.Screens.PlayScreen;
 
 /**
@@ -87,6 +88,7 @@ public class LightingPowerUp extends PowerUp{
 
     @Override
     public void onPlayerCaught() {
+        Controller.setAmountOfSpeeds(Controller.getAmountOfSpeeds()+1);
 
     }
 

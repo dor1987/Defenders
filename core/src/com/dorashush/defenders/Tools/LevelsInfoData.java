@@ -20,6 +20,7 @@ public class LevelsInfoData {
     public int[] getCurrentLevelInfo(int levelNumber){
         switch (levelNumber){
           case 0:
+
               enemy = 0;
               ball = 0;
               powerUps = 1;
@@ -27,7 +28,6 @@ public class LevelsInfoData {
               timeBetweenBalls=4;
               amountOfBallsPerShoot = 1;
               timeBetweenPowerUps = 5;
-
              break;
 
           case 1:
@@ -104,11 +104,11 @@ public class LevelsInfoData {
                 timeBetweenPowerUps = 7;
                 break;
 
-            case 666:
+            case 8:
                 enemy = 666;
                 ball = 666;
                 powerUps = 3;
-                levelNum = 666;
+                levelNum = 9;
                 timeBetweenBalls=4;
                 amountOfBallsPerShoot = 1;
                 timeBetweenPowerUps = 5;
