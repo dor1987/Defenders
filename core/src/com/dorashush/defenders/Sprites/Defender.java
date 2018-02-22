@@ -115,7 +115,7 @@ public class Defender extends Sprite{
 
     public void defineDefender(){
         BodyDef bdef = new BodyDef();
-        bdef.position.set(200/Defenders.PPM,240/Defenders.PPM);
+        bdef.position.set(200/Defenders.PPM,230/Defenders.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 

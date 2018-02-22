@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "452946049482",
+    "firebase_url": "https://defenders-fd170.firebaseio.com",
+    "project_id": "defenders-fd170",
+    "storage_bucket": "defenders-fd170.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:452946049482:android:9c30eb4ac54fe095",
+        "android_client_info": {
+          "package_name": "com.dorashush.defenders"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "452946049482-n6re0kb97gj0gl38d0t7rshqmvt8r7jn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dorashush.defenders",
+            "certificate_hash": "d9749bcb29132339e9f00fd5babd62fa33998643"
+          }
+        },
+        {
+          "client_id": "452946049482-npgsgunlrmrf785fd881nnk78lluvak7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVH7Arid1lFs5_AKUz1bdnnTUAsmD1ZvY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "452946049482-npgsgunlrmrf785fd881nnk78lluvak7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -62,7 +62,7 @@ import java.util.Random;
 public class PlayScreen implements Screen {
     public static final int SCREEN_WIDTH = 480;
     public static final int SCREEN_HEIGHT = 800;
-    public static boolean godMode = true; //for debugging
+    public static boolean godMode = false; //for debugging
     public static final int TIME_BETWEEN_BALL_SPAWN = 4;
     public static final int TIME_BETWEEN_POWER_UP_SPAWN = 10;
 
@@ -107,6 +107,7 @@ public class PlayScreen implements Screen {
 
     private boolean speed;
     private boolean bomb;
+    private int godModeCheatCounter;
     private boolean points;
     private boolean extraLife;
     private float bombCoolDownTimer;
@@ -149,6 +150,7 @@ public class PlayScreen implements Screen {
     public PlayScreen(Defenders game ,int levelNumber , int score , int lives){
         atlas = new TextureAtlas("final_animation_for_game.atlas");
 
+
         this.game = game;
         gameCam = new OrthographicCamera();
         gamePort = new FitViewport(Defenders.V_WIDTH/ Defenders.PPM,Defenders.V_HEIGHT/ Defenders.PPM,gameCam);
@@ -164,6 +166,7 @@ public class PlayScreen implements Screen {
         //power ups
             bomb = false;
             speed = false;
+            godModeCheatCounter=0;
         //
 
         //Box2d
@@ -302,6 +305,12 @@ public class PlayScreen implements Screen {
             }
 
             if(controller.isPausePressed()){
+                godModeCheatCounter+=1;
+                if(godModeCheatCounter>=5) {
+                    godMode = !godMode;
+                    godModeCheatCounter=0;
+                }
+
                 pause();
             }
 

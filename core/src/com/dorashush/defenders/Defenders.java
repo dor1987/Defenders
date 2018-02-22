@@ -20,15 +20,18 @@ public class Defenders extends Game {
 	public static final int FIRST_LEVEL = 0;
 	public static final int STARTING_SCORE = 0;
     public static final int STARTING_LIVES = 3;
+	public static LeaderBoardHandler handler;
 
+	public Defenders(LeaderBoardHandler handler){
+		this.handler = handler;
+	}
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		setScreen(new PlayScreen(this,FIRST_LEVEL,STARTING_SCORE,STARTING_LIVES));
-
+		//setScreen(new PlayScreen(this,FIRST_LEVEL,STARTING_SCORE,STARTING_LIVES));
 		//setScreen(new EndGameScreen(this,STARTING_SCORE));
-		//setScreen(new MenuScreen(this));
+		setScreen(new MenuScreen(this));
 	}
 
 	@Override

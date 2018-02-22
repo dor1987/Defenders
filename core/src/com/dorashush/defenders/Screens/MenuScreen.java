@@ -21,6 +21,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dorashush.defenders.Defenders;
 
+import javax.naming.Context;
+
 /**
  * Created by Dor on 01/22/18.
  */
@@ -88,33 +90,55 @@ public class MenuScreen implements Screen{
         mainTable.top();
 
         //Create buttons
-        TextButton playButton = new TextButton("Play", skin);
+        final TextButton playButton = new TextButton("Play", skin);
         TextButton optionsButton = new TextButton("Options", skin);
-        TextButton exitButton = new TextButton("Exit", skin);
+        final TextButton leaderBoardButton = new TextButton("Leader Board", skin);
 
         //Add listeners to buttons
         playButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
+               int tempScore = Defenders.handler.getLowestScoreOnBoard();
+
+               String tempScoreString = Integer.toString(tempScore);
+                if(tempScore==0){
+                    tempScore= Defenders.handler.getLowestScoreOnBoard();
+                    tempScoreString = Integer.toString(tempScore);
+                }
+                playButton.setText(tempScoreString);
+
+
+
+                /*
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new PlayScreen((Defenders)game,0,0,((Defenders) game).STARTING_LIVES));
                 dispose();
+
+                */
             }
         });
-        exitButton.addListener(new ClickListener(){
+        leaderBoardButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
-                dispose();
+         Defenders.handler.addPlayerScoreToDataBase("dor",400);
+         Defenders.handler.addPlayerScoreToDataBase("dor",500);
+         Defenders.handler.addPlayerScoreToDataBase("dor",300);
+
+                //  Defenders.handler.sendMsgToFireBase("TEsting it out");
+              //  Gdx.app.exit();
+                //dispose();
 
             }
         });
+
+
 
         //Add buttons to table
         mainTable.add(playButton);
         mainTable.row();
         mainTable.add(optionsButton);
         mainTable.row();
-        mainTable.add(exitButton);
+        mainTable.add(leaderBoardButton);
 
         //Add table to stage
         stage.addActor(mainTable);

@@ -16,10 +16,20 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/robovm/ios/robovm.xml'
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
     }
     defaultConfig {
         applicationId "com.dorashush.defenders"
-        minSdkVersion 9
+        minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -135,3 +145,14 @@ idea {
         }
     }
 }
+dependencies {
+
+    compile 'com.google.firebase:firebase-core:11.8.0'
+    compile 'com.google.firebase:firebase-ads:11.8.0'
+    compile 'com.android.support:support-annotations:25.3.1'
+    compile 'com.google.firebase:firebase-database:11.8.0'
+    compile 'com.firebase:firebase-client-android:2.3.1'
+}
+
+apply plugin: 'com.google.gms.google-services'
+
