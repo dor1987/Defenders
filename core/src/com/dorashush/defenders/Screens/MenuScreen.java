@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dorashush.defenders.Defenders;
+import com.dorashush.defenders.Sprites.Defender;
 
 import javax.naming.Context;
 
@@ -36,6 +38,7 @@ public class MenuScreen implements Screen{
     protected Skin skin;
     private Game game;
     private BitmapFont font;
+    TextureRegion backgroundTexture;
 
     public MenuScreen(Defenders game){
         this.game = game;
@@ -44,6 +47,7 @@ public class MenuScreen implements Screen{
         font = new BitmapFont();
         skin = new Skin();
         skin.add("default", font);
+        backgroundTexture = new TextureRegion(new Texture("background.png"),0,0,Defenders.V_WIDTH,Defenders.V_HEIGHT);
 
         Pixmap pixmap = new Pixmap((int)Gdx.graphics.getWidth()/4,(int)Gdx.graphics.getHeight()/10, Pixmap.Format.RGB888);
         pixmap.setColor(Color.WHITE);
@@ -99,30 +103,12 @@ public class MenuScreen implements Screen{
             @Override
             public void clicked(InputEvent event, float x, float y) {
 
-               int tempScore = Defenders.handler.getLowestScoreOnBoard();
 
-               String tempScoreString = Integer.toString(tempScore);
-                if(tempScore==0){
-                    tempScore= Defenders.handler.getLowestScoreOnBoard();
-                    tempScoreString = Integer.toString(tempScore);
-                }
-                playButton.setText(tempScoreString);
-
-
-
-                /*
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new PlayScreen((Defenders)game,0,0,((Defenders) game).STARTING_LIVES));
-                dispose();
-
-                */
             }
         });
         leaderBoardButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-         Defenders.handler.addPlayerScoreToDataBase("dor",400);
-         Defenders.handler.addPlayerScoreToDataBase("dor",500);
-         Defenders.handler.addPlayerScoreToDataBase("dor",300);
 
                 //  Defenders.handler.sendMsgToFireBase("TEsting it out");
               //  Gdx.app.exit();
@@ -148,9 +134,13 @@ public class MenuScreen implements Screen{
     public void render(float delta) {
         Gdx.gl.glClearColor(.1f, .12f, .16f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        stage.act();
+        resize(Defenders.V_WIDTH, Defenders.V_HEIGHT);
+        //stage.act();
+        batch.begin();
+        batch.draw(backgroundTexture,0,0);
+        batch.end();
         stage.draw();
+
 
     }
 

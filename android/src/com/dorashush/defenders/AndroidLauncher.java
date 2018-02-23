@@ -23,7 +23,9 @@ import java.util.Map;
 public class AndroidLauncher extends AndroidApplication implements LeaderBoardHandler{
 	public static FirebaseDatabase mFirebaseDatabase;
 	public static DatabaseReference mLeaderboardReference;
+	public static ScoreLine tempScoreLine;
 	int score;
+	boolean isHighScore;
 
 
 	public static Handler handler = new Handler(){
@@ -49,8 +51,37 @@ public class AndroidLauncher extends AndroidApplication implements LeaderBoardHa
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		initialize(new Defenders(this), config);
 
-	}
+		//to get lowest score for database
+		mLeaderboardReference.orderByChild("score").limitToFirst(1).addChildEventListener(new ChildEventListener() {
+			@Override
+			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+				tempScoreLine = dataSnapshot.getValue(ScoreLine.class);
+				score = tempScoreLine.score;
 
+			}
+
+			@Override
+			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+			}
+
+			@Override
+			public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+			}
+
+			@Override
+			public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+
+	}
 
 
 	@Override
@@ -103,6 +134,17 @@ public class AndroidLauncher extends AndroidApplication implements LeaderBoardHa
 
 		return score;
 
+	}
+
+	@Override
+	public boolean isHighScore(final int scoreToCheck) {
+		isHighScore = false;
+
+		if(score < scoreToCheck)
+			isHighScore = true;
+
+
+		return isHighScore;
 	}
 
 

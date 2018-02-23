@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dorashush.defenders.Screens.EndGameScreen;
+import com.dorashush.defenders.Screens.MainMenuScreen;
 import com.dorashush.defenders.Screens.MenuScreen;
 import com.dorashush.defenders.Screens.PlayScreen;
 
@@ -31,7 +32,7 @@ public class Defenders extends Game {
 		batch = new SpriteBatch();
 		//setScreen(new PlayScreen(this,FIRST_LEVEL,STARTING_SCORE,STARTING_LIVES));
 		//setScreen(new EndGameScreen(this,STARTING_SCORE));
-		setScreen(new MenuScreen(this));
+		setScreen(new MainMenuScreen(this));
 	}
 
 	@Override

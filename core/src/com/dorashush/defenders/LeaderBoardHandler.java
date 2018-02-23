@@ -7,4 +7,5 @@ package com.dorashush.defenders;
 public interface LeaderBoardHandler {
     public void addPlayerScoreToDataBase(String name , int score);
     public int getLowestScoreOnBoard();
+    public boolean isHighScore(int scoreToCheck);
 }

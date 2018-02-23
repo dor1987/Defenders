@@ -694,7 +694,7 @@ public class PlayScreen implements Screen {
             gameStatus=GameStatus.WIN;
         }
     }
-    public void waitInputSetNextScreen(){
+    public void waitInputSetNextScreen() {
         if(Gdx.input.justTouched()){
             if(gameStatus==GameStatus.WIN){
                 if (amountOfLevel == levelNum)//check if last stage
