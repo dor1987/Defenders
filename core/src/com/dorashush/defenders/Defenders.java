@@ -10,6 +10,7 @@ import com.dorashush.defenders.Screens.EndGameScreen;
 import com.dorashush.defenders.Screens.MainMenuScreen;
 import com.dorashush.defenders.Screens.MenuScreen;
 import com.dorashush.defenders.Screens.PlayScreen;
+import com.dorashush.defenders.Screens.SplashScreen;
 
 public class Defenders extends Game {
 	public static SpriteBatch batch;
@@ -32,7 +33,8 @@ public class Defenders extends Game {
 		batch = new SpriteBatch();
 		//setScreen(new PlayScreen(this,FIRST_LEVEL,STARTING_SCORE,STARTING_LIVES));
 		//setScreen(new EndGameScreen(this,STARTING_SCORE));
-		setScreen(new MainMenuScreen(this));
+		//setScreen(new MainMenuScreen(this));
+		setScreen(new SplashScreen(this));
 	}
 
 	@Override

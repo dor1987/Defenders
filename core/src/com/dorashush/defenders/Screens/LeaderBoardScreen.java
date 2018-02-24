@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -53,7 +55,7 @@ public class LeaderBoardScreen implements Screen {
 
     private Image backBtn;
 
-    public LeaderBoardScreen(Game game){
+    public LeaderBoardScreen(final Game game){
         this.game = game;
         viewport = new FitViewport(Defenders.V_WIDTH,Defenders.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport,((Defenders)game).batch);
@@ -70,21 +72,25 @@ public class LeaderBoardScreen implements Screen {
 
         backBtn = new Image(new Texture("leaderboardbackbtn.png"));
 
+
+        leaderBoardArrayList = Defenders.handler.getTopSeven();
+
         Drawable lineDrawable = new TextureRegionDrawable(new TextureRegion(new Texture("scoreboardline.png")));
         TextButton.TextButtonStyle lineStyle = new TextButton.TextButtonStyle( lineDrawable, lineDrawable, lineDrawable, new BitmapFont() );
-        line1 = new TextButton("Dor  2131",lineStyle);
+
+        line1 = new TextButton("1. "+leaderBoardArrayList.get(0),lineStyle);
         line1.setDisabled( true );
-        line2 = new TextButton("Dor  2131",lineStyle);
+        line2 = new TextButton("2. "+leaderBoardArrayList.get(1),lineStyle);
         line2.setDisabled( true );
-        line3 = new TextButton("Dor  2131",lineStyle);
+        line3 = new TextButton("3. "+leaderBoardArrayList.get(2),lineStyle);
         line3.setDisabled( true );
-        line4 = new TextButton("Dor  2131",lineStyle);
+        line4 = new TextButton("4. "+leaderBoardArrayList.get(3),lineStyle);
         line4.setDisabled( true );
-        line5 = new TextButton("Dor  2131",lineStyle);
+        line5 = new TextButton("5. "+leaderBoardArrayList.get(4),lineStyle);
         line5.setDisabled( true );
-        line6 = new TextButton("Dor  2131",lineStyle);
+        line6 = new TextButton("6. "+leaderBoardArrayList.get(5),lineStyle);
         line6.setDisabled( true );
-        line7 = new TextButton("Dor  2131",lineStyle);
+        line7 = new TextButton("7. "+leaderBoardArrayList.get(6),lineStyle);
         line7.setDisabled( true );
 
 
@@ -92,23 +98,9 @@ public class LeaderBoardScreen implements Screen {
 
 
 
-        ArrayList<String> leaderBoardArrayList = new ArrayList<String>();
-        leaderBoardList = new List(skin);
 
 
-        leaderBoardArrayList.add("Dor 4144");
-        leaderBoardArrayList.add("Dor 4144");
-        leaderBoardArrayList.add("Dor 4144");
-        leaderBoardArrayList.add("Dor 4144");
-        leaderBoardArrayList.add("Dor 4144");
-        leaderBoardArrayList.add("Dor 4144");
-        leaderBoardArrayList.add("Dor 4144");
-        leaderBoardArrayList.add("Dor 4144");
-        leaderBoardArrayList.add("Dor 4144");
-        leaderBoardArrayList.add("Dor 4144");
 
-
-        leaderBoardList.setItems(leaderBoardArrayList);
 
         table = new Table().bottom();
         table.setFillParent(true);
@@ -128,6 +120,16 @@ public class LeaderBoardScreen implements Screen {
         table.add(line7).padBottom(10f);
         table.row();
         table.add(backBtn).padBottom(10f);
+
+        backBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                //Add leaderbaord Screen
+                game.setScreen(new MainMenuScreen((Defenders) game));
+                dispose();
+            }
+        });
     }
 
 

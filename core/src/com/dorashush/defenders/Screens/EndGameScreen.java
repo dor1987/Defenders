@@ -25,6 +25,8 @@ import com.dorashush.defenders.Defenders;
 
 import sun.rmi.runtime.Log;
 
+import static com.dorashush.defenders.Screens.PlayScreen.godMode;
+
 /**
  * Created by Dor on 01/24/18.
  */
@@ -65,15 +67,19 @@ public class EndGameScreen implements Screen {
         table = new Table();
         table.center();
         table.setFillParent(true);
-        //uiSkin = Gdx.files.internal("uiskin.json")
+        skin =new Skin(Gdx.files.internal("uiskin.json"));
+
 
         Label gameOverLabel = new Label("GAME OVER", labelStyle);
         Label playAgain = new Label("Click to play again", labelStyle);
         Label scoreLabel = new Label("Your Score is:", labelStyle);
         Label scoreLabelInNumber = new Label(String.format("%06d", score), labelStyle);
 
-        getUserNameBtn = new TextButton("Submit", textButtonStyle);
-        userNameTextArea = new TextArea("Enter Your Name", textFieldStyle);
+       // getUserNameBtn = new TextButton("Submit", textButtonStyle);
+        getUserNameBtn = new TextButton("Submit", skin);
+
+        //userNameTextArea = new TextArea("Enter Your Name", textFieldStyle);
+        userNameTextArea = new TextArea("Enter Your Name", skin);
         userNameTextArea.setMaxLength(10);
         backToMainMenuBtn = new TextButton("Main Menu", textButtonStyle);
         restartGameBtn = new TextButton("Replay Game", textButtonStyle);
@@ -87,8 +93,10 @@ public class EndGameScreen implements Screen {
         table.add(scoreLabelInNumber).uniform().padBottom(10f);
         table.row();
 
-        table.add(getUserNameBtn).padBottom(100f);
-        table.add(userNameTextArea).padBottom(100f);
+        if(Defenders.handler.isHighScore(score)) {
+            table.add(getUserNameBtn).padBottom(100f);
+            table.add(userNameTextArea).padBottom(100f);
+        }
 
         table.row();
         table.add(backToMainMenuBtn).padRight(30f);
@@ -126,7 +134,7 @@ public class EndGameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                game.setScreen(new MenuScreen((Defenders)game));
+                game.setScreen(new MainMenuScreen((Defenders)game));
                 dispose();
             }
         });

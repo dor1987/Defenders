@@ -17,6 +17,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,8 +27,12 @@ public class AndroidLauncher extends AndroidApplication implements LeaderBoardHa
 	public static FirebaseDatabase mFirebaseDatabase;
 	public static DatabaseReference mLeaderboardReference;
 	public static ScoreLine tempScoreLine;
-	int score;
+	static DatabaseReference mLowestScoreRef;
+
+	int lowestScore;
 	boolean isHighScore;
+	private ArrayList<String> topSevenArray;
+	private ArrayList<ScoreLine> topSevenArrayScoreLine;
 
 
 	public static Handler handler = new Handler(){
@@ -35,6 +42,12 @@ public class AndroidLauncher extends AndroidApplication implements LeaderBoardHa
 			//Adding new score to the data base
 			String playerName =((Bundle)msg.getData()).getString("name","fail");
 			int playerScore = ((Bundle)msg.getData()).getInt("score",0);
+
+			//remove the lowest score
+			if(mLowestScoreRef!=null) {
+				mLowestScoreRef.removeValue();
+			}
+			//add The new high score
 			mLeaderboardReference.push().setValue(new ScoreLine(playerName,playerScore));
 
 		}
@@ -47,16 +60,20 @@ public class AndroidLauncher extends AndroidApplication implements LeaderBoardHa
 
 		mFirebaseDatabase = FirebaseDatabase.getInstance();
 		mLeaderboardReference = mFirebaseDatabase.getReference().child("leaderboard");
+		topSevenArray = new ArrayList<String>();
+		topSevenArrayScoreLine = new ArrayList<ScoreLine>();
 
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		initialize(new Defenders(this), config);
 
 		//to get lowest score for database
+
 		mLeaderboardReference.orderByChild("score").limitToFirst(1).addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				tempScoreLine = dataSnapshot.getValue(ScoreLine.class);
-				score = tempScoreLine.score;
+				lowestScore = tempScoreLine.score;
+				mLowestScoreRef = dataSnapshot.getRef();
 
 			}
 
@@ -67,6 +84,38 @@ public class AndroidLauncher extends AndroidApplication implements LeaderBoardHa
 
 			@Override
 			public void onChildRemoved(DataSnapshot dataSnapshot) {
+				tempScoreLine = dataSnapshot.getValue(ScoreLine.class);
+				lowestScore = tempScoreLine.score;
+				mLowestScoreRef = dataSnapshot.getRef();
+			}
+
+			@Override
+			public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+
+		mLeaderboardReference.orderByChild("score").limitToLast(7).addChildEventListener(new ChildEventListener() {
+			@Override
+			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+				String tempString;
+				topSevenArrayScoreLine.add(dataSnapshot.getValue(ScoreLine.class));
+
+			}
+
+			@Override
+			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+			}
+
+			@Override
+			public void onChildRemoved(DataSnapshot dataSnapshot) {
+			topSevenArray.clear();
 
 			}
 
@@ -98,53 +147,35 @@ public class AndroidLauncher extends AndroidApplication implements LeaderBoardHa
 	}
 
 
-	@Override
-	public int getLowestScoreOnBoard() {
-	mLeaderboardReference.orderByChild("score").limitToFirst(1).addChildEventListener(new ChildEventListener() {
-			@Override
-			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-				ScoreLine tempScoreLine = dataSnapshot.getValue(ScoreLine.class);
-
-				score = tempScoreLine.score;
-
-
-				Log.d("","LOOK HERE FOR SCORE"+score);
-			}
-
-			@Override
-			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-			}
-
-			@Override
-			public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-			}
-
-			@Override
-			public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-			}
-
-			@Override
-			public void onCancelled(DatabaseError databaseError) {
-
-			}
-		});
-
-		return score;
-
-	}
 
 	@Override
 	public boolean isHighScore(final int scoreToCheck) {
 		isHighScore = false;
 
-		if(score < scoreToCheck)
+		if(lowestScore < scoreToCheck)
 			isHighScore = true;
 
 
 		return isHighScore;
+	}
+
+	@Override
+	public ArrayList<String> getTopSeven() {
+
+		Collections.sort(topSevenArrayScoreLine, new ScoreLine.CustomComparator());
+
+		for (ScoreLine sl : topSevenArrayScoreLine){
+			topSevenArray.add(sl.toString());
+		}
+
+
+		if(topSevenArray.size()<7) {
+			for(int i = topSevenArray.size() ; i<7;i++)
+			topSevenArray.add("");
+
+		}
+
+		return topSevenArray;
 	}
 
 
@@ -176,5 +207,20 @@ public class AndroidLauncher extends AndroidApplication implements LeaderBoardHa
 
 	  public void setScore(int score) {
 		  this.score = score;
+	  }
+
+	  @Override
+	  public String toString() {
+		  return "Name: " + name  + "        Score: " + score ;
+	  }
+
+	  public static class CustomComparator implements Comparator<ScoreLine> {
+
+
+		  @Override
+		  public int compare(ScoreLine o1, ScoreLine o2) {
+
+			  return -1*Integer.compare(o1.score,o2.score);
+		  }
 	  }
   }
