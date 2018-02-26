@@ -87,6 +87,8 @@ public class DinoRaiderBall extends Ball{
         CircleShape shape = new CircleShape();
         shape.setRadius(14 /Defenders.PPM);
         fdef.shape = shape;
+        fdef.isSensor = true;
+
         b2body.createFixture(fdef).setUserData(this);
 
     }

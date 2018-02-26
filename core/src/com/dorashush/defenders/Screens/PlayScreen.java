@@ -23,6 +23,7 @@ import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Scenes.Controller;
 import com.dorashush.defenders.Scenes.Hud;
 import com.dorashush.defenders.Scenes.HudForEndLevel;
+import com.dorashush.defenders.Scenes.HudPauseGame;
 import com.dorashush.defenders.Sprites.Alien;
 import com.dorashush.defenders.Sprites.AlienBall;
 import com.dorashush.defenders.Sprites.Ball;
@@ -82,6 +83,7 @@ public class PlayScreen implements Screen {
     private Viewport gamePort;
     private Hud hud;
     private HudForEndLevel hudForEndLevel; //delete if doesnt work
+    private HudPauseGame hudForPause;
 
     private TmxMapLoader mapLoader;
     private TiledMap map;
@@ -108,6 +110,8 @@ public class PlayScreen implements Screen {
     private boolean speed;
     private boolean bomb;
     private int godModeCheatCounter;
+    private float godModeCheatCounterTimer;
+
     private boolean points;
     private boolean extraLife;
     private float bombCoolDownTimer;
@@ -158,6 +162,7 @@ public class PlayScreen implements Screen {
         gamePort.apply();
         hud = new Hud(game.batch);
         hudForEndLevel = new HudForEndLevel(game.batch);//delete if doesnt work
+        hudForPause = new HudPauseGame(game.batch);
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("stage2.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1/ Defenders.PPM);
@@ -167,6 +172,7 @@ public class PlayScreen implements Screen {
             bomb = false;
             speed = false;
             godModeCheatCounter=0;
+            godModeCheatCounterTimer=0;
         //
 
         //Box2d
@@ -218,10 +224,10 @@ public class PlayScreen implements Screen {
 
 
         //player movement speed
-        normalSpeedLeft = new Vector2(-1.5f,-1);
-        lightingSpeedLeft = new Vector2(-2.5f,-1);
-        normalSpeedRight = new Vector2(1.5f,-1);
-        lightingSpeedRight = new Vector2(2.5f,-1);
+        normalSpeedLeft = new Vector2(-1.5f,0);
+        lightingSpeedLeft = new Vector2(-2.5f,0);
+        normalSpeedRight = new Vector2(1.5f,0);
+        lightingSpeedRight = new Vector2(2.5f,0);
         speedToUseLeft= normalSpeedLeft;
         speedToUseRight=normalSpeedRight;
         //
@@ -266,6 +272,7 @@ public class PlayScreen implements Screen {
         */
         bombCoolDownTimer+=dt;
         speedCoolDownTimer+=dt;
+        godModeCheatCounterTimer+=dt;
 
         if(controller.isSpeedPressed()) {
             if(controller.getAmountOfSpeeds()>0&& speedCoolDownTimer>=8){
@@ -302,6 +309,11 @@ public class PlayScreen implements Screen {
                     bombCoolDownTimer=0;
                 }
 
+            }
+
+            if(godModeCheatCounterTimer>=3) {
+                godModeCheatCounter=0;
+                godModeCheatCounterTimer = 0;
             }
 
             if(controller.isPausePressed()){
@@ -386,6 +398,16 @@ public class PlayScreen implements Screen {
         }
 
         if(gameStatus==GameStatus.PAUSED){
+
+            /////
+
+            //TODO Fix this show when game paused
+            //game.batch.setProjectionMatrix(hudForPause.stage.getCamera().combined);
+            //hudForPause.stage.draw();
+
+            ///
+
+
             waitInputSetNextScreen();
         }
         //render the game map
@@ -393,8 +415,8 @@ public class PlayScreen implements Screen {
 
         //render the 2dbox debug lines
         b2dr.render(world, gameCam.combined);
-
         controller.draw();
+
 
         game.batch.setProjectionMatrix(gameCam.combined);
 
@@ -673,6 +695,8 @@ public class PlayScreen implements Screen {
         if(gameStatus==GameStatus.PAUSED){
         //what would be shown when paused
             game.batch.draw(pause,(Defenders.V_WIDTH/2-pause.getWidth()/3)/Defenders.PPM,Defenders.V_HEIGHT/2/Defenders.PPM,Defenders.V_WIDTH/2/Defenders.PPM,20/Defenders.PPM);
+            //game.batch.draw(new Texture("pausebackground.png"),(Defenders.V_WIDTH/2-pause.getWidth()/3)/Defenders.PPM,Defenders.V_HEIGHT/2/Defenders.PPM,Defenders.V_WIDTH/2/Defenders.PPM,20/Defenders.PPM);
+
 
 
         }

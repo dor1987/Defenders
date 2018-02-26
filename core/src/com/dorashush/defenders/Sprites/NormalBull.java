@@ -174,6 +174,8 @@ public class NormalBull  extends Enemy {
         CircleShape shape = new CircleShape();
         shape.setRadius(20 / Defenders.PPM);
         fdef.shape = shape;
+        fdef.isSensor = true;
+
         b2body.createFixture(fdef).setUserData(this);
 
     }

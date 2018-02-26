@@ -87,6 +87,8 @@ public class WingedBullFireBall extends Ball {
         CircleShape shape = new CircleShape();
         shape.setRadius(12 /Defenders.PPM);
         fdef.shape = shape;
+        fdef.isSensor = true;
+
         b2body.createFixture(fdef).setUserData(this);
 
     }

@@ -49,7 +49,6 @@ public class AndroidLauncher extends AndroidApplication implements LeaderBoardHa
 			}
 			//add The new high score
 			mLeaderboardReference.push().setValue(new ScoreLine(playerName,playerScore));
-
 		}
 	};
 
@@ -170,14 +169,46 @@ public class AndroidLauncher extends AndroidApplication implements LeaderBoardHa
 
 
 		if(topSevenArray.size()<7) {
-			for(int i = topSevenArray.size() ; i<7;i++)
-			topSevenArray.add("");
 
+			for(int i = topSevenArray.size() ; i<7;i++)
+			topSevenArray.add("No internet connection");
 		}
 
 		return topSevenArray;
 	}
 
+	public void refresh(){
+		mLeaderboardReference.orderByChild("score").limitToLast(7).addChildEventListener(new ChildEventListener() {
+			@Override
+			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+				String tempString;
+				topSevenArrayScoreLine.add(dataSnapshot.getValue(ScoreLine.class));
+
+			}
+
+			@Override
+			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+			}
+
+			@Override
+			public void onChildRemoved(DataSnapshot dataSnapshot) {
+				topSevenArray.clear();
+
+			}
+
+			@Override
+			public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+
+	}
 
 }
 

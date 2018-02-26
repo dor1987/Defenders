@@ -40,6 +40,8 @@ public class LeaderBoardScreen implements Screen {
     private List leaderBoardList;
     private Skin skin;
     private Table table;
+    private Table table2;
+
     private ExtendViewport backViewPort;
     private Image backgroundTexture;
     private Image tableBackground;
@@ -54,6 +56,7 @@ public class LeaderBoardScreen implements Screen {
 
 
     private Image backBtn;
+    private Image refreshBtn;
 
     public LeaderBoardScreen(final Game game){
         this.game = game;
@@ -70,8 +73,8 @@ public class LeaderBoardScreen implements Screen {
         viewport.apply();
         backViewPort.apply();
 
-        backBtn = new Image(new Texture("leaderboardbackbtn.png"));
-
+        backBtn = new Image(new Texture("back.png"));
+        refreshBtn = new Image(new Texture("refresh.png"));
 
         leaderBoardArrayList = Defenders.handler.getTopSeven();
 
@@ -102,7 +105,7 @@ public class LeaderBoardScreen implements Screen {
 
 
 
-        table = new Table().bottom();
+        table = new Table().center().padTop(30f);
         table.setFillParent(true);
        // table.add(leaderBoardList);
         table.add(line1);
@@ -119,7 +122,11 @@ public class LeaderBoardScreen implements Screen {
         table.row();
         table.add(line7).padBottom(10f);
         table.row();
-        table.add(backBtn).padBottom(10f);
+
+        table2 = new Table().bottom();
+        table2.setFillParent(true);
+        table2.add(backBtn).padRight(50f).padBottom(10f).center();
+        table2.add(refreshBtn).padBottom(10f);
 
         backBtn.addListener(new ClickListener() {
             @Override
@@ -127,6 +134,17 @@ public class LeaderBoardScreen implements Screen {
                 super.clicked(event, x, y);
                 //Add leaderbaord Screen
                 game.setScreen(new MainMenuScreen((Defenders) game));
+                dispose();
+            }
+        });
+
+        refreshBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                //Add leaderbaord Screen
+                Defenders.handler.refresh();
+                game.setScreen(new LeaderBoardScreen(game));
                 dispose();
             }
         });
@@ -142,6 +160,8 @@ public class LeaderBoardScreen implements Screen {
         backStage.addActor(tableBackground);
 
         stage.addActor(table);
+        stage.addActor(table2);
+
     }
 
     @Override

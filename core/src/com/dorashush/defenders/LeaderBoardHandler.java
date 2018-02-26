@@ -10,4 +10,5 @@ public interface LeaderBoardHandler {
     public void addPlayerScoreToDataBase(String name , int score);
     public boolean isHighScore(int scoreToCheck);
     public ArrayList<String> getTopSeven();
+    public void refresh();
 }
