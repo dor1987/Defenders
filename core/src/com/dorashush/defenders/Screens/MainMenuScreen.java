@@ -90,16 +90,9 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 //Add option Screen
-                /*
-                Defenders.handler.addPlayerScoreToDataBase("Dor",1231);
-                Defenders.handler.addPlayerScoreToDataBase("Tal",121);
-                Defenders.handler.addPlayerScoreToDataBase("Guy",1217);
-                Defenders.handler.addPlayerScoreToDataBase("Perla",121);
-                Defenders.handler.addPlayerScoreToDataBase("Tal",12);
-                Defenders.handler.addPlayerScoreToDataBase("Guy",117);
-                Defenders.handler.addPlayerScoreToDataBase("Perla",131);
-*/
-                //dispose();
+                game.setScreen(new OptionScreen(game));
+
+                dispose();
             }
         });
 
