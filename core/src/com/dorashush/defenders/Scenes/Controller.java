@@ -131,9 +131,6 @@ public class Controller {
         });
 
 
-        //Image bombImg = new Image(new Texture("bomb.png"));
-        //bombImg.setSize(85, 70);
-
         Drawable bombDrawable = new TextureRegionDrawable(new TextureRegion(new Texture("bomb.png")));
         TextButton.TextButtonStyle bombTextButtonStyle = new TextButton.TextButtonStyle( bombDrawable, bombDrawable, bombDrawable, new BitmapFont() );
         bombImg = new TextButton( String.format("  %02d",amountOfBombs) ,bombTextButtonStyle);
