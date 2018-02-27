@@ -18,7 +18,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -62,11 +64,20 @@ public class OptionScreen implements Screen {
     private TextButton fullControlButton;
     ButtonGroup controlButtonGroup;
 
+    private Label vibreationLabel;
+    private TextButton vibreationOnButton;
+    private TextButton vibreationOffButton;
+    ButtonGroup vibreationButtonGroup;
 
+
+    private Label cheatLabel;
+    private TextArea cheatTextArea;
+    private TextButton submitCheatButton;
 
 
     private Image backBtn;
-    private Image refreshBtn;
+
+
 
     public OptionScreen(final Game game){
         this.game = game;
@@ -87,19 +98,15 @@ public class OptionScreen implements Screen {
         soundLabel.setFontScale(1.5f,1.5f);
         controlLabel= new Label("Control:",skin);
         controlLabel.setFontScale(1.5f,1.5f);
+        vibreationLabel= new Label("Vibration:",skin);
+        vibreationLabel.setFontScale(1.5f,1.5f);
+        cheatLabel = new Label("Cheats:",skin);
+        cheatLabel.setFontScale(1.5f,1.5f);
 
         backBtn = new Image(new Texture("back.png"));
 
 
-/*
-        line1 = new TextButton("1. "+leaderBoardArrayList.get(0),lineStyle);
-        line1.setDisabled( true );
-*/
-/*
-        checkBox = new CheckBox("one", skin);
-        checkBox2 = new CheckBox("two", skin);
-        checkBox3 = new CheckBox("three", skin);
-*/
+
         soundOnButton = new TextButton("ON", skin,"toggle");
         soundOffButton = new TextButton("OFF", skin,"toggle");
         soundButtonGroup = new ButtonGroup(soundOnButton, soundOffButton);
@@ -109,8 +116,13 @@ public class OptionScreen implements Screen {
         fullControlButton = new TextButton("Full Control", skin,"toggle");
         controlButtonGroup = new ButtonGroup(singleClickButton, fullControlButton);
 
+        vibreationOnButton = new TextButton("ON", skin,"toggle");
+        vibreationOffButton = new TextButton("OFF", skin,"toggle");
+        controlButtonGroup = new ButtonGroup(vibreationOnButton, vibreationOffButton);
 
 
+        cheatTextArea = new TextArea("", skin);
+        submitCheatButton=new TextButton("Enter", skin);
 
         table = new Table().center().top().padTop(120f);
         table.setFillParent(true);
@@ -125,9 +137,23 @@ public class OptionScreen implements Screen {
 
         table.add(controlLabel).left().padBottom(10);
         table.row();
-
         table.add(singleClickButton).width(150).height(50);
         table.add(fullControlButton).width(150).height(50);
+
+        table.row().padTop(50);
+
+        table.add(vibreationLabel).left().padBottom(10);
+        table.row();
+        table.add(vibreationOnButton).width(150).height(50);
+        table.add(vibreationOffButton).width(150).height(50);
+
+        table.row().padTop(50);
+
+        table.add(cheatLabel).left().padBottom(10);
+        table.row();
+        table.add(cheatTextArea).width(150).height(50);
+        table.add(submitCheatButton).width(150).height(50);
+
 
 
         table2 = new Table().bottom();
@@ -147,7 +173,7 @@ public class OptionScreen implements Screen {
 
     }
 
-
+    //TODO add buttons functionality
 
     @Override
     public void show() {

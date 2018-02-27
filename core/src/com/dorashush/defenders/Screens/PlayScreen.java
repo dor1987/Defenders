@@ -398,16 +398,8 @@ public class PlayScreen implements Screen {
         }
 
         if(gameStatus==GameStatus.PAUSED){
-
-            /////
-
-            //TODO Fix this show when game paused
-            //game.batch.setProjectionMatrix(hudForPause.stage.getCamera().combined);
             //hudForPause.stage.draw();
-
-            ///
-
-
+            //TODO Fix this show when game paused
             waitInputSetNextScreen();
         }
         //render the game map
@@ -416,6 +408,7 @@ public class PlayScreen implements Screen {
         //render the 2dbox debug lines
         b2dr.render(world, gameCam.combined);
         controller.draw();
+
 
 
         game.batch.setProjectionMatrix(gameCam.combined);
@@ -446,8 +439,9 @@ public class PlayScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-    gamePort.update(width,height);
+        gamePort.update(width,height);
         controller.resize(width,height);
+        hudForPause.resize(width,height);
     }
 
     @Override
@@ -692,16 +686,13 @@ public class PlayScreen implements Screen {
         game.batch.setColor(Color.WHITE);
         //
 
-        if(gameStatus==GameStatus.PAUSED){
-        //what would be shown when paused
-            game.batch.draw(pause,(Defenders.V_WIDTH/2-pause.getWidth()/3)/Defenders.PPM,Defenders.V_HEIGHT/2/Defenders.PPM,Defenders.V_WIDTH/2/Defenders.PPM,20/Defenders.PPM);
-            //game.batch.draw(new Texture("pausebackground.png"),(Defenders.V_WIDTH/2-pause.getWidth()/3)/Defenders.PPM,Defenders.V_HEIGHT/2/Defenders.PPM,Defenders.V_WIDTH/2/Defenders.PPM,20/Defenders.PPM);
-
-
-
-        }
 
         game.batch.end();
+
+        if(gameStatus==GameStatus.PAUSED){
+            hudForPause.draw();
+
+        }
     }
     public void checkIfLost(){
         for (Ball ball : ballArray) {
