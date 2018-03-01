@@ -24,25 +24,26 @@ package com.dorashush.defenders.Scenes;
         import com.dorashush.defenders.Defenders;
         import com.dorashush.defenders.Screens.PlayScreen;
 
-/**
- * Created by brentaureli on 10/23/15.
- */
+
 public class Controller {
     Viewport viewport;
     Stage stage;
-    boolean  leftPressed, rightPressed, pausePressed,bombedPressed,speedPressed;
+    boolean  leftPressed, rightPressed, pausePressed,bombedPressed,speedPressed,playPressed, menuPressed;
     OrthographicCamera cam;
     private static Integer amountOfBombs;
     static TextButton bombImg;
     private static Integer amountOfSpeeds;
     static TextButton speedImg;
+    private Table table;
+    private Table pauseTable;
+    private Image tableBackground;
     public Controller(){
         cam = new OrthographicCamera();
         viewport = new FitViewport(Defenders.V_WIDTH,Defenders.V_HEIGHT, cam);
         stage = new Stage(viewport, Defenders.batch);
         amountOfBombs = 0;
         amountOfSpeeds = 0;
-
+/*
         stage.addListener(new InputListener(){
 
             @Override
@@ -72,13 +73,60 @@ public class Controller {
                 return true;
             }
         });
-
+*/
         Gdx.input.setInputProcessor(stage);
+/////////////
+        pauseTable= new Table();
+        pauseTable.center();
+        pauseTable.setFillParent(true);
+        pauseTable.setVisible(false);
+        tableBackground = new Image(new Texture("pausebackground.png"));
+        tableBackground.setPosition(Defenders.V_WIDTH/2-tableBackground.getWidth()/2,Defenders.V_HEIGHT/2-tableBackground.getHeight()/3);
+        tableBackground.setVisible(false);
 
-        Table table = new Table();
+
+
+        Image playBtnImg = new Image(new Texture("pauseplaybutton.png"));
+        playBtnImg.addListener(new InputListener() {
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                Gdx.app.log("","BACK TO GAME CLICKED");
+
+                playPressed = true;
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                playPressed = false;
+            }
+        });
+
+        Image menuBtnImg = new Image(new Texture("pausebacktomenubutton.png"));
+
+        menuBtnImg.addListener(new InputListener() {
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                menuPressed = true;
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                menuPressed = false;
+            }
+        });
+
+        pauseTable.add(playBtnImg).pad(40,40,40,40);
+        pauseTable.add(menuBtnImg).pad(40,40,40,40);
+
+
+        ///////////////
+        table = new Table();
         table.center().bottom().padBottom(100);
         table.setFillParent(true);
-
 
         Image rightImg = new Image(new Texture("right.png"));
         rightImg.setSize(85, 70);
@@ -120,6 +168,8 @@ public class Controller {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                Gdx.app.log("","PAUSE CLICKED");
+
                 pausePressed = true;
                 return true;
             }
@@ -182,7 +232,8 @@ public class Controller {
 
 
         stage.addActor(table);
-
+        stage.addActor(tableBackground);
+        stage.addActor(pauseTable);
     }
 
     public void draw(){
@@ -225,7 +276,18 @@ public class Controller {
         speedImg.setText(String.format("  %02d",amountOfSpeeds));
     }
 
+    public boolean isPlayPressed() {
+        return playPressed;
+    }
 
+    public boolean isMenuPressed() {
+        return menuPressed;
+    }
+
+    public void setPauseMenuVisable(boolean state){
+        pauseTable.setVisible(state);
+        tableBackground.setVisible(state);
+    }
 
     public void resize(int width, int height){
         viewport.update(width, height);

@@ -24,6 +24,7 @@ import com.dorashush.defenders.Scenes.Controller;
 import com.dorashush.defenders.Scenes.Hud;
 import com.dorashush.defenders.Scenes.HudForEndLevel;
 import com.dorashush.defenders.Scenes.HudPauseGame;
+import com.dorashush.defenders.Scenes.PauseMenu;
 import com.dorashush.defenders.Sprites.Alien;
 import com.dorashush.defenders.Sprites.AlienBall;
 import com.dorashush.defenders.Sprites.Ball;
@@ -83,7 +84,7 @@ public class PlayScreen implements Screen {
     private Viewport gamePort;
     private Hud hud;
     private HudForEndLevel hudForEndLevel; //delete if doesnt work
-    private HudPauseGame hudForPause;
+   // private HudPauseGame hudForPause;
 
     private TmxMapLoader mapLoader;
     private TiledMap map;
@@ -137,7 +138,7 @@ public class PlayScreen implements Screen {
     //
     //Pause
     Texture pause;
-
+   // PauseMenu pauseMenu;
 
     //Enemy hp bar - testing new method
   //  float health = 1; // 0 = dead , 1 = full hp
@@ -162,7 +163,7 @@ public class PlayScreen implements Screen {
         gamePort.apply();
         hud = new Hud(game.batch);
         hudForEndLevel = new HudForEndLevel(game.batch);//delete if doesnt work
-        hudForPause = new HudPauseGame(game.batch);
+     //   hudForPause = new HudPauseGame();
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("stage2.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1/ Defenders.PPM);
@@ -221,6 +222,7 @@ public class PlayScreen implements Screen {
 
         //Controller
         controller = new Controller();
+       // pauseMenu = new PauseMenu();
 
 
         //player movement speed
@@ -252,79 +254,94 @@ public class PlayScreen implements Screen {
 
     }
 
-    public void handleInput(float dt){/*
-        Vector3 touchPos = new Vector3(Gdx.input.getX(),Gdx.input.getY(),0);
-       // if((touchPos.x > Defenders.V_WIDTH/2) && player.b2body.getLinearVelocity().x<=2){ //move right
-        if((touchPos.x > Gdx.graphics.getWidth()/2) && player.b2body.getLinearVelocity().x<=2){ //move right
-
-           //player.b2body.applyLinearImpulse(new Vector2(0.1f,-0.1f),player.b2body.getWorldCenter(),true);
-            //player.b2body.applyForce(new Vector2(2f,-0.1f),player.b2body.getWorldCenter(),true);
-            player.b2body.setLinearVelocity(new Vector2(1.5f,0));
-        }
-
-        //else if((touchPos.x < Defenders.V_WIDTH/2) && player.b2body.getLinearVelocity().x>=-2){ //move left
-        else if((touchPos.x < Gdx.graphics.getWidth()/2) && player.b2body.getLinearVelocity().x>=-2){ //move left
-
-           // player.b2body.applyLinearImpulse(new Vector2(-0.1f,-0.1f),player.b2body.getWorldCenter(),true);
-            //player.b2body.applyForce(new Vector2(-2f,-0.1f),player.b2body.getWorldCenter(),true);
-            player.b2body.setLinearVelocity(new Vector2(-1.5f,0));
-        }
-        */
+    public void handleInput(float dt){
         bombCoolDownTimer+=dt;
         speedCoolDownTimer+=dt;
         godModeCheatCounterTimer+=dt;
 
-        if(controller.isSpeedPressed()) {
-            if(controller.getAmountOfSpeeds()>0&& speedCoolDownTimer>=8){
-                speed = true;
-                speedToUseRight = lightingSpeedRight;
-                speedToUseLeft = lightingSpeedLeft;
-                controller.setAmountOfSpeeds(controller.getAmountOfSpeeds() - 1);
 
-                speedCoolDownTimer = 0;
-            }
-        }
 
-        else if(speedCoolDownTimer>=8){
-            speed=false;
-            speedToUseRight= normalSpeedRight;
-            speedToUseLeft= normalSpeedLeft;
-        }
+        if(gameStatus == GameStatus.MID_GAME) {
+            if (controller.isSpeedPressed()) {
+                if (controller.getAmountOfSpeeds() > 0 && speedCoolDownTimer >= 8) {
+                    speed = true;
+                    speedToUseRight = lightingSpeedRight;
+                    speedToUseLeft = lightingSpeedLeft;
+                    controller.setAmountOfSpeeds(controller.getAmountOfSpeeds() - 1);
 
-        if(controller.isRightPressed()){
-            player.b2body.setLinearVelocity(speedToUseRight);
-
-        }
-        else if(controller.isLeftPressed()) {
-            player.b2body.setLinearVelocity(speedToUseLeft);
-        }
-            else{
-                player.b2body.setLinearVelocity(new Vector2(0,0));
+                    speedCoolDownTimer = 0;
+                }
+            } else if (speedCoolDownTimer >= 8) {
+                speed = false;
+                speedToUseRight = normalSpeedRight;
+                speedToUseLeft = normalSpeedLeft;
             }
 
-            if(controller.isBombedPressed()){
-                if(controller.getAmountOfBombs()>0 && bombCoolDownTimer >=2) {
+            if (controller.isRightPressed()) {
+                player.b2body.setLinearVelocity(speedToUseRight);
+            } else if (controller.isLeftPressed()) {
+                player.b2body.setLinearVelocity(speedToUseLeft);
+            } else {
+                if (Defenders.FULL_CONTROL == true) {
+                    player.b2body.setLinearVelocity(new Vector2(0, 0));
+                }
+            }
+
+            if (controller.isBombedPressed()) {
+                if (controller.getAmountOfBombs() > 0 && bombCoolDownTimer >= 2) {
                     setBomb(true);
                     controller.setAmountOfBombs(controller.getAmountOfBombs() - 1);
-                    bombCoolDownTimer=0;
+                    bombCoolDownTimer = 0;
                 }
 
             }
 
-            if(godModeCheatCounterTimer>=3) {
-                godModeCheatCounter=0;
+            if (godModeCheatCounterTimer >= 3) {
+                godModeCheatCounter = 0;
                 godModeCheatCounterTimer = 0;
             }
 
-            if(controller.isPausePressed()){
-                godModeCheatCounter+=1;
-                if(godModeCheatCounter>=5) {
+            if (controller.isPausePressed()) {
+                godModeCheatCounter += 1;
+                if (godModeCheatCounter >= 5) {
                     godMode = !godMode;
-                    godModeCheatCounter=0;
+                    godModeCheatCounter = 0;
                 }
 
-                pause();
+
+                if (gameStatus != GameStatus.PAUSED)
+                    pause();
+
             }
+        }
+
+        else if(gameStatus==GameStatus.PAUSED){
+            if(controller.isPlayPressed()){
+                gameStatus=GameStatus.MID_GAME;
+
+            }
+
+            else if(controller.isMenuPressed()){
+                gameStatus = GameStatus.LOOSE;
+            }
+        }
+/*
+        if(pauseMenu.isPlayPressed()){
+            gameStatus=GameStatus.MID_GAME;
+
+        }
+        */
+/*
+            if(gameStatus == GameStatus.PAUSED){
+                if(hudForPause.isBackToGamePressed()){
+                    gameStatus=GameStatus.MID_GAME;
+                }
+                else if(hudForPause.isBackToMenuPressed()){
+                    gameStatus = GameStatus.LOOSE;
+                }
+           }
+
+*/
 
 
 
@@ -334,57 +351,54 @@ public class PlayScreen implements Screen {
             handleInput(dt);
             world.step(1 / 60f, 6, 2);
 
-            player.update(dt);
-            hud.update(dt);
+               player.update(dt);
+               hud.update(dt);
 
-            //The to find better way to update this
+               //The to find better way to update this
 
-            enemy.update(dt);
-            //////////////////////////////////
+               enemy.update(dt);
+               //////////////////////////////////
 
-            //add balls to game
-            ballTimeCount += dt;
-        //boss
-        if(enemyType==666){
-            if(enemy.getHealthBar()>0.7){
-                timeBetweenBalls=4;
-            }
+               //add balls to game
+               ballTimeCount += dt;
+               //boss
+               if (enemyType == 666) {
+                   if (enemy.getHealthBar() > 0.7) {
+                       timeBetweenBalls = 4;
+                   } else if (enemy.getHealthBar() > 0.4) {
+                       timeBetweenBalls = 4;
+                       amountOfBallsPerShoot = 2;
+                   } else {
+                       timeBetweenBalls = 3;
+                       amountOfBallsPerShoot = 3;
+                   }
 
-            else if(enemy.getHealthBar()>0.4){
-                timeBetweenBalls=4;
-                amountOfBallsPerShoot=2;
-            }
-            else{
-                timeBetweenBalls=3;
-                amountOfBallsPerShoot=3;
-            }
+               }
+               //////////////////////////////////////////
+               if (ballTimeCount >= timeBetweenBalls) {
+                   for (int i = 0; i < amountOfBallsPerShoot; i++)
+                       ballArray.add(initlizeBall(ballType));
+                   ballTimeCount = 0;
+               }
 
-        }
-        //////////////////////////////////////////
-            if (ballTimeCount >= timeBetweenBalls) {
-                for(int i = 0 ; i<amountOfBallsPerShoot;i++)
-                    ballArray.add(initlizeBall(ballType));
-                ballTimeCount = 0;
-            }
+               //add powerups to game
 
-            //add powerups to game
+               powerUpTimeCount += dt;
+               if (powerUpTimeCount >= timeBetweenPowerUps) {
+                   powerUpArray.add(initlizePowerUp(powerUpsType));
+                   powerUpTimeCount = 0;
+               }
 
-            powerUpTimeCount += dt;
-            if (powerUpTimeCount >= timeBetweenPowerUps) {
-                powerUpArray.add(initlizePowerUp(powerUpsType));
-                powerUpTimeCount = 0;
-            }
+               for (Ball ball : ballArray) {
+                   ball.update(dt);
+               }
 
-            for (Ball ball : ballArray) {
-                ball.update(dt);
-            }
+               for (PowerUp powerUp : powerUpArray) {
+                   powerUp.update(dt);
+               }
 
-            for (PowerUp powerUp : powerUpArray) {
-                powerUp.update(dt);
-            }
-
-            game.batch.setProjectionMatrix(gameCam.combined);
-            renderer.setView(gameCam);
+               game.batch.setProjectionMatrix(gameCam.combined);
+               renderer.setView(gameCam);
 
     }
 
@@ -397,17 +411,14 @@ public class PlayScreen implements Screen {
             update(delta);
         }
 
-        if(gameStatus==GameStatus.PAUSED){
-            //hudForPause.stage.draw();
-            //TODO Fix this show when game paused
-            waitInputSetNextScreen();
-        }
+
         //render the game map
         renderer.render();
 
         //render the 2dbox debug lines
         b2dr.render(world, gameCam.combined);
         controller.draw();
+
 
 
 
@@ -424,6 +435,21 @@ public class PlayScreen implements Screen {
             endLevelHudRender();
             waitInputSetNextScreen();
         }
+
+        if(gameStatus==GameStatus.PAUSED){
+            controller.setPauseMenuVisable(true);
+            handleInput(delta);
+           // pauseMenu.draw();
+            //  hudForPause.draw();
+            //TODO Fix this show when game paused
+          //  waitInputSetNextScreen();
+        }
+
+        else if(gameStatus!=GameStatus.PAUSED){
+            controller.setPauseMenuVisable(false);
+        }
+
+
     }
 
     public void endLevelHudRender(){
@@ -441,7 +467,8 @@ public class PlayScreen implements Screen {
     public void resize(int width, int height) {
         gamePort.update(width,height);
         controller.resize(width,height);
-        hudForPause.resize(width,height);
+       // hudForPause.resize(width,height);
+       // pauseMenu.resize(width,height);
     }
 
     @Override
@@ -689,10 +716,6 @@ public class PlayScreen implements Screen {
 
         game.batch.end();
 
-        if(gameStatus==GameStatus.PAUSED){
-            hudForPause.draw();
-
-        }
     }
     public void checkIfLost(){
         for (Ball ball : ballArray) {
@@ -726,8 +749,9 @@ public class PlayScreen implements Screen {
             }
 
             else if(gameStatus==GameStatus.PAUSED){
-                gameStatus=GameStatus.MID_GAME;
+                    gameStatus=GameStatus.MID_GAME;
             }
+
         }
     }
 

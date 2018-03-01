@@ -111,14 +111,33 @@ public class OptionScreen implements Screen {
         soundOffButton = new TextButton("OFF", skin,"toggle");
         soundButtonGroup = new ButtonGroup(soundOnButton, soundOffButton);
 
+        if(Defenders.VOLUME==1)
+            soundButtonGroup.setChecked("ON");
+        else if(Defenders.VOLUME==0){
+            soundButtonGroup.setChecked("OFF");
+        }
+
 
         singleClickButton = new TextButton("Single Click", skin,"toggle");
         fullControlButton = new TextButton("Full Control", skin,"toggle");
         controlButtonGroup = new ButtonGroup(singleClickButton, fullControlButton);
 
+        if(Defenders.FULL_CONTROL==true)
+            controlButtonGroup.setChecked("Full Control");
+        else if(Defenders.FULL_CONTROL==false){
+            controlButtonGroup.setChecked("Single Click");
+        }
+
+
         vibreationOnButton = new TextButton("ON", skin,"toggle");
         vibreationOffButton = new TextButton("OFF", skin,"toggle");
-        controlButtonGroup = new ButtonGroup(vibreationOnButton, vibreationOffButton);
+        vibreationButtonGroup = new ButtonGroup(vibreationOnButton, vibreationOffButton);
+
+        if(Defenders.VIBRATION==true)
+            vibreationButtonGroup.setChecked("ON");
+        else if(Defenders.VIBRATION==false){
+            vibreationButtonGroup.setChecked("OFF");
+        }
 
 
         cheatTextArea = new TextArea("", skin);
@@ -171,9 +190,59 @@ public class OptionScreen implements Screen {
         });
 
 
+
+        soundOnButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Defenders.VOLUME=1f;
+            }
+        });
+
+        soundOffButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Defenders.VOLUME=0;
+            }
+        });
+
+
+        vibreationOnButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Defenders.VIBRATION=true;
+            }
+        });
+
+        vibreationOffButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Defenders.VIBRATION=false;
+            }
+        });
+
+
+        fullControlButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Defenders.FULL_CONTROL=true;
+            }
+        });
+
+        singleClickButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Defenders.FULL_CONTROL=false;
+            }
+        });
     }
 
-    //TODO add buttons functionality
+    //TODO add cheat funcionality
 
     @Override
     public void show() {

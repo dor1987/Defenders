@@ -24,6 +24,15 @@ public class Defenders extends Game {
     public static final int STARTING_LIVES = 3;
 	public static LeaderBoardHandler handler;
 
+	//options setting
+	public static float VOLUME = 1f;
+	public static boolean FULL_CONTROL = true;
+	public static boolean VIBRATION = true;
+	public static boolean ISCHEATER = false;
+
+
+
+
 	public Defenders(LeaderBoardHandler handler){
 		this.handler = handler;
 	}
