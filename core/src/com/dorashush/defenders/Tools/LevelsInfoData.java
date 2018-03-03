@@ -99,7 +99,7 @@ public class LevelsInfoData {
                 ball = 7;
                 powerUps = 3;
                 levelNum = 8;
-                timeBetweenBalls=8;
+                timeBetweenBalls=6;
                 amountOfBallsPerShoot = 1;
                 timeBetweenPowerUps = 7;
                 break;

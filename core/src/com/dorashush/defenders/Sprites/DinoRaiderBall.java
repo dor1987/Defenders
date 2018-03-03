@@ -27,13 +27,12 @@ public class DinoRaiderBall extends Ball{
 
         frames = new Array<TextureRegion>();
         for(int i = 0; i<4 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("dinoraiderball"), i *108,0,108,49));
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("dinoraiderball"), i *111,0,111,49));
         moveAnimation = new Animation(0.2f,frames);
         stateTime = 0;
         setBounds(getX(),getY(),108 / Defenders.PPM,49/Defenders.PPM);
         setToRemove = false;
         removed = false;
-
         setToHitVillage = false;
         hitedTheVillage = false;
 
@@ -85,7 +84,7 @@ public class DinoRaiderBall extends Ball{
 
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(14 /Defenders.PPM);
+        shape.setRadius(17 /Defenders.PPM);
         fdef.shape = shape;
         fdef.isSensor = true;
 

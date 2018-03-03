@@ -87,7 +87,14 @@ public class NormalBull  extends Enemy {
             if (getState() == DinoRaider.State.FIREING) {
                 b2body.setLinearVelocity(velocity2);
             } else {
-                if(movmentTimer>=0.5) {
+                if(getX() >= 480/Defenders.PPM){
+                    velocity3.x= -3;
+                }
+                else if(getX() <= 0){
+                    velocity3.x= 3;
+                }
+
+                if(movmentTimer>=0.9) {
                     velocity3.x = velocity.x * generateNumber(3);
                     movmentTimer=0;
                 }

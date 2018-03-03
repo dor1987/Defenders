@@ -26,11 +26,11 @@ public class BossBall extends Ball{
         super(screen, x, y);
 
         frames = new Array<TextureRegion>();
-        for(int i = 0; i<4 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("dinoraiderball"), i *108,0,108,49));
+        for(int i = 0; i<3 ; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("bossball1"), i *86,0,86,36));
         moveAnimation = new Animation(0.2f,frames);
         stateTime = 0;
-        setBounds(getX(),getY(),108 / Defenders.PPM,49/Defenders.PPM);
+        setBounds(getX(),getY(),86 / Defenders.PPM,36/Defenders.PPM);
         setToRemove = false;
         removed = false;
 

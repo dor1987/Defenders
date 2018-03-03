@@ -153,6 +153,8 @@ public class WorldContactListener implements ContactListener {
         //Enemy movment
         if(fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.ENEMY)){
             if (fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.WALL)) {
+                Gdx.app.log("","enemy touched wall");
+
                 ((Enemy)fixtureA.getUserData()).reverseVelocity(true,false);
             }
         }
@@ -160,6 +162,8 @@ public class WorldContactListener implements ContactListener {
         else if(fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.ENEMY)){
 
             if (fixtureIsCollisionType(fixtureA, BodyUserData.CollisionType.WALL)) {
+                Gdx.app.log("","enemy touched wall");
+
                 ((Enemy)fixtureB.getUserData()).reverseVelocity(true,false);
 
             }

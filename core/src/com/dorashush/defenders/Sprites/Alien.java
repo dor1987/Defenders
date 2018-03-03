@@ -39,6 +39,9 @@ public class Alien extends Enemy{
         frames = new Array<TextureRegion>();
         for(int i = 0; i<4 ; i++)
             frames.add(new TextureRegion(screen.getAtlas().findRegion("allienwalk"), i *106,0,106,103));
+
+
+
         flyAnimation = new Animation(0.2f,frames);
 
         frames.clear();

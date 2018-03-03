@@ -211,7 +211,7 @@ public class Boss  extends Enemy {
         else{
             shootingTimer %=3;
 
-            if (previousState == Boss.State.FIREING2 && shootingTimer > 0.02 && shootingTimer < 1.5) {
+            if (previousState == Boss.State.FIREING2 && shootingTimer > 0.02 && shootingTimer < 1.8) {
                 return Boss.State.FIREING2;
             } else if (shootingTimer <= 0.02 && avoidFirstHitTimer > 2) {
                 return Boss.State.FIREING2;

@@ -27,7 +27,7 @@ public class AlienBall extends Ball {
 
         frames = new Array<TextureRegion>();
         for(int i = 0; i<3 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("allienball"), i *90,0,90,76));
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("allienball"), i *95,0,95,76));
         moveAnimation = new Animation(0.2f,frames);
         stateTime = 0;
         setBounds(getX(),getY(),90 / Defenders.PPM,76/Defenders.PPM);

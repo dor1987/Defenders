@@ -134,7 +134,7 @@ public class IceDino extends Enemy {
 
 
     public DinoRaider.State getState() {
-        shootingTimer %= 8;
+        shootingTimer %= 6;
 
         if (previousState == DinoRaider.State.FIREING && shootingTimer > 0.02 && shootingTimer < 0.9) {
             return DinoRaider.State.FIREING;

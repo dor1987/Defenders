@@ -129,7 +129,7 @@ public class Controller {
         table.setFillParent(true);
 
         Image rightImg = new Image(new Texture("right.png"));
-        rightImg.setSize(85, 70);
+        rightImg.setSize(76, 76);
         rightImg.addListener(new InputListener() {
 
             @Override
@@ -145,7 +145,7 @@ public class Controller {
         });
 
         Image leftImg = new Image(new Texture("left.png"));
-        leftImg.setSize(85, 70);
+        leftImg.setSize(76, 76);
         leftImg.addListener(new InputListener() {
 
             @Override
@@ -162,7 +162,7 @@ public class Controller {
 
 
         final Image pauseImg = new Image(new Texture("pause.png"));
-        pauseImg.setSize(85, 70);
+        pauseImg.setSize(76, 76);
 
         pauseImg.addListener(new InputListener() {
 
@@ -183,11 +183,11 @@ public class Controller {
 
         Drawable bombDrawable = new TextureRegionDrawable(new TextureRegion(new Texture("bomb.png")));
         TextButton.TextButtonStyle bombTextButtonStyle = new TextButton.TextButtonStyle( bombDrawable, bombDrawable, bombDrawable, new BitmapFont() );
-        bombImg = new TextButton( String.format("  %02d",amountOfBombs) ,bombTextButtonStyle);
+        bombImg = new TextButton( String.format("%02d",amountOfBombs) ,bombTextButtonStyle);
         bombImg.getLabel().setFontScale(1.5f);
 
         bombImg.setDisabled( true );
-        bombImg.setSize(85,70);
+        bombImg.setSize(76,76);
         bombImg.addListener(new InputListener() {
 
             @Override
@@ -202,13 +202,13 @@ public class Controller {
             }
         });
 
-        Drawable speedDrawable = new TextureRegionDrawable(new TextureRegion(new Texture("bomb.png")));
+        Drawable speedDrawable = new TextureRegionDrawable(new TextureRegion(new Texture("speed.png")));
         TextButton.TextButtonStyle speedTextButtonStyle = new TextButton.TextButtonStyle( speedDrawable, speedDrawable, speedDrawable, new BitmapFont() );
-        speedImg = new TextButton( String.format("  %02d",amountOfSpeeds) ,speedTextButtonStyle);
+        speedImg = new TextButton( String.format("%02d",amountOfSpeeds) ,speedTextButtonStyle);
         speedImg.getLabel().setFontScale(1.5f);
 
         speedImg.setDisabled( true );
-        speedImg.setSize(85,70);
+        speedImg.setSize(76,76);
         speedImg.addListener(new InputListener() {
 
             @Override
@@ -224,11 +224,11 @@ public class Controller {
         });
 
 
-        table.add(leftImg).size(leftImg.getWidth(), leftImg.getHeight()).padRight(15);
-        table.add(speedImg).size(speedImg.getWidth(), speedImg.getHeight()).pad(0,5,0,5);
-        table.add(pauseImg).size(pauseImg.getWidth(), pauseImg.getHeight()).pad(0,5,0,5);
-        table.add(bombImg).size(bombImg.getWidth(), bombImg.getHeight()).pad(0,5,0,5);
-        table.add(rightImg).size(rightImg.getWidth(), rightImg.getHeight()).padLeft(15);
+        table.add(leftImg).size(leftImg.getWidth(), leftImg.getHeight()).padRight(10);
+        table.add(speedImg).size(speedImg.getWidth(), speedImg.getHeight()).pad(0,10,0,10);
+        table.add(pauseImg).size(pauseImg.getWidth(), pauseImg.getHeight()).pad(0,10,0,10);
+        table.add(bombImg).size(bombImg.getWidth(), bombImg.getHeight()).pad(0,10,0,10);
+        table.add(rightImg).size(rightImg.getWidth(), rightImg.getHeight()).padLeft(10);
 
 
         stage.addActor(table);

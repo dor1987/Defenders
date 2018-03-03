@@ -32,7 +32,7 @@ public class SpeedChangingBall extends Ball{
 
         frames = new Array<TextureRegion>();
         for(int i = 0; i<3 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("forestwitchball2"), i *91,0,91,80));
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("forestwitchball2"), i *95,0,95,80));
         moveAnimation = new Animation(0.2f,frames);
         stateTime = 0;
         setBounds(getX(),getY(),91 / Defenders.PPM,80/Defenders.PPM);

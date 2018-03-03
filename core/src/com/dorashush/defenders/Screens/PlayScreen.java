@@ -216,9 +216,7 @@ public class PlayScreen implements Screen {
 
         //
 
-        //pause
-        pause = new Texture("pausescreen.png");
-        //
+
 
         //Controller
         controller = new Controller();
@@ -473,7 +471,8 @@ public class PlayScreen implements Screen {
 
     @Override
     public void pause() {
-    gameStatus=GameStatus.PAUSED;
+        if(gameStatus!= GameStatus.WIN && gameStatus!= GameStatus.LOOSE)
+            gameStatus=GameStatus.PAUSED;
     }
 
     @Override
