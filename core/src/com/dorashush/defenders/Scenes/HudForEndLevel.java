@@ -5,12 +5,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -39,18 +42,20 @@ public class HudForEndLevel implements Disposable {
     static Label totalScoreLabelInNumber;
      Label.LabelStyle font;
     private Image endGamePanelBackground;
-    private Image noStar;
-    private Image oneStar;
-    private Image twoStar;
-    private Image threeStar;
-    private static boolean isWin;
+
+    private Texture noStar;
+    private Texture oneStar;
+    private Texture twoStar;
+    private Texture threeStar;
+    private Image amountOfStarToShow;
+
 
     public HudForEndLevel(SpriteBatch sb){
 
         font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
       viewPort = new FitViewport(Defenders.V_WIDTH,Defenders.V_HEIGHT,new OrthographicCamera());
        // viewPort = new FitViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(),new OrthographicCamera());
-
+//TODO fix the star funcionality
         stage = new Stage(viewPort,sb);
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
@@ -71,10 +76,14 @@ public class HudForEndLevel implements Disposable {
 
         endGamePanelBackground= new Image(new Texture("endlevelpanel.png"));
         endGamePanelBackground.setPosition(Defenders.V_WIDTH/2-endGamePanelBackground.getWidth()/2,Defenders.V_HEIGHT/2-endGamePanelBackground.getHeight()/3);
-        noStar = new Image(new Texture("nostars.png"));
-        oneStar = new Image(new Texture("onestar.png"));
-        twoStar = new Image(new Texture("twostar.png"));
-        threeStar = new Image(new Texture("threestars.png"));
+
+        noStar = new Texture("nostars.png");
+        oneStar =new Texture("onestar.png");
+        twoStar = new Texture("twostar.png");
+        threeStar = new Texture("threestars.png");
+        amountOfStarToShow = new Image(noStar);
+
+
 
         youWinOrLooseLabel = new Label("YOU WIN",skin);
         youWinOrLooseLabel.setFontScale(1.5f);
@@ -87,6 +96,8 @@ public class HudForEndLevel implements Disposable {
         timLeftBonusLabel= new Label("Time left Bonus:",skin);
         timLeftBonusLabel.setFontScale(1.2f);
         timLeftBonusLabelInNumber = new Label(String.format("%06d",Hud.getTimeLeft()),skin);
+        //timLeftBonusLabelInNumber = new Label(String.format("%06d",tempTime),skin);
+
         timLeftBonusLabelInNumber.setFontScale(1.2f);
         totalScoreLabel= new Label("Total Score:",skin);
         totalScoreLabel.setFontScale(1.2f);
@@ -95,7 +106,7 @@ public class HudForEndLevel implements Disposable {
 
         table.add(youWinOrLooseLabel).setActorWidth(480);
         table.row().padTop(20);
-        table.add(getAmountOfStars()).setActorWidth(480);
+        table.add(amountOfStarToShow).setActorWidth(480);
 
 
         table2.add(scoreLabel);
@@ -120,11 +131,9 @@ public class HudForEndLevel implements Disposable {
     public static void setGameStatus(PlayScreen.GameStatus gameStatus){
       if(gameStatus== PlayScreen.GameStatus.LOOSE) {
           youWinOrLooseLabel.setText("YOU LOOSE");
-          isWin =false;
       }
       else if(gameStatus== PlayScreen.GameStatus.WIN)
           youWinOrLooseLabel.setText("You WIN");
-            isWin = true;
     }
 
     public static void setScore(int value){
@@ -139,27 +148,30 @@ public class HudForEndLevel implements Disposable {
         totalScoreLabelInNumber.setText(String.format("%06d",value));
     }
 
-    public Image getAmountOfStars() {
-        if (!isWin) {
-            return noStar;
+    public void setAmountOfStars(int timeLeft,PlayScreen.GameStatus gameStatus) {
+        if (gameStatus== PlayScreen.GameStatus.LOOSE) {
+            amountOfStarToShow.setDrawable(new SpriteDrawable(new Sprite(noStar)));
         }
 
         else {
-            int tempTime = Hud.getTimeLeft();
-            if (tempTime >= 200) {
-                return threeStar;
-            } else if (tempTime >= 100) {
-                return twoStar;
-            } else if (tempTime >= 0) {
-                return oneStar;
+            if (timeLeft >= 200) {
+                amountOfStarToShow.setDrawable(new SpriteDrawable(new Sprite(threeStar)));
+            } else if (timeLeft >= 100) {
+                amountOfStarToShow.setDrawable(new SpriteDrawable(new Sprite(twoStar)));
+            } else if (timeLeft >= 0) {
+                amountOfStarToShow.setDrawable(new SpriteDrawable(new Sprite(oneStar)));
             } else {
-                return noStar;
+                amountOfStarToShow.setDrawable(new SpriteDrawable(new Sprite(noStar)));
             }
         }
 
     }
 
-    @Override
+
+
+
+
+        @Override
     public void dispose() {
         stage.dispose();
     }

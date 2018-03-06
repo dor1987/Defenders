@@ -83,19 +83,25 @@ public class LeaderBoardScreen implements Screen {
 
         line1 = new TextButton("1. "+leaderBoardArrayList.get(0),lineStyle);
         line1.setDisabled( true );
+        line1.getLabel().setFontScale(1.3f);
         line2 = new TextButton("2. "+leaderBoardArrayList.get(1),lineStyle);
         line2.setDisabled( true );
+        line2.getLabel().setFontScale(1.3f);
         line3 = new TextButton("3. "+leaderBoardArrayList.get(2),lineStyle);
         line3.setDisabled( true );
+        line3.getLabel().setFontScale(1.3f);
         line4 = new TextButton("4. "+leaderBoardArrayList.get(3),lineStyle);
         line4.setDisabled( true );
+        line4.getLabel().setFontScale(1.3f);
         line5 = new TextButton("5. "+leaderBoardArrayList.get(4),lineStyle);
         line5.setDisabled( true );
+        line5.getLabel().setFontScale(1.3f);
         line6 = new TextButton("6. "+leaderBoardArrayList.get(5),lineStyle);
         line6.setDisabled( true );
+        line6.getLabel().setFontScale(1.3f);
         line7 = new TextButton("7. "+leaderBoardArrayList.get(6),lineStyle);
         line7.setDisabled( true );
-
+        line7.getLabel().setFontScale(1.3f);
 
 
 

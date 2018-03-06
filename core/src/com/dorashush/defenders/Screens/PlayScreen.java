@@ -456,7 +456,7 @@ public class PlayScreen implements Screen {
         hudForEndLevel.setScore(Hud.getScore());
         hudForEndLevel.setTimeLeftBonus(Hud.getTimeLeft());
         hudForEndLevel.setTotalScore(Hud.getScore()+Hud.getTimeLeft());
-
+        hudForEndLevel.setAmountOfStars(Hud.getTimeLeft(),gameStatus);
         game.batch.setProjectionMatrix(hudForEndLevel.stage.getCamera().combined);
         hudForEndLevel.stage.draw();
     }
