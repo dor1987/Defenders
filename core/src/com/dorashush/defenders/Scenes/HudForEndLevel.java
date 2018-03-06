@@ -96,7 +96,6 @@ public class HudForEndLevel implements Disposable {
         timLeftBonusLabel= new Label("Time left Bonus:",skin);
         timLeftBonusLabel.setFontScale(1.2f);
         timLeftBonusLabelInNumber = new Label(String.format("%06d",Hud.getTimeLeft()),skin);
-        //timLeftBonusLabelInNumber = new Label(String.format("%06d",tempTime),skin);
 
         timLeftBonusLabelInNumber.setFontScale(1.2f);
         totalScoreLabel= new Label("Total Score:",skin);
