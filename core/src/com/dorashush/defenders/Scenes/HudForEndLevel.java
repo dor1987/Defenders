@@ -1,6 +1,8 @@
 package com.dorashush.defenders.Scenes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -48,10 +50,10 @@ public class HudForEndLevel implements Disposable {
     private Texture twoStar;
     private Texture threeStar;
     private Image amountOfStarToShow;
+    AssetManager manager;
 
-
-    public HudForEndLevel(SpriteBatch sb){
-
+    public HudForEndLevel(SpriteBatch sb, AssetManager manager){
+        this.manager = manager;
         font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
       viewPort = new FitViewport(Defenders.V_WIDTH,Defenders.V_HEIGHT,new OrthographicCamera());
        // viewPort = new FitViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(),new OrthographicCamera());

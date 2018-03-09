@@ -1,5 +1,7 @@
 package com.dorashush.defenders.Sprites;
 
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,6 +18,8 @@ import com.badlogic.gdx.utils.Array;
 import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Screens.PlayScreen;
 import com.dorashush.defenders.Tools.BodyUserData;
+
+import java.util.Random;
 
 /**
  * Created by Dor on 01/22/18.
@@ -35,13 +39,14 @@ public class Defender extends Sprite{
     private TextureRegion defenderStand;
 
     private BodyUserData bodyUserData;
-
+    private AssetManager manager;
     //power ups
 
 
-    public Defender(PlayScreen screen){
+    public Defender(PlayScreen screen,AssetManager manager){
         super(screen.getAtlas().findRegion("playersheet"));
         this.world = screen.getWorld();
+        this.manager=manager;
         currentState = State.STANDING;
         previousState = State.STANDING;
         stateTimer = 0;
@@ -124,16 +129,37 @@ public class Defender extends Sprite{
         shape.setRadius(20 /Defenders.PPM);
 
         fdef.shape = shape;
-        b2body.createFixture(fdef).setUserData("body");
+        b2body.createFixture(fdef).setUserData(this);
 
         EdgeShape shield = new EdgeShape();
         shield.set(new Vector2(-25/Defenders.PPM,30/Defenders.PPM),new Vector2(25/Defenders.PPM,30/Defenders.PPM));
         fdef.shape = shield;
 
-        b2body.createFixture(fdef).setUserData("shield");
+        b2body.createFixture(fdef).setUserData(this);
     }
 
-    public void turnOnPowerUp(){
+    public void onBallBlock(){
+        int temp = generateNumber(3);
+        switch (temp){
+            case 1:
+                manager.get("sound/hit1.ogg",Sound.class).play(Defenders.VOLUME);
+            break;
 
+            case 2:
+                manager.get("sound/hit2.ogg",Sound.class).play(Defenders.VOLUME);
+                break;
+
+            case 3:
+                manager.get("sound/hit3.ogg",Sound.class).play(Defenders.VOLUME);
+                break;
+        }
+
+    }
+
+    public int generateNumber(int maxNum) {
+        Random random = new Random();
+        int result = random.nextInt(maxNum+1); //to avoid maxnum been 0
+
+        return result;
     }
 }

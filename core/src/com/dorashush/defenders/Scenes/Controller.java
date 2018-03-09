@@ -264,7 +264,7 @@ public class Controller {
     }
     public static void setAmountOfBombs(Integer amountOfBombs) {
         Controller.amountOfBombs = amountOfBombs;
-        bombImg.setText(String.format("  %02d",amountOfBombs));
+        bombImg.setText(String.format("%02d",amountOfBombs));
     }
 
     public static Integer getAmountOfSpeeds() {
@@ -273,7 +273,7 @@ public class Controller {
 
     public static void setAmountOfSpeeds(Integer amountOfSpeeds) {
         Controller.amountOfSpeeds = amountOfSpeeds;
-        speedImg.setText(String.format("  %02d",amountOfSpeeds));
+        speedImg.setText(String.format("%02d",amountOfSpeeds));
     }
 
     public boolean isPlayPressed() {

@@ -3,6 +3,7 @@ package com.dorashush.defenders.Screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -28,12 +29,13 @@ public class SplashScreen implements Screen {
     private ExtendViewport backViewPort;
     private Table table;
     private Image logo;
+    private AssetManager manager;
 
-
-    public SplashScreen(final Defenders game) {
+    public SplashScreen(final Defenders game ,AssetManager manager) {
         this.game = game;
         camera = new OrthographicCamera();
         viewport = new FitViewport(Defenders.V_WIDTH,Defenders.V_HEIGHT, camera);
+        this.manager=manager;
 
         stage = new Stage(viewport,game.batch);
         Gdx.input.setInputProcessor(stage);
@@ -42,7 +44,8 @@ public class SplashScreen implements Screen {
         logo = new Image(logoText);
 
         logo.setOrigin(logo.getWidth()/2,logo.getHeight()/2);
-        logo.setSize(322f,172f);
+       // logo.setSize(322f,172f);
+        //logo.setScale(0.8f);
         stage.addActor(logo);
 
 
@@ -54,19 +57,20 @@ public class SplashScreen implements Screen {
     }
 
     @Override
-    public void show() {
+    public void show() {// use to set starting position
         logo.setPosition(stage.getWidth()/2,stage.getHeight()/2+logo.getHeight());
 
         Runnable transitionRunnable = new Runnable() {
             @Override
             public void run() {
-                game.setScreen(new MainMenuScreen((Defenders) game));
+                game.setScreen(new MainMenuScreen((Defenders)game,manager));
+
             }
         };
 
 
-        logo.addAction(sequence(alpha(0),scaleTo(.1f,.1f),parallel(fadeIn(2f, Interpolation.pow2),scaleTo(2f,2f,2.5f,Interpolation.pow5),
-                moveTo(Defenders.V_WIDTH/2-logo.getWidth()/Defenders.PPM,Defenders.V_HEIGHT/2-logo.getHeight()/Defenders.PPM,2f,Interpolation.swing)),delay(1.5f),fadeOut(1.25f),run(transitionRunnable)));
+        logo.addAction(sequence(alpha(0),scaleTo(.1f,.1f),parallel(fadeIn(2f, Interpolation.pow2),scaleTo(1.2f,1.2f,2.5f,Interpolation.pow5),
+                moveTo(Defenders.V_WIDTH/2/Defenders.PPM+logo.getWidth()/4,Defenders.V_HEIGHT/2-logo.getHeight()/3,2f,Interpolation.swing)),delay(1.5f),fadeOut(1.25f),run(transitionRunnable)));
 
     }
 

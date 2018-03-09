@@ -3,12 +3,15 @@ package com.dorashush.defenders.Tools;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.dorashush.defenders.Sprites.Ball;
+import com.dorashush.defenders.Sprites.Defender;
 import com.dorashush.defenders.Sprites.Enemy;
 import com.dorashush.defenders.Sprites.PowerUp;
 import com.dorashush.defenders.Sprites.SimpleBall;
@@ -40,10 +43,12 @@ public class WorldContactListener implements ContactListener {
 
             } else if (fixtureIsCollisionType(fixtureB, BodyUserData.CollisionType.PLAYER)) {
                 //BALL HIT PLAYER
-                if(fixtureB.getUserData()=="shield"){
+              //  if(fixtureB.getUserData()=="shield"){
+                if(fixtureB.getShape() instanceof EdgeShape){
                     ((Ball)fixtureA.getUserData()).reverseVelocity(false,true);
+                    ((Defender)fixtureB.getUserData()).onBallBlock();
                 }
-                else if(fixtureB.getUserData()=="body"){
+                else if(fixtureB.getShape() instanceof CircleShape){
                     if(!godMode) {
                         ((Ball) fixtureA.getUserData()).hitTheVillage();
                     }
@@ -102,10 +107,12 @@ public class WorldContactListener implements ContactListener {
 
                 //((Ball)fixtureB.getUserData()).reverseVelocity(false,true);
 
-                if(fixtureA.getUserData()=="shield"){
+                //if(fixtureA.getUserData()=="shield"){
+                if(fixtureA.getShape() instanceof EdgeShape){
+                    ((Defender)fixtureA.getUserData()).onBallBlock();
                     ((Ball)fixtureB.getUserData()).reverseVelocity(false,true);
                 }
-                else if(fixtureA.getUserData()=="body"){
+                else if(fixtureA.getShape() instanceof CircleShape){
                     if(!godMode) {
                         ((Ball) fixtureB.getUserData()).hitTheVillage();
                     }

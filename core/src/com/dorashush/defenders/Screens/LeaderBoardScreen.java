@@ -3,6 +3,7 @@ package com.dorashush.defenders.Screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -58,7 +59,7 @@ public class LeaderBoardScreen implements Screen {
     private Image backBtn;
     private Image refreshBtn;
 
-    public LeaderBoardScreen(final Game game){
+    public LeaderBoardScreen(final Game game, final AssetManager manager){
         this.game = game;
         viewport = new FitViewport(Defenders.V_WIDTH,Defenders.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport,((Defenders)game).batch);
@@ -139,7 +140,7 @@ public class LeaderBoardScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 //Add leaderbaord Screen
-                game.setScreen(new MainMenuScreen((Defenders) game));
+                game.setScreen(new MainMenuScreen((Defenders) game,manager));
                 dispose();
             }
         });
@@ -150,7 +151,7 @@ public class LeaderBoardScreen implements Screen {
                 super.clicked(event, x, y);
                 //Add leaderbaord Screen
                 Defenders.handler.refresh();
-                game.setScreen(new LeaderBoardScreen(game));
+                game.setScreen(new LeaderBoardScreen(game,manager));
                 dispose();
             }
         });

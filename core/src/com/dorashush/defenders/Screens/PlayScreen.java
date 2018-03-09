@@ -2,6 +2,8 @@ package com.dorashush.defenders.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -96,10 +98,7 @@ public class PlayScreen implements Screen {
     private Defender player;
 
     private Enemy enemy; //testing
-    //private Dragon dragon;
-   // private GodPowerUp godPowerUP;
-    //private SimpleBall simpleBall;//for ball testing
-    //private Vector2 positionToSpawnBall;
+
 
     //Ball control
     private Array<Ball> ballArray;
@@ -152,17 +151,22 @@ public class PlayScreen implements Screen {
     Vector2 speedToUseRight;
     Vector2 speedToUseLeft;
 
-    public PlayScreen(Defenders game ,int levelNumber , int score , int lives){
+
+    //sound
+    AssetManager manager;
+    boolean isFirstTimeSound;
+
+    public PlayScreen(Defenders game , int levelNumber , int score , int lives, AssetManager manager){
         atlas = new TextureAtlas("final_animation_for_game.atlas");
-
-
+        this.manager=manager;
+        isFirstTimeSound =true;
         this.game = game;
         gameCam = new OrthographicCamera();
         gamePort = new FitViewport(Defenders.V_WIDTH/ Defenders.PPM,Defenders.V_HEIGHT/ Defenders.PPM,gameCam);
 
         gamePort.apply();
         hud = new Hud(game.batch);
-        hudForEndLevel = new HudForEndLevel(game.batch);//delete if doesnt work
+        hudForEndLevel = new HudForEndLevel(game.batch,manager);//delete if doesnt work
      //   hudForPause = new HudPauseGame();
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("stage2.tmx");
@@ -188,7 +192,7 @@ public class PlayScreen implements Screen {
         ballTimeCount = 0;
         powerUpTimeCount=0;
 
-        player = new Defender(this);
+        player = new Defender(this, manager);
 
         //Stage managment
         gameStatus=GameStatus.MID_GAME;
@@ -233,6 +237,8 @@ public class PlayScreen implements Screen {
         //
 
         world.setContactListener(new WorldContactListener());
+        playStarGameSound();
+
     }
 
     public TextureAtlas getAtlas(){
@@ -263,6 +269,8 @@ public class PlayScreen implements Screen {
             if (controller.isSpeedPressed()) {
                 if (controller.getAmountOfSpeeds() > 0 && speedCoolDownTimer >= 8) {
                     speed = true;
+                    manager.get("sound/notsofast.ogg",Sound.class).play(Defenders.VOLUME);
+
                     speedToUseRight = lightingSpeedRight;
                     speedToUseLeft = lightingSpeedLeft;
                     controller.setAmountOfSpeeds(controller.getAmountOfSpeeds() - 1);
@@ -288,6 +296,8 @@ public class PlayScreen implements Screen {
             if (controller.isBombedPressed()) {
                 if (controller.getAmountOfBombs() > 0 && bombCoolDownTimer >= 2) {
                     setBomb(true);
+                   manager.get("sound/bomb.mp3",Sound.class).play(Defenders.VOLUME);
+
                     controller.setAmountOfBombs(controller.getAmountOfBombs() - 1);
                     bombCoolDownTimer = 0;
                 }
@@ -414,7 +424,7 @@ public class PlayScreen implements Screen {
         renderer.render();
 
         //render the 2dbox debug lines
-        b2dr.render(world, gameCam.combined);
+       // b2dr.render(world, gameCam.combined);
         controller.draw();
 
 
@@ -430,6 +440,7 @@ public class PlayScreen implements Screen {
 
 
         if(gameStatus!=GameStatus.MID_GAME && gameStatus!=GameStatus.PAUSED){
+
             endLevelHudRender();
             waitInputSetNextScreen();
         }
@@ -452,6 +463,7 @@ public class PlayScreen implements Screen {
 
     public void endLevelHudRender(){
         //update end level hud before drawing
+        endLevelSound(isFirstTimeSound);
         hudForEndLevel.setGameStatus(gameStatus);
         hudForEndLevel.setScore(Hud.getScore());
         hudForEndLevel.setTimeLeftBonus(Hud.getTimeLeft());
@@ -637,7 +649,7 @@ public class PlayScreen implements Screen {
                 powerUp = new BombPowerUp(this);
                 break;
             case 1:
-                powerUp = new LifePowerUp(this);
+                powerUp = new LifePowerUp(this,manager);
                 break;
 
             case 2:
@@ -735,14 +747,14 @@ public class PlayScreen implements Screen {
         if(Gdx.input.justTouched()){
             if(gameStatus==GameStatus.WIN){
                 if (amountOfLevel == levelNum)//check if last stage
-                    game.setScreen(new EndGameScreen(game, Hud.getScore()+Hud.getTimeLeft()));
+                    game.setScreen(new EndGameScreen(game, Hud.getScore()+Hud.getTimeLeft(),manager));
                 else
-                    game.setScreen(new PlayScreen(game, levelNum, Hud.getScore()+Hud.getTimeLeft(),Hud.getLives())); //move to next level
+                    game.setScreen(new PlayScreen(game, levelNum, Hud.getScore()+Hud.getTimeLeft(),Hud.getLives(),manager)); //move to next level
                 dispose();
             }
 
             else if(gameStatus==GameStatus.LOOSE){
-                game.setScreen(new EndGameScreen(game, Hud.getScore()));
+                game.setScreen(new EndGameScreen(game, Hud.getScore(),manager));
                 dispose();
 
             }
@@ -763,6 +775,57 @@ public class PlayScreen implements Screen {
 
     public void setBomb(boolean bomb) {
         this.bomb = bomb;
+    }
+
+    public void endLevelSound(boolean isFirstTime) {
+        if (isFirstTime) {
+            if (gameStatus == PlayScreen.GameStatus.LOOSE) {
+                manager.get("sound/motherdontlose.ogg", Sound.class).play(Defenders.VOLUME);
+            } else if (gameStatus == PlayScreen.GameStatus.WIN) {
+                int temp = generateNumber(3);
+                switch (temp) {
+                    case 1:
+                        manager.get("sound/braumlivesanotherday.ogg", Sound.class).play(Defenders.VOLUME);
+                        break;
+                    case 2:
+                        manager.get("sound/butuhaveme.ogg", Sound.class).play(Defenders.VOLUME);
+                        break;
+
+                    case 3:
+                        manager.get("sound/ucallbraum.ogg", Sound.class).play(Defenders.VOLUME);
+                        break;
+                }
+
+            }
+            isFirstTimeSound=false;
+        }
+    }
+
+    public void playStarGameSound(){
+        int temp =generateNumber(6);
+
+        switch (temp) {
+            case 1:
+                manager.get("sound/weareabouttobegin.ogg",Sound.class).play(Defenders.VOLUME);
+                break;
+            case 2:
+                manager.get("sound/braumishere.ogg", Sound.class).play(Defenders.VOLUME);
+                break;
+
+            case 3:
+                manager.get("sound/myshieldishereforu.ogg", Sound.class).play(Defenders.VOLUME);
+                break;
+            case 4:
+                manager.get("sound/myshieldismysword.ogg", Sound.class).play(Defenders.VOLUME);
+                break;
+            case 5:
+                manager.get("sound/showmeyourbest.ogg", Sound.class).play(Defenders.VOLUME);
+                break;
+
+            case 6:
+                manager.get("sound/standbehindbraum.ogg", Sound.class).play(Defenders.VOLUME);
+                break;
+        }
     }
 }
 

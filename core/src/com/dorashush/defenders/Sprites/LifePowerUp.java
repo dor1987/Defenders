@@ -1,5 +1,7 @@
 package com.dorashush.defenders.Sprites;
 
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -9,6 +11,8 @@ import com.badlogic.gdx.utils.Array;
 import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Scenes.Hud;
 import com.dorashush.defenders.Screens.PlayScreen;
+
+import java.util.Random;
 
 /**
  * Created by Dor on 02/17/18.
@@ -21,9 +25,11 @@ public class LifePowerUp extends PowerUp {
     private Array<TextureRegion> frames;
     private boolean setToRemove;
     //private boolean setGotCollected;
+    private AssetManager manager;
 
-    public LifePowerUp(PlayScreen screen) {
+    public LifePowerUp(PlayScreen screen, AssetManager manager) {
         super(screen);
+        this.manager=manager;
         frames = new Array<TextureRegion>();
         for(int i = 0; i<8 ; i++)
             frames.add(new TextureRegion(screen.getAtlas().findRegion("heartcoin"), i *40,0,40,40));
@@ -89,7 +95,23 @@ public class LifePowerUp extends PowerUp {
 
     @Override
     public void onPlayerCaught() {
+        int temp =generateNumber(2);
+        if(temp==1){
+            manager.get("sound/takeheart.ogg",Sound.class).play(Defenders.VOLUME);
+        }
+        else if(temp==2){
+            manager.get("sound/theheartisthestrongestmus.ogg",Sound.class).play(Defenders.VOLUME);
+        }
+
         Hud.addLive();
+
+    }
+
+    public int generateNumber(int maxNum) {
+        Random random = new Random();
+        int result = random.nextInt(maxNum+1); //to avoid maxnum been 0
+
+        return result;
     }
 
 }

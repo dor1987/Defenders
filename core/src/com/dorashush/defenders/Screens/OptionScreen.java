@@ -3,6 +3,7 @@ package com.dorashush.defenders.Screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -79,7 +80,7 @@ public class OptionScreen implements Screen {
 
 
 
-    public OptionScreen(final Game game){
+    public OptionScreen(final Game game, final AssetManager manager){
         this.game = game;
         viewport = new FitViewport(Defenders.V_WIDTH,Defenders.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport,((Defenders)game).batch);
@@ -184,7 +185,7 @@ public class OptionScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 //Add leaderbaord Screen
-                game.setScreen(new MainMenuScreen((Defenders) game));
+                game.setScreen(new MainMenuScreen((Defenders) game,manager));
                 dispose();
             }
         });
@@ -196,6 +197,8 @@ public class OptionScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 Defenders.VOLUME=1f;
+                Defenders.defendersSettings.putFloat("volume",1f);
+                Defenders.defendersSettings.flush();
             }
         });
 
@@ -204,6 +207,8 @@ public class OptionScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 Defenders.VOLUME=0;
+                Defenders.defendersSettings.putFloat("volume",0f);
+                Defenders.defendersSettings.flush();
             }
         });
 
@@ -213,6 +218,9 @@ public class OptionScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 Defenders.VIBRATION=true;
+                Defenders.defendersSettings.putBoolean("vibration",true);
+                Defenders.defendersSettings.flush();
+
             }
         });
 
@@ -221,6 +229,8 @@ public class OptionScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 Defenders.VIBRATION=false;
+                Defenders.defendersSettings.putBoolean("vibration",false);
+                Defenders.defendersSettings.flush();
             }
         });
 
@@ -230,6 +240,9 @@ public class OptionScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 Defenders.FULL_CONTROL=true;
+                Defenders.defendersSettings.putBoolean("control",true);
+                Defenders.defendersSettings.flush();
+
             }
         });
 
@@ -238,6 +251,8 @@ public class OptionScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 Defenders.FULL_CONTROL=false;
+                Defenders.defendersSettings.putBoolean("control",false);
+                Defenders.defendersSettings.flush();
             }
         });
     }
@@ -256,7 +271,9 @@ public class OptionScreen implements Screen {
 
     }
 
-    @Override
+
+
+        @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

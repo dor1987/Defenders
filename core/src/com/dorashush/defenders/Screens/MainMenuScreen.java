@@ -3,6 +3,8 @@ package com.dorashush.defenders.Screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,6 +20,8 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dorashush.defenders.Defenders;
+
+import java.util.Random;
 
 /**
  * Created by Dor on 02/23/18.
@@ -35,11 +39,11 @@ public class MainMenuScreen implements Screen {
     private Image optionsBtn;
     private Image leaderBoardBtn;
     private Image menuTitle;
+    private AssetManager manager;
 
-
-    public MainMenuScreen(final Defenders game) {
+    public MainMenuScreen(final Defenders game, final AssetManager manager) {
         this.game = game;
-
+        this.manager =manager;
         camera = new OrthographicCamera();
        // camera.update();
 
@@ -49,8 +53,7 @@ public class MainMenuScreen implements Screen {
         backgroundTexture.setFillParent(true);
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         viewport.apply();
-        backViewPort.apply()
-        ;
+        backViewPort.apply();
         stage = new Stage(viewport, game.batch);
         backStage = new Stage(backViewPort);
 
@@ -80,7 +83,7 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 Gdx.app.log("","BEEN CLICKED!");
-                game.setScreen(new PlayScreen(game,Defenders.FIRST_LEVEL,Defenders.STARTING_SCORE,Defenders.STARTING_LIVES));
+                game.setScreen(new PlayScreen(game,Defenders.FIRST_LEVEL,Defenders.STARTING_SCORE,Defenders.STARTING_LIVES,manager));
                 dispose();
             }
         });
@@ -90,7 +93,7 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 //Add option Screen
-                game.setScreen(new OptionScreen(game));
+                game.setScreen(new OptionScreen(game,manager));
 
                 dispose();
             }
@@ -101,7 +104,7 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 //Add leaderbaord Screen
-                game.setScreen(new LeaderBoardScreen(game));
+                game.setScreen(new LeaderBoardScreen(game,manager));
                 dispose();
             }
         });
@@ -118,9 +121,7 @@ public class MainMenuScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    backStage.act();
     backStage.draw();
-    stage.act();
     stage.draw();
 
     }
@@ -128,7 +129,7 @@ public class MainMenuScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         viewport.update(width,height);
-
+        backViewPort.update(width,height);
     }
 
     @Override
@@ -151,4 +152,5 @@ public class MainMenuScreen implements Screen {
     backStage.dispose();
     stage.dispose();
     }
+
 }
