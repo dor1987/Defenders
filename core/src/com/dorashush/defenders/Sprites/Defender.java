@@ -152,6 +152,10 @@ public class Defender extends Sprite{
             case 3:
                 manager.get("sound/hit3.ogg",Sound.class).play(Defenders.VOLUME);
                 break;
+
+                default:
+                    manager.get("sound/hit2.ogg",Sound.class).play(Defenders.VOLUME);
+                    break;
         }
 
     }

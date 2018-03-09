@@ -794,6 +794,10 @@ public class PlayScreen implements Screen {
                     case 3:
                         manager.get("sound/ucallbraum.ogg", Sound.class).play(Defenders.VOLUME);
                         break;
+
+                        default:
+                            manager.get("sound/ucallbraum.ogg", Sound.class).play(Defenders.VOLUME);
+                            break;
                 }
 
             }
@@ -823,6 +827,10 @@ public class PlayScreen implements Screen {
                 break;
 
             case 6:
+                manager.get("sound/standbehindbraum.ogg", Sound.class).play(Defenders.VOLUME);
+                break;
+
+            default:
                 manager.get("sound/standbehindbraum.ogg", Sound.class).play(Defenders.VOLUME);
                 break;
         }

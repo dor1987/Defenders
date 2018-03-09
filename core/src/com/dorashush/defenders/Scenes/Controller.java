@@ -135,6 +135,7 @@ public class Controller {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 rightPressed = true;
+                vibrate();
                 return true;
             }
 
@@ -151,6 +152,7 @@ public class Controller {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 leftPressed = true;
+                vibrate();
                 return true;
             }
 
@@ -169,7 +171,7 @@ public class Controller {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Gdx.app.log("","PAUSE CLICKED");
-
+                vibrate();
                 pausePressed = true;
                 return true;
             }
@@ -192,6 +194,7 @@ public class Controller {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                vibrate();
                 bombedPressed = true;
                 return true;
             }
@@ -213,6 +216,7 @@ public class Controller {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                vibrate();
                 speedPressed = true;
                 return true;
             }
@@ -291,5 +295,11 @@ public class Controller {
 
     public void resize(int width, int height){
         viewport.update(width, height);
+    }
+
+    public void vibrate(){
+        if(Defenders.VIBRATION){
+            Gdx.input.vibrate(10);
+        }
     }
 }

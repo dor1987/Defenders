@@ -99,7 +99,7 @@ public class LifePowerUp extends PowerUp {
         if(temp==1){
             manager.get("sound/takeheart.ogg",Sound.class).play(Defenders.VOLUME);
         }
-        else if(temp==2){
+        else{
             manager.get("sound/theheartisthestrongestmus.ogg",Sound.class).play(Defenders.VOLUME);
         }
 
