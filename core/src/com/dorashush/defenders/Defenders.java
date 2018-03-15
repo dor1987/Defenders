@@ -10,10 +10,8 @@ import com.dorashush.defenders.Screens.SplashScreen;
 
 public class Defenders extends Game {
 	public static SpriteBatch batch;
-
 	public static final int V_WIDTH = 480;
 	public static final int V_HEIGHT = 800;
-
 	public static final float PPM = 100;
 	public static final int FIRST_LEVEL = 0;
 	public static final int STARTING_SCORE = 0;
@@ -24,13 +22,7 @@ public class Defenders extends Game {
 	public static float VOLUME;
 	public static boolean FULL_CONTROL;
 	public static boolean VIBRATION;
-	public static boolean ISCHEATER = false;
-
-
-	//sound
 	public  AssetManager manager;
-
-	//testing LIBGDX Preferences
 	public static Preferences defendersSettings;
 
 
@@ -46,10 +38,6 @@ public class Defenders extends Game {
 		manager = new AssetManager();
 		soundLoad();
 
-
-		//setScreen(new PlayScreen(this,FIRST_LEVEL,STARTING_SCORE,STARTING_LIVES));
-		//setScreen(new EndGameScreen(this,STARTING_SCORE));
-		//setScreen(new MainMenuScreen(this));
 		setScreen(new SplashScreen(this,manager,batch));
 
 		defendersSettings =Gdx.app.getPreferences("defendersSettings");
