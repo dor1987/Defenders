@@ -1,5 +1,6 @@
 package com.dorashush.defenders.Sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -139,6 +140,13 @@ public class Defender extends Sprite{
     }
 
     public void onBallBlock(){
+        manager.get("sound/shieldbash.ogg",Sound.class).play(Defenders.VOLUME);
+        if(Defenders.VIBRATION){
+            Gdx.input.vibrate(200);
+        }
+
+
+        /*
         int temp = generateNumber(3);
         switch (temp){
             case 1:
@@ -157,6 +165,7 @@ public class Defender extends Sprite{
                     manager.get("sound/hit2.ogg",Sound.class).play(Defenders.VOLUME);
                     break;
         }
+        */
 
     }
 

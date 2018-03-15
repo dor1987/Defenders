@@ -1,5 +1,7 @@
 package com.dorashush.defenders.Sprites;
 
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -8,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
 import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Scenes.Controller;
+import com.dorashush.defenders.Scenes.Hud;
 import com.dorashush.defenders.Screens.PlayScreen;
 
 /**
@@ -20,9 +23,12 @@ public class BombPowerUp extends PowerUp{
     private Array<TextureRegion> frames;
     private boolean setToRemove;
     //private boolean setGotCollected;
+    private AssetManager manager;
 
-    public BombPowerUp(PlayScreen screen) {
+    public BombPowerUp(PlayScreen screen, AssetManager manager) {
         super(screen);
+        this.manager=manager;
+
         frames = new Array<TextureRegion>();
         for(int i = 0; i<12 ; i++)
             frames.add(new TextureRegion(screen.getAtlas().findRegion("bombcoin"), i *52,0,52,36));
@@ -89,6 +95,8 @@ public class BombPowerUp extends PowerUp{
     @Override
     public void onPlayerCaught() {
         Controller.setAmountOfBombs(Controller.getAmountOfBombs()+1);
+        manager.get("sound/bombtake.ogg",Sound.class).play(Defenders.VOLUME);
+
     }
 
 }

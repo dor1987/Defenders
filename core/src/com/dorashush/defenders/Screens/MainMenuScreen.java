@@ -33,19 +33,14 @@ public class MainMenuScreen implements Screen {
     private OrthographicCamera camera;
     private Stage stage,backStage;
     private ExtendViewport backViewPort;
-    private Image backgroundTexture;
     private Table table;
-    private Image playBtn;
-    private Image optionsBtn;
-    private Image leaderBoardBtn;
-    private Image menuTitle;
+    private Image playBtn,optionsBtn,leaderBoardBtn,menuTitle,backgroundTexture;
     private AssetManager manager;
 
     public MainMenuScreen(final Defenders game, final AssetManager manager) {
         this.game = game;
         this.manager =manager;
         camera = new OrthographicCamera();
-       // camera.update();
 
         viewport = new FitViewport(Defenders.V_WIDTH,Defenders.V_HEIGHT, camera);
         backViewPort = new ExtendViewport( Defenders.V_WIDTH, Defenders.V_HEIGHT );
@@ -56,14 +51,16 @@ public class MainMenuScreen implements Screen {
         backViewPort.apply();
         stage = new Stage(viewport, game.batch);
         backStage = new Stage(backViewPort);
+        menuInit();
+        addListeners();
 
+    }
+    public void menuInit(){
         table =new Table();
         playBtn = new Image(new Texture("newgamebtn.png"));
         optionsBtn = new Image(new Texture("optionsbtn.png"));
         leaderBoardBtn = new Image(new Texture("leaderboardbtn.png"));
         menuTitle = new Image(new Texture("menutitle.png"));
-
-
 
 
         table.center();
@@ -77,13 +74,15 @@ public class MainMenuScreen implements Screen {
         table.row();
         table.add(leaderBoardBtn).padBottom(20f);
 
+    }
+
+    public void addListeners(){
 
         playBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                Gdx.app.log("","BEEN CLICKED!");
-                game.setScreen(new PlayScreen(game,Defenders.FIRST_LEVEL,Defenders.STARTING_SCORE,Defenders.STARTING_LIVES,manager));
+                game.setScreen(new PlayScreen((Defenders) game,Defenders.FIRST_LEVEL,Defenders.STARTING_SCORE,Defenders.STARTING_LIVES,manager));
                 dispose();
             }
         });
@@ -109,7 +108,6 @@ public class MainMenuScreen implements Screen {
             }
         });
     }
-
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);

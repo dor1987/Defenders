@@ -7,11 +7,10 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dorashush.defenders.Defenders;
@@ -26,33 +25,21 @@ public class SplashScreen implements Screen {
     private Viewport viewport;
     private OrthographicCamera camera;
     private Stage stage;
-    private ExtendViewport backViewPort;
-    private Table table;
     private Image logo;
     private AssetManager manager;
 
-    public SplashScreen(final Defenders game ,AssetManager manager) {
+    public SplashScreen(final Defenders game , AssetManager manager, SpriteBatch sb) {
         this.game = game;
         camera = new OrthographicCamera();
         viewport = new FitViewport(Defenders.V_WIDTH,Defenders.V_HEIGHT, camera);
         this.manager=manager;
 
-        stage = new Stage(viewport,game.batch);
+        stage = new Stage(viewport,sb);
         Gdx.input.setInputProcessor(stage);
-
         Texture logoText = new Texture("splashscreenlogo.png");
         logo = new Image(logoText);
-
         logo.setOrigin(logo.getWidth()/2,logo.getHeight()/2);
-       // logo.setSize(322f,172f);
-        //logo.setScale(0.8f);
         stage.addActor(logo);
-
-
-
-
-
-
 
     }
 
@@ -79,7 +66,6 @@ public class SplashScreen implements Screen {
         Gdx.gl.glClearColor(255, 255, 255, 255);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         update(delta);
-
         stage.draw();
 
 

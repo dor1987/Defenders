@@ -1,18 +1,11 @@
 package com.dorashush.defenders;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.dorashush.defenders.Screens.EndGameScreen;
-import com.dorashush.defenders.Screens.MainMenuScreen;
-import com.dorashush.defenders.Screens.MenuScreen;
-import com.dorashush.defenders.Screens.PlayScreen;
 import com.dorashush.defenders.Screens.SplashScreen;
 
 public class Defenders extends Game {
@@ -57,7 +50,7 @@ public class Defenders extends Game {
 		//setScreen(new PlayScreen(this,FIRST_LEVEL,STARTING_SCORE,STARTING_LIVES));
 		//setScreen(new EndGameScreen(this,STARTING_SCORE));
 		//setScreen(new MainMenuScreen(this));
-		setScreen(new SplashScreen(this,manager));
+		setScreen(new SplashScreen(this,manager,batch));
 
 		defendersSettings =Gdx.app.getPreferences("defendersSettings");
 		VOLUME = defendersSettings.getFloat("volume",1f);
@@ -98,6 +91,10 @@ public class Defenders extends Game {
 		manager.load("sound/hit1.ogg",Sound.class);
 		manager.load("sound/hit2.ogg",Sound.class);
 		manager.load("sound/hit3.ogg",Sound.class);
+		manager.load("sound/shieldbash.ogg",Sound.class);
+		manager.load("sound/bombtake.ogg",Sound.class);
+
+
 
 		manager.finishLoading();
 	}

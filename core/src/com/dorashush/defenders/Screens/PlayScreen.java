@@ -8,16 +8,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -25,8 +22,6 @@ import com.dorashush.defenders.Defenders;
 import com.dorashush.defenders.Scenes.Controller;
 import com.dorashush.defenders.Scenes.Hud;
 import com.dorashush.defenders.Scenes.HudForEndLevel;
-import com.dorashush.defenders.Scenes.HudPauseGame;
-import com.dorashush.defenders.Scenes.PauseMenu;
 import com.dorashush.defenders.Sprites.Alien;
 import com.dorashush.defenders.Sprites.AlienBall;
 import com.dorashush.defenders.Sprites.Ball;
@@ -64,20 +59,13 @@ import java.util.Random;
  */
 
 public class PlayScreen implements Screen {
-    public static final int SCREEN_WIDTH = 480;
-    public static final int SCREEN_HEIGHT = 800;
-    public static boolean godMode = false; //for debugging
-    public static final int TIME_BETWEEN_BALL_SPAWN = 4;
-    public static final int TIME_BETWEEN_POWER_UP_SPAWN = 10;
-
-
+    public static boolean godMode = false;
 
     public enum GameStatus {
         LOOSE,
         WIN,
         MID_GAME,
         PAUSED,
-
     }
 
     private Defenders game;
@@ -85,173 +73,79 @@ public class PlayScreen implements Screen {
     private OrthographicCamera gameCam;
     private Viewport gamePort;
     private Hud hud;
-    private HudForEndLevel hudForEndLevel; //delete if doesnt work
-   // private HudPauseGame hudForPause;
-
+    private HudForEndLevel hudForEndLevel;
     private TmxMapLoader mapLoader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
-
     //Box2d Vars
     private World world;
     private Box2DDebugRenderer b2dr;
     private Defender player;
-
-    private Enemy enemy; //testing
-
-
+    private Enemy enemy;
     //Ball control
     private Array<Ball> ballArray;
     private float ballTimeCount;
     //Power Ups
     private Array<PowerUp> powerUpArray;
     private float powerUpTimeCount;
-
-    private boolean speed;
+   // private boolean speed;
     private boolean bomb;
     private int godModeCheatCounter;
     private float godModeCheatCounterTimer;
-
-    private boolean points;
-    private boolean extraLife;
-    private float bombCoolDownTimer;
-    private float speedCoolDownTimer;
-
+    //Timers
+    private float bombCoolDownTimer,endGamewindowTimer,speedCoolDownTimer;
     //Stage managment
     private LevelsInfoData levelManager;
     private int[] currentLevelInfo;
     private GameStatus gameStatus;
-
-    private int enemyType;
-    private int ballType;
-    private int powerUpsType;
-    private int levelNum;
-    private int timeBetweenBalls;
-    private int amountOfBallsPerShoot;
-    private int timeBetweenPowerUps;
-    private int amountOfLevel;
-
-    //testing Controller
-    Controller controller;
-
-    //
-    //Pause
-    Texture pause;
-   // PauseMenu pauseMenu;
-
-    //Enemy hp bar - testing new method
-  //  float health = 1; // 0 = dead , 1 = full hp
-    Texture blank;
-
+    private int enemyType,ballType,powerUpsType,levelNum,timeBetweenBalls,amountOfBallsPerShoot,timeBetweenPowerUps,amountOfLevel;
+    private Controller controller;
+    //Enemy hp bar
+    private Texture blank;
     //Player movment speeds
-    Vector2 normalSpeedLeft;
-    Vector2 lightingSpeedLeft;
-    Vector2 normalSpeedRight;
-    Vector2 lightingSpeedRight;
-    Vector2 speedToUseRight;
-    Vector2 speedToUseLeft;
-
-
+    private Vector2 normalSpeedLeft,lightingSpeedLeft,normalSpeedRight,lightingSpeedRight,speedToUseRight,speedToUseLeft;
     //sound
     AssetManager manager;
     boolean isFirstTimeSound;
-
     public PlayScreen(Defenders game , int levelNumber , int score , int lives, AssetManager manager){
         atlas = new TextureAtlas("final_animation_for_game.atlas");
-        this.manager=manager;
-        isFirstTimeSound =true;
+        this.manager = manager;
         this.game = game;
+        isFirstTimeSound =true;
         gameCam = new OrthographicCamera();
         gamePort = new FitViewport(Defenders.V_WIDTH/ Defenders.PPM,Defenders.V_HEIGHT/ Defenders.PPM,gameCam);
-
         gamePort.apply();
         hud = new Hud(game.batch);
-        hudForEndLevel = new HudForEndLevel(game.batch,manager);//delete if doesnt work
-     //   hudForPause = new HudPauseGame();
+        hudForEndLevel = new HudForEndLevel(game.batch,manager);
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("stage2.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1/ Defenders.PPM);
         gameCam.position.set(gamePort.getWorldWidth()/2,gamePort.getWorldHeight()/2,0);
-
-        //power ups
-            bomb = false;
-            speed = false;
-            godModeCheatCounter=0;
-            godModeCheatCounterTimer=0;
-        //
-
-        //Box2d
+        endGamewindowTimer =0;
         world = new World(new Vector2(0,0),true);
-
-
         b2dr = new Box2DDebugRenderer();
         new B2WorldCreator(this);
-        //Ball Control
-        ballArray = new Array<Ball>();
-        powerUpArray = new Array<PowerUp>();
-        ballTimeCount = 0;
-        powerUpTimeCount=0;
-
+        ballAndPowerIniter();
         player = new Defender(this, manager);
-
-        //Stage managment
         gameStatus=GameStatus.MID_GAME;
-        levelManager = new LevelsInfoData();
-        currentLevelInfo = levelManager.getCurrentLevelInfo(levelNumber);
-
-        //From the level info array to variables
-        enemyType = currentLevelInfo[0];
-        ballType = currentLevelInfo[1];
-        powerUpsType = currentLevelInfo[2];
-        levelNum = currentLevelInfo[3];
-        amountOfLevel = currentLevelInfo[4];
-        timeBetweenBalls=currentLevelInfo[5];
-        amountOfBallsPerShoot = currentLevelInfo[6];
-        timeBetweenPowerUps = currentLevelInfo[7];
-
-
-        Hud.levelNumber(levelNum);
-        Hud.addScore(score); //to carry score from last level
-        Hud.setLives(lives);
+        levelInfoInit(levelNumber);
+        hudSet(score,lives);
         enemy = initlizeEnemy(enemyType);
-
-        //Testing hp bar
         blank = new Texture("blank.png");
-
-        //
-
-
-
-        //Controller
         controller = new Controller();
-       // pauseMenu = new PauseMenu();
-
-
-        //player movement speed
-        normalSpeedLeft = new Vector2(-1.5f,0);
-        lightingSpeedLeft = new Vector2(-2.5f,0);
-        normalSpeedRight = new Vector2(1.5f,0);
-        lightingSpeedRight = new Vector2(2.5f,0);
-        speedToUseLeft= normalSpeedLeft;
-        speedToUseRight=normalSpeedRight;
-        //
-
+        playerMovementSpeedInit();
         world.setContactListener(new WorldContactListener());
         playStarGameSound();
-
     }
-
     public TextureAtlas getAtlas(){
         return atlas;
     }
-
     public TiledMap getMap(){
         return map;
     }
     public World getWorld(){
         return world;
     }
-
 
     @Override
     public void show() {
@@ -264,11 +158,9 @@ public class PlayScreen implements Screen {
         godModeCheatCounterTimer+=dt;
 
 
-
         if(gameStatus == GameStatus.MID_GAME) {
             if (controller.isSpeedPressed()) {
                 if (controller.getAmountOfSpeeds() > 0 && speedCoolDownTimer >= 8) {
-                    speed = true;
                     manager.get("sound/notsofast.ogg",Sound.class).play(Defenders.VOLUME);
 
                     speedToUseRight = lightingSpeedRight;
@@ -278,7 +170,6 @@ public class PlayScreen implements Screen {
                     speedCoolDownTimer = 0;
                 }
             } else if (speedCoolDownTimer >= 8) {
-                speed = false;
                 speedToUseRight = normalSpeedRight;
                 speedToUseLeft = normalSpeedLeft;
             }
@@ -297,6 +188,9 @@ public class PlayScreen implements Screen {
                 if (controller.getAmountOfBombs() > 0 && bombCoolDownTimer >= 2) {
                     setBomb(true);
                    manager.get("sound/bomb.mp3",Sound.class).play(Defenders.VOLUME);
+                    if(Defenders.VIBRATION){
+                        Gdx.input.vibrate(300);
+                    }
 
                     controller.setAmountOfBombs(controller.getAmountOfBombs() - 1);
                     bombCoolDownTimer = 0;
@@ -316,10 +210,8 @@ public class PlayScreen implements Screen {
                     godModeCheatCounter = 0;
                 }
 
-
                 if (gameStatus != GameStatus.PAUSED)
                     pause();
-
             }
         }
 
@@ -333,77 +225,23 @@ public class PlayScreen implements Screen {
                 gameStatus = GameStatus.LOOSE;
             }
         }
-/*
-        if(pauseMenu.isPlayPressed()){
-            gameStatus=GameStatus.MID_GAME;
-
-        }
-        */
-/*
-            if(gameStatus == GameStatus.PAUSED){
-                if(hudForPause.isBackToGamePressed()){
-                    gameStatus=GameStatus.MID_GAME;
-                }
-                else if(hudForPause.isBackToMenuPressed()){
-                    gameStatus = GameStatus.LOOSE;
-                }
-           }
-
-*/
-
-
-
     }
 
     public void update(float dt){
             handleInput(dt);
             world.step(1 / 60f, 6, 2);
-
                player.update(dt);
                hud.update(dt);
-
-               //The to find better way to update this
-
                enemy.update(dt);
-               //////////////////////////////////
-
-               //add balls to game
+               //add balls time counter
                ballTimeCount += dt;
                //boss
-               if (enemyType == 666) {
-                   if (enemy.getHealthBar() > 0.7) {
-                       timeBetweenBalls = 4;
-                   } else if (enemy.getHealthBar() > 0.4) {
-                       timeBetweenBalls = 4;
-                       amountOfBallsPerShoot = 2;
-                   } else {
-                       timeBetweenBalls = 3;
-                       amountOfBallsPerShoot = 3;
-                   }
+               if (enemyType == 666)
+                   initBoss();
 
-               }
-               //////////////////////////////////////////
-               if (ballTimeCount >= timeBetweenBalls) {
-                   for (int i = 0; i < amountOfBallsPerShoot; i++)
-                       ballArray.add(initlizeBall(ballType));
-                   ballTimeCount = 0;
-               }
-
-               //add powerups to game
-
-               powerUpTimeCount += dt;
-               if (powerUpTimeCount >= timeBetweenPowerUps) {
-                   powerUpArray.add(initlizePowerUp(powerUpsType));
-                   powerUpTimeCount = 0;
-               }
-
-               for (Ball ball : ballArray) {
-                   ball.update(dt);
-               }
-
-               for (PowerUp powerUp : powerUpArray) {
-                   powerUp.update(dt);
-               }
+                ballAdder();
+                powerUpsAdder(dt);
+                ballAndPowerUpsupdate(dt);
 
                game.batch.setProjectionMatrix(gameCam.combined);
                renderer.setView(gameCam);
@@ -419,46 +257,15 @@ public class PlayScreen implements Screen {
             update(delta);
         }
 
-
         //render the game map
         renderer.render();
-
-        //render the 2dbox debug lines
-       // b2dr.render(world, gameCam.combined);
         controller.draw();
-
-
-
-
         game.batch.setProjectionMatrix(gameCam.combined);
-
         gamePlayRender();
-
-
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
-
-
-        if(gameStatus!=GameStatus.MID_GAME && gameStatus!=GameStatus.PAUSED){
-
-            endLevelHudRender();
-            waitInputSetNextScreen();
-        }
-
-        if(gameStatus==GameStatus.PAUSED){
-            controller.setPauseMenuVisable(true);
-            handleInput(delta);
-           // pauseMenu.draw();
-            //  hudForPause.draw();
-            //TODO Fix this show when game paused
-          //  waitInputSetNextScreen();
-        }
-
-        else if(gameStatus!=GameStatus.PAUSED){
-            controller.setPauseMenuVisable(false);
-        }
-
-
+        endGameIfOver(delta);
+        handlePause(delta);
     }
 
     public void endLevelHudRender(){
@@ -477,8 +284,6 @@ public class PlayScreen implements Screen {
     public void resize(int width, int height) {
         gamePort.update(width,height);
         controller.resize(width,height);
-       // hudForPause.resize(width,height);
-       // pauseMenu.resize(width,height);
     }
 
     @Override
@@ -506,15 +311,12 @@ public class PlayScreen implements Screen {
         hud.dispose();
         hudForEndLevel.dispose();
     }
-
     public int generateNumber(int maxNum) {
         Random random = new Random();
         int result = random.nextInt(maxNum+1); //to avoid maxnum been 0
         return result;
     }
-
     public Enemy initlizeEnemy(int enemyToInitilize){
-        //need to update new enemys
         Enemy enemy;
 
         switch (enemyToInitilize){
@@ -524,58 +326,45 @@ public class PlayScreen implements Screen {
 
             case 1:
                 enemy = new Dragon(this,240/ Defenders.PPM,750/Defenders.PPM);
-
                 break;
 
             case 2:
                 enemy = new DinoRaider(this,240/ Defenders.PPM,750/Defenders.PPM);
-
                 break;
 
             case 3:
                 enemy = new Alien(this,240/ Defenders.PPM,750/Defenders.PPM);
-
                 break;
 
             case 4:
                 enemy = new ForestWitch(this,240/ Defenders.PPM,750/Defenders.PPM);
-
                 break;
 
             case 5:
                 enemy = new ForestGhost(this,240/ Defenders.PPM,750/Defenders.PPM);
-
                 break;
 
             case 6:
                 enemy = new NormalBull(this,240/ Defenders.PPM,750/Defenders.PPM);
-
                 break;
 
             case 7:
                 enemy = new IceDino(this,240/ Defenders.PPM,750/Defenders.PPM);
-
                 break;
 
             case 666:
                 enemy = new Boss(this,240/ Defenders.PPM,750/Defenders.PPM);
-
                 break;
-
 
             default:
                 enemy = new Dragon(this,240/ Defenders.PPM,750/Defenders.PPM);
-
                 break;
         }
 
         return enemy;
     }
-
     public Ball initlizeBall(int ballToInitilize){
-        //need to update new Balls
         Ball ball;
-
         switch (ballToInitilize){
             case 0:
                 ball = new WingedBullFireBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
@@ -583,37 +372,30 @@ public class PlayScreen implements Screen {
 
             case 1:
                 ball = new SimpleBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
-
                 break;
 
             case 2:
                 ball = new DinoRaiderBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
-
                 break;
 
             case 3:
                 ball = new AlienBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
-
                 break;
 
             case 4:
                 ball = new SpeedChangingBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
-
                 break;
 
             case 5:
                 ball = new ForestGhostBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
-
                 break;
 
             case 6:
                 ball = new NormalBullBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
-
                 break;
 
             case 7:
                 ball = new IceDinoBall(this,enemy.getX()+(enemy.getWidth()*50)/Defenders.PPM,enemy.getY()-enemy.getHeight()/Defenders.PPM);
-
                 break;
 
             case 666:
@@ -637,16 +419,12 @@ public class PlayScreen implements Screen {
         }
         return ball;
     }
-
     public PowerUp initlizePowerUp(int powerUpToInitilize){
-        //need to update new PowerUps
         PowerUp powerUp;
-
         powerUpToInitilize = generateNumber(powerUpToInitilize);
-        //powerUpToInitilize = 2;
         switch (powerUpToInitilize){
             case 0:
-                powerUp = new BombPowerUp(this);
+                powerUp = new BombPowerUp(this,manager);
                 break;
             case 1:
                 powerUp = new LifePowerUp(this,manager);
@@ -661,18 +439,15 @@ public class PlayScreen implements Screen {
                 break;
 
             default:
-                powerUp = new BombPowerUp(this);
+                powerUp = new BombPowerUp(this,manager);
                 break;
         }
         return powerUp;
     }
-
-    public void gameEnded(GameStatus gameStatus){
-        //would be used toupdate the end stage hud
-        if(gameStatus==GameStatus.WIN){
-        }
-
-        else if(gameStatus==GameStatus.LOOSE){
+    public void endGameIfOver(float delta){
+        if(gameStatus!=GameStatus.MID_GAME && gameStatus!=GameStatus.PAUSED){
+            endLevelHudRender();
+            waitInputSetNextScreen(delta);
         }
     }
     public void gamePlayRender(){
@@ -683,54 +458,16 @@ public class PlayScreen implements Screen {
         checkIfLost();
         checkIfWin();
 
-        if(bomb){
+        if(bomb)
             removeAllBalls();
-        }
 
-        for (Ball ball : ballArray) {
-            if (ball.removed)
-                ballArray.removeValue(ball, true);
-
-            if (ball != null) {
-                ball.draw(game.batch);
-            }
-        }
-
-        for (PowerUp powerUp : powerUpArray) {
-            if (powerUp.removed)
-                powerUpArray.removeValue(powerUp, true);
-
-            if (powerUp != null) {
-                powerUp.draw(game.batch);
-            }
-        }
-
-        //Hp bar testing
-        game.batch.setColor(Color.BLACK);
-        game.batch.draw(blank,0,(Defenders.V_HEIGHT-7)/Defenders.PPM,Defenders.V_WIDTH/Defenders.PPM,1/Defenders.PPM);
-        game.batch.setColor(Color.WHITE);
-
-
-        if(enemy.getHealthBar() > 0.7f){
-            game.batch.setColor(Color.GREEN);
-        }
-        else if(enemy.getHealthBar() > 0.4f)
-            game.batch.setColor(Color.ORANGE);
-        else
-            game.batch.setColor(Color.RED);
-
-
-        game.batch.draw(blank,0,(Defenders.V_HEIGHT-6)/Defenders.PPM,Defenders.V_WIDTH*enemy.getHealthBar()/Defenders.PPM,6/Defenders.PPM);
-        game.batch.setColor(Color.WHITE);
-        //
-
-
+        ballRemoveControl();
+        powerUpRemoveControl();
+        enemyHpBarControl();
         game.batch.end();
-
     }
     public void checkIfLost(){
         for (Ball ball : ballArray) {
-
             if (ball.hitedTheVillage) {
                 hud.reduceLive();
             }
@@ -743,9 +480,11 @@ public class PlayScreen implements Screen {
             gameStatus=GameStatus.WIN;
         }
     }
-    public void waitInputSetNextScreen() {
+    public void waitInputSetNextScreen(float dt) {
+        endGamewindowTimer+=dt;
+
         if(Gdx.input.justTouched()){
-            if(gameStatus==GameStatus.WIN){
+            if(gameStatus==GameStatus.WIN && endGamewindowTimer >= 2){
                 if (amountOfLevel == levelNum)//check if last stage
                     game.setScreen(new EndGameScreen(game, Hud.getScore()+Hud.getTimeLeft(),manager));
                 else
@@ -753,10 +492,9 @@ public class PlayScreen implements Screen {
                 dispose();
             }
 
-            else if(gameStatus==GameStatus.LOOSE){
+            else if(gameStatus==GameStatus.LOOSE && endGamewindowTimer >= 2){
                 game.setScreen(new EndGameScreen(game, Hud.getScore(),manager));
                 dispose();
-
             }
 
             else if(gameStatus==GameStatus.PAUSED){
@@ -765,18 +503,15 @@ public class PlayScreen implements Screen {
 
         }
     }
-
     public void removeAllBalls(){
         for (Ball ball : ballArray) {
                 ball.removeFromGame();
         }
         bomb = false;
     }
-
     public void setBomb(boolean bomb) {
         this.bomb = bomb;
     }
-
     public void endLevelSound(boolean isFirstTime) {
         if (isFirstTime) {
             if (gameStatus == PlayScreen.GameStatus.LOOSE) {
@@ -804,7 +539,6 @@ public class PlayScreen implements Screen {
             isFirstTimeSound=false;
         }
     }
-
     public void playStarGameSound(){
         int temp =generateNumber(6);
 
@@ -834,6 +568,123 @@ public class PlayScreen implements Screen {
                 manager.get("sound/standbehindbraum.ogg", Sound.class).play(Defenders.VOLUME);
                 break;
         }
+    }
+    public void initBoss(){
+        if (enemy.getHealthBar() > 0.7) {
+            timeBetweenBalls = 4;
+        } else if (enemy.getHealthBar() > 0.4) {
+            timeBetweenBalls = 4;
+            amountOfBallsPerShoot = 2;
+        } else {
+            timeBetweenBalls = 3;
+            amountOfBallsPerShoot = 3;
+        }
+    }
+    public void ballAdder(){
+        if (ballTimeCount >= timeBetweenBalls) {
+            for (int i = 0; i < amountOfBallsPerShoot; i++)
+                ballArray.add(initlizeBall(ballType));
+            ballTimeCount = 0;
+        }
+    }
+    public void powerUpsAdder(float dt){
+        powerUpTimeCount += dt;
+        if (powerUpTimeCount >= timeBetweenPowerUps) {
+            powerUpArray.add(initlizePowerUp(powerUpsType));
+            powerUpTimeCount = 0;
+        }
+
+    }
+    public void ballAndPowerUpsupdate(float dt){
+        for (Ball ball : ballArray) {
+            ball.update(dt);
+        }
+
+        for (PowerUp powerUp : powerUpArray) {
+            powerUp.update(dt);
+        }
+    }
+    public void handlePause(float delta){
+        if(gameStatus==GameStatus.PAUSED){
+            controller.setPauseMenuVisable(true);
+            handleInput(delta);
+        }
+
+        else if(gameStatus!=GameStatus.PAUSED){
+            controller.setPauseMenuVisable(false);
+        }
+    }
+    public void ballRemoveControl(){
+        for (Ball ball : ballArray) {
+            if (ball.removed)
+                ballArray.removeValue(ball, true);
+
+            if (ball != null) {
+                ball.draw(game.batch);
+            }
+        }
+    }
+    public void powerUpRemoveControl(){
+        for (PowerUp powerUp : powerUpArray) {
+            if (powerUp.removed)
+                powerUpArray.removeValue(powerUp, true);
+
+            if (powerUp != null) {
+                powerUp.draw(game.batch);
+            }
+        }
+    }
+    public void enemyHpBarControl(){
+        game.batch.setColor(Color.BLACK);
+        game.batch.draw(blank,0,(Defenders.V_HEIGHT-7)/Defenders.PPM,Defenders.V_WIDTH/Defenders.PPM,1/Defenders.PPM);
+        game.batch.setColor(Color.WHITE);
+
+        if(enemy.getHealthBar() > 0.7f){
+            game.batch.setColor(Color.GREEN);
+        }
+        else if(enemy.getHealthBar() > 0.4f)
+            game.batch.setColor(Color.ORANGE);
+        else
+            game.batch.setColor(Color.RED);
+
+
+        game.batch.draw(blank,0,(Defenders.V_HEIGHT-6)/Defenders.PPM,Defenders.V_WIDTH*enemy.getHealthBar()/Defenders.PPM,6/Defenders.PPM);
+        game.batch.setColor(Color.WHITE);
+    }
+    public void ballAndPowerIniter(){
+        bomb = false;
+        godModeCheatCounter=0;
+        godModeCheatCounterTimer=0;
+
+        ballArray = new Array<Ball>();
+        powerUpArray = new Array<PowerUp>();
+        ballTimeCount = 0;
+        powerUpTimeCount=0;
+    }
+    public void playerMovementSpeedInit(){
+        normalSpeedLeft = new Vector2(-1.5f,0);
+        lightingSpeedLeft = new Vector2(-2.5f,0);
+        normalSpeedRight = new Vector2(1.5f,0);
+        lightingSpeedRight = new Vector2(2.5f,0);
+        speedToUseLeft= normalSpeedLeft;
+        speedToUseRight=normalSpeedRight;
+    }
+    public void hudSet(int score, int lives){
+        Hud.levelNumber(levelNum);
+        Hud.addScore(score); //to carry score from last level
+        Hud.setLives(lives);
+    }
+    public void levelInfoInit(int levelNumber){
+        levelManager = new LevelsInfoData();
+        currentLevelInfo = levelManager.getCurrentLevelInfo(levelNumber);
+        enemyType = currentLevelInfo[0];
+        ballType = currentLevelInfo[1];
+        powerUpsType = currentLevelInfo[2];
+        levelNum = currentLevelInfo[3];
+        amountOfLevel = currentLevelInfo[4];
+        timeBetweenBalls=currentLevelInfo[5];
+        amountOfBallsPerShoot = currentLevelInfo[6];
+        timeBetweenPowerUps = currentLevelInfo[7];
     }
 }
 

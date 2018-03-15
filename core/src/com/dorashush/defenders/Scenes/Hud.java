@@ -21,22 +21,11 @@ import com.dorashush.defenders.Defenders;
 public class Hud implements Disposable{
     public Stage stage;
     private Viewport viewPort;
-    private static Integer worldTimer;
+    private static Integer worldTimer,score,levelNumber,livesNumber;
     private float timeCount;
-    private static Integer score; // Need to think of a better way, maybe pass hud to objects
-    private static Integer levelNumber;
-    private static Integer livesNumber;
-
-
-    private Label countDownLabel;
-    private Label worldLabel;
-    private static Label scoreLabel;
-    private Label timeLabel;
-    private static Label levelLabel;
-    private Label defenderLabel;
-
-    private Label liveLabel;
-    private static Label liveAmountLabel;
+    private Label countDownLabel,worldLabel,timeLabel,defenderLabel,liveLabel;
+    private static Label scoreLabel,levelLabel,liveAmountLabel;
+    private Table table;
 
     public Hud(SpriteBatch sb){
         worldTimer = 300;
@@ -44,25 +33,27 @@ public class Hud implements Disposable{
         score = 0;
         levelNumber = 1;
         livesNumber = 0;
-
         viewPort = new FitViewport(Defenders.V_WIDTH,Defenders.V_HEIGHT,new OrthographicCamera());
-        //viewPort = new FitViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(),new OrthographicCamera());
-
         stage = new Stage(viewPort,sb);
+        initLabels();
+        initTable();
+        stage.addActor(table);
+    }
 
-        Table table =new Table();
-        table.bottom();
-        table.setFillParent(true);
-
+    public void initLabels(){
         liveLabel = new Label("LIVES",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         liveAmountLabel = new Label(String.format("%03d",livesNumber),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-
         countDownLabel = new Label(String.format("%03d",worldTimer),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         scoreLabel= new Label(String.format("%06d",score),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         timeLabel= new Label("TIME",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         levelLabel= new Label(String.format("%03d",levelNumber),new Label.LabelStyle(new BitmapFont(), Color.WHITE)); // need to update it each level
         worldLabel = new Label("LEVEL",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         defenderLabel= new Label("SCORE",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+    }
+    public void initTable(){
+        table =new Table();
+        table.bottom();
+        table.setFillParent(true);
 
         table.add(liveLabel).expandX().padBottom(5);
         table.add(defenderLabel).expandX().padBottom(5);
@@ -73,10 +64,7 @@ public class Hud implements Disposable{
         table.add(scoreLabel).expandX().padBottom(25);
         table.add(levelLabel).expandX().padBottom(25);
         table.add(countDownLabel).expandX().padBottom(25);
-
-        stage.addActor(table);
     }
-
     public void update(float dt){
         timeCount += dt;
         if(timeCount>=1) {
@@ -85,7 +73,6 @@ public class Hud implements Disposable{
             timeCount=0;
         }
     }
-
     public static void addLive(){
         livesNumber++;
         liveAmountLabel.setText(String.format("%03d",livesNumber));
@@ -96,16 +83,13 @@ public class Hud implements Disposable{
         livesNumber--;
         liveAmountLabel.setText(String.format("%03d",livesNumber));
     }
-
     public static int getLives(){
         return livesNumber;
     }
-
     public static void setLives(int lives){
         livesNumber+=lives;
         liveAmountLabel.setText(String.format("%03d",livesNumber));
     }
-
     public static void addScore(int value){
         score+=value;
         scoreLabel.setText(String.format("%06d",score));
@@ -119,7 +103,6 @@ public class Hud implements Disposable{
     public static void levelNumber(int levelNumber){
         levelLabel.setText(String.format("%03d",levelNumber));
     }
-
     @Override
     public void dispose() {
         stage.dispose();
