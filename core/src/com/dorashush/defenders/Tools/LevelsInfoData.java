@@ -7,20 +7,11 @@ package com.dorashush.defenders.Tools;
 
 public class LevelsInfoData {
     public static final int AMOUNT_OF_LEVELS = 9;
-    private int enemy;
-    private int ball;
-    private int powerUps;
-    private int timeBetweenBalls;
-    private int amountOfBallsPerShoot;
-    private int timeBetweenPowerUps;
-
-    private int levelNum; // the number that will be displayed on hud
+    private int enemy,ball,powerUps,timeBetweenBalls,amountOfBallsPerShoot,timeBetweenPowerUps,levelNum;
     private int[] levelInfo;
-
     public int[] getCurrentLevelInfo(int levelNumber){
         switch (levelNumber){
           case 0:
-
               enemy = 0;
               ball = 0;
               powerUps = 1;
@@ -38,7 +29,6 @@ public class LevelsInfoData {
               timeBetweenBalls=4;
               amountOfBallsPerShoot = 1;
               timeBetweenPowerUps = 10;
-
               break;
 
             case 2:
@@ -49,7 +39,6 @@ public class LevelsInfoData {
                 timeBetweenBalls=4;
                 amountOfBallsPerShoot = 2;
                 timeBetweenPowerUps = 10;
-
                 break;
 
             case 3:
@@ -60,7 +49,6 @@ public class LevelsInfoData {
                 timeBetweenBalls=4;
                 amountOfBallsPerShoot = 2;
                 timeBetweenPowerUps = 10;
-
                 break;
 
             case 4:
@@ -71,7 +59,6 @@ public class LevelsInfoData {
                 timeBetweenBalls=4;
                 amountOfBallsPerShoot = 2;
                 timeBetweenPowerUps = 9;
-
                 break;
 
             case 5:

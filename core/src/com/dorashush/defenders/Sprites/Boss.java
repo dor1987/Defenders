@@ -18,27 +18,14 @@ import java.util.Random;
  */
 
 public class Boss  extends Enemy {
-    //private float stateTime;
     public enum State {
-        WALKING, FIREING, STANDING, FIREING2
-    }
+        WALKING, FIREING, STANDING, FIREING2}
 
-    ;
-
-    private Animation flyAnimation;
-    private Animation shootAnimation;
-    private Animation shootAnimation2;
-    private Animation standAnimation;
-    private float stateTimer;
-    private float shootingTimer;
-    private float movmentTimer;
-
+    private Animation flyAnimation,shootAnimation,shootAnimation2,standAnimation;
+    private float stateTimer,shootingTimer,movmentTimer,avoidFirstHitTimer;
     private boolean walkingRight;
-    private float avoidFirstHitTimer; //for debug
-
     private Array<TextureRegion> frames;
-    Boss.State currentState;
-    Boss.State previousState;
+    private Boss.State currentState,previousState;
 
     public Boss(PlayScreen screen, float x, float y) {
         super(screen, x, y);
@@ -47,49 +34,13 @@ public class Boss  extends Enemy {
         movmentTimer =0;
         walkingRight = true;
 
-        frames = new Array<TextureRegion>();
-        for (int i = 0; i < 8; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("bosswalk"), i * 93, 0, 93, 93));
-        flyAnimation = new Animation(0.2f, frames);
-
-        frames.clear();
-
-        for (int i = 0; i < 4; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("bosshit1"), (i * 119)+88, 0, 119, 87));
-        shootAnimation = new Animation(0.2f, frames);
-
-        frames.clear();
-
-            //frames.add(new TextureRegion(screen.getAtlas().findRegion("bosshit2"), i * 120, 0, 120, 95));
-        //frames.add(new TextureRegion(screen.getAtlas().findRegion("bosshit2"), 0, 0, 82, 95));
-        //frames.add(new TextureRegion(screen.getAtlas().findRegion("bosshit2"), 82, 0, 82, 95));
-        //frames.add(new TextureRegion(screen.getAtlas().findRegion("bosshit2"), 180, 0, 103, 95));
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("bosshit2"), 290, 0, 117, 95));
-
-        for (int i = 0; i < 5; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("bosshit2"), i*133+406, 0, 133, 95));
-
-        for (int i = 0; i < 7; i++)
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("bosshit2"), 1080+i*183, 0, 183, 95));
-
-        //frames.add(new TextureRegion(screen.getAtlas().findRegion("bosshit2"), 2284, 0, 81, 95));
-
-
-        shootAnimation2 = new Animation(0.2f, frames);
-
-        frames.clear();
-
-        for (int i = 0; i < 8; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("bossstand"), i * 92, 0, 91, 87));
-        standAnimation = new Animation(0.2f, frames);
+        getAndSetAnimations();
 
         stateTime = 0;
         setBounds(getX(), getY(), 92 / Defenders.PPM, 87 / Defenders.PPM);
         removed = false;
         gotHit = false;
         avoidFirstHitTimer = 0;
-
-
     }
 
     public void update(float dt) {
@@ -97,46 +48,8 @@ public class Boss  extends Enemy {
         shootingTimer += dt;
         avoidFirstHitTimer += dt;
         movmentTimer +=dt;
-
-
-        if (!gotHit) {
-            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
-            //setRegion((TextureRegion) flyAnimation.getKeyFrame(stateTime, true));
-            setRegion(getFrame(dt));
-
-
-
-            if (getState() == Boss.State.FIREING) {
-                b2body.setLinearVelocity(velocity2);
-            }
-
-            else if(getState() == State.STANDING){
-                b2body.setLinearVelocity(velocity2);
-            }
-
-            else if(getState() == Boss.State.FIREING2){
-                b2body.setLinearVelocity(velocity2);
-            }
-
-            else{
-                if(movmentTimer>=0.5) {
-                    velocity3.x = velocity.x * generateNumber(2);
-                    movmentTimer=0;
-                }
-                b2body.setLinearVelocity(velocity3);
-            }
-
-
-        } else if (gotHit) {
-            if (!removed) {
-                world.destroyBody(b2body);
-                removed = true;
-                stateTime = 0;
-            }
-
-        }
+        movment(dt);
     }
-
 
     public TextureRegion getFrame(float dt) {
         currentState = getState();
@@ -181,7 +94,6 @@ public class Boss  extends Enemy {
 
 
     }
-
 
     public Boss.State getState() {
         if(getPhase()==1) {
@@ -283,5 +195,74 @@ public class Boss  extends Enemy {
             return 2;
         else
             return 3;
+    }
+
+    public void getAndSetAnimations(){
+        frames = new Array<TextureRegion>();
+        for (int i = 0; i < 8; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("bosswalk"), i * 93, 0, 93, 93));
+        flyAnimation = new Animation(0.2f, frames);
+
+        frames.clear();
+
+        for (int i = 0; i < 4; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("bosshit1"), (i * 119)+88, 0, 119, 87));
+        shootAnimation = new Animation(0.2f, frames);
+
+        frames.clear();
+
+
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("bosshit2"), 290, 0, 117, 95));
+
+        for (int i = 0; i < 5; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("bosshit2"), i*133+406, 0, 133, 95));
+
+        for (int i = 0; i < 7; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("bosshit2"), 1080+i*183, 0, 183, 95));
+
+
+        shootAnimation2 = new Animation(0.2f, frames);
+        frames.clear();
+
+        for (int i = 0; i < 8; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("bossstand"), i * 92, 0, 91, 87));
+        standAnimation = new Animation(0.2f, frames);
+    }
+    public void movment(float dt){
+        if (!gotHit) {
+            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
+            setRegion(getFrame(dt));
+
+
+
+            if (getState() == Boss.State.FIREING) {
+                b2body.setLinearVelocity(velocity2);
+            }
+
+            else if(getState() == State.STANDING){
+                b2body.setLinearVelocity(velocity2);
+            }
+
+            else if(getState() == Boss.State.FIREING2){
+                b2body.setLinearVelocity(velocity2);
+            }
+
+            else{
+                if(movmentTimer>=0.5) {
+                    velocity3.x = velocity.x * generateNumber(2);
+                    movmentTimer=0;
+                }
+                b2body.setLinearVelocity(velocity3);
+            }
+
+
+        } else if (gotHit) {
+            if (!removed) {
+                world.destroyBody(b2body);
+                removed = true;
+                stateTime = 0;
+            }
+
+        }
     }
 }

@@ -17,74 +17,32 @@ import com.dorashush.defenders.Screens.PlayScreen;
  */
 
 public class WingedBull extends Enemy {
-    //private float stateTime;
-    public enum State {WALKING,FIREING};
-
-    private Animation flyAnimation;
-    private Animation shootAnimation;
-    private float stateTimer;
-    private float shootingTimer;
+    public enum State {WALKING,FIREING}
+    private Animation flyAnimation,shootAnimation;
+    private float stateTimer,shootingTimer,avoidFirstHitTimer;
     private boolean walkingRight;
-    private float avoidFirstHitTimer; //for debug
-
     private Array<TextureRegion> frames;
-    State currentState;
-    State previousState;
+    private State currentState,previousState;
+
 
     public WingedBull(PlayScreen screen, float x, float y) {
         super(screen, x, y);
         stateTimer = 0;
         shootingTimer =0;
         walkingRight = true;
-
-        frames = new Array<TextureRegion>();
-        for(int i = 0; i<4 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("bull_walk"), i *180,2,180,170));
-        flyAnimation = new Animation(0.2f,frames);
-
-        frames.clear();
-
-        for(int i = 0; i<3 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("bull_attack"), i *200,2,200,170));
-        shootAnimation = new Animation(0.2f,frames);
-
-
+        getAndSetAnimations();
         stateTime = 0;
         setBounds(getX(),getY(),64 / Defenders.PPM,71/Defenders.PPM);
         removed = false;
         gotHit = false;
         avoidFirstHitTimer= 0;
     }
-
     public void update(float dt) {
         stateTime += dt;
         shootingTimer += dt;
         avoidFirstHitTimer += dt;
-       // setRegion(getFrame(dt));
-
-       /*
-        setPosition(b2body.getPosition().x - getWidth()/2,b2body.getPosition().y - getHeight()/2);
-
-        b2body.setLinearVelocity(velocity);
-*/
-
-        if (!gotHit) {
-            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
-            //setRegion((TextureRegion) flyAnimation.getKeyFrame(stateTime, true));
-            setRegion(getFrame(dt));
-            b2body.setLinearVelocity(velocity);
-
-        } else if (gotHit ) {
-            if (!removed) {
-                world.destroyBody(b2body);
-                removed = true;
-                stateTime = 0;
-            }
-
-        }
+        movment(dt);
     }
-
-
     public TextureRegion getFrame(float dt){
         currentState = getState();
 
@@ -111,11 +69,7 @@ public class WingedBull extends Enemy {
         stateTimer = currentState == previousState ? stateTimer +dt : 0;
         previousState = currentState;
         return region;
-
-
     }
-
-
     public State getState(){
         shootingTimer%=4;
 
@@ -129,25 +83,11 @@ public class WingedBull extends Enemy {
         else{
             return State.WALKING;
         }
-        /*
-        if(b2body.getLinearVelocity().x != 0 ) {
-            return State.WALKING;
-        }
-        else {
-            Gdx.app.log("state is fireing",""+shootingTimer);
-
-            shootingTimer=0;
-            return State.FIREING;
-        }
-        */
     }
     public void draw(Batch batch){
         if(!removed || stateTime < 2)
             super.draw(batch);
     }
-
-
-
     @Override
     protected void defineEnemy() {
         BodyDef bdef = new BodyDef();
@@ -160,22 +100,47 @@ public class WingedBull extends Enemy {
         shape.setRadius(20 /Defenders.PPM);
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
-
     }
-
     @Override
     public void onBallHit() {
             setHealthBar((float)(getHealthBar()-0.5));
-
         if(getHealthBar() <= 0) {
             Hud.addScore(600);
             gotHit = true;
         }
     }
 
-
     @Override
     public float getTimer() {
         return stateTime;
     }
+    public void getAndSetAnimations(){
+        frames = new Array<TextureRegion>();
+        for(int i = 0; i<4 ; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("bull_walk"), i *180,2,180,170));
+        flyAnimation = new Animation(0.2f,frames);
+
+        frames.clear();
+
+        for(int i = 0; i<3 ; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("bull_attack"), i *200,2,200,170));
+        shootAnimation = new Animation(0.2f,frames);
+
+    }
+    public void movment(float dt){
+        if (!gotHit) {
+            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
+            setRegion(getFrame(dt));
+            b2body.setLinearVelocity(velocity);
+
+        } else if (gotHit ) {
+            if (!removed) {
+                world.destroyBody(b2body);
+                removed = true;
+                stateTime = 0;
+            }
+        }
+    }
 }
+
+

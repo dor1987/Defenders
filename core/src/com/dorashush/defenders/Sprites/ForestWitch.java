@@ -16,44 +16,26 @@ import com.dorashush.defenders.Screens.PlayScreen;
  */
 
 public class ForestWitch extends Enemy{
-    //private float stateTime;
-    public enum State {WALKING,FIREING};
-
-    private Animation flyAnimation;
-    private Animation shootAnimation;
-    private float stateTimer;
-    private float shootingTimer;
+    public enum State {WALKING,FIREING}
+    private Animation flyAnimation,shootAnimation;
+    private float stateTimer,shootingTimer,avoidFirstHitTimer;
     private boolean walkingRight;
-    private float avoidFirstHitTimer; //for debug
 
     private Array<TextureRegion> frames;
-    DinoRaider.State currentState;
-    DinoRaider.State previousState;
+    ForestWitch.State currentState;
+    ForestWitch.State previousState;
 
     public ForestWitch(PlayScreen screen, float x, float y) {
         super(screen, x, y);
         stateTimer = 0;
         shootingTimer =0;
         walkingRight = true;
-
-        frames = new Array<TextureRegion>();
-        for(int i = 0; i<6 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("forestwitchwalk2"), i *117,0,117,93));
-        flyAnimation = new Animation(0.2f,frames);
-
-        frames.clear();
-
-        for(int i = 0; i<6 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("forestwitchhit"), i *126,0,126,106));
-        shootAnimation = new Animation(0.2f,frames);
-
-
+        getAndSetAnimations();
         stateTime = 0;
         setBounds(getX(),getY(),97 / Defenders.PPM,82/Defenders.PPM);
         removed = false;
         gotHit = false;
         avoidFirstHitTimer= 0;
-
 
     }
 
@@ -61,38 +43,8 @@ public class ForestWitch extends Enemy{
         stateTime += dt;
         shootingTimer += dt;
         avoidFirstHitTimer += dt;
-        // setRegion(getFrame(dt));
-
-       /*
-        setPosition(b2body.getPosition().x - getWidth()/2,b2body.getPosition().y - getHeight()/2);
-
-        b2body.setLinearVelocity(velocity);
-*/
-
-        if (!gotHit) {
-            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
-            //setRegion((TextureRegion) flyAnimation.getKeyFrame(stateTime, true));
-            setRegion(getFrame(dt));
-
-            if(getState()==DinoRaider.State.FIREING){
-                velocity3.x =velocity.x*2;
-                b2body.setLinearVelocity(velocity3);
-            }
-            else {
-                b2body.setLinearVelocity(velocity);
-            }
-
-        } else if (gotHit ) {
-            if (!removed) {
-                world.destroyBody(b2body);
-                removed = true;
-                stateTime = 0;
-            }
-
-        }
+        movment(dt);
     }
-
-
     public TextureRegion getFrame(float dt){
         currentState = getState();
 
@@ -119,42 +71,26 @@ public class ForestWitch extends Enemy{
         stateTimer = currentState == previousState ? stateTimer +dt : 0;
         previousState = currentState;
         return region;
-
-
     }
-
-
-    public DinoRaider.State getState(){
+    public ForestWitch.State getState(){
         shootingTimer%=4;
 
-        if(previousState == DinoRaider.State.FIREING && shootingTimer>0.02 &&shootingTimer<0.7){
-            return DinoRaider.State.FIREING;
+        if(previousState == ForestWitch.State.FIREING && shootingTimer>0.02 &&shootingTimer<0.7){
+            return ForestWitch.State.FIREING;
         }
 
         else if(shootingTimer <=0.02 && avoidFirstHitTimer>2){
-            return DinoRaider.State.FIREING;
+            return ForestWitch.State.FIREING;
         }
         else{
-            return DinoRaider.State.WALKING;
+            return ForestWitch.State.WALKING;
         }
-        /*
-        if(b2body.getLinearVelocity().x != 0 ) {
-            return State.WALKING;
-        }
-        else {
-            Gdx.app.log("state is fireing",""+shootingTimer);
 
-            shootingTimer=0;
-            return State.FIREING;
-        }
-        */
     }
     public void draw(Batch batch){
         if(!removed || stateTime < 2)
             super.draw(batch);
     }
-
-
 
     @Override
     protected void defineEnemy() {
@@ -185,6 +121,42 @@ public class ForestWitch extends Enemy{
     @Override
     public float getTimer() {
         return stateTime;
+    }
+    public void getAndSetAnimations(){
+        frames = new Array<TextureRegion>();
+        for(int i = 0; i<6 ; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("forestwitchwalk2"), i *117,0,117,93));
+        flyAnimation = new Animation(0.2f,frames);
+
+        frames.clear();
+
+        for(int i = 0; i<6 ; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("forestwitchhit"), i *126,0,126,106));
+        shootAnimation = new Animation(0.2f,frames);
+
+    }
+    public void movment(float dt){
+        if (!gotHit) {
+            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
+            //setRegion((TextureRegion) flyAnimation.getKeyFrame(stateTime, true));
+            setRegion(getFrame(dt));
+
+            if(getState()==ForestWitch.State.FIREING){
+                velocity3.x =velocity.x*2;
+                b2body.setLinearVelocity(velocity3);
+            }
+            else {
+                b2body.setLinearVelocity(velocity);
+            }
+
+        } else if (gotHit ) {
+            if (!removed) {
+                world.destroyBody(b2body);
+                removed = true;
+                stateTime = 0;
+            }
+
+        }
     }
 }
 

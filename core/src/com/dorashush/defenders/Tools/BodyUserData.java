@@ -14,7 +14,6 @@ public class BodyUserData {
         VILLAGE,
         POWER_UP,
         ENEMY_BOUNDARIES
-
     }
 
     public CollisionType collisionType = CollisionType.UNKNOWN;

@@ -16,39 +16,19 @@ import com.dorashush.defenders.Screens.PlayScreen;
  */
 
 public class Alien extends Enemy{
-    //private float stateTime;
     public enum State {WALKING,FIREING};
-
-    private Animation flyAnimation;
-    private Animation shootAnimation;
-    private float stateTimer;
-    private float shootingTimer;
+    private Animation flyAnimation,shootAnimation;
+    private float stateTimer,shootingTimer,avoidFirstHitTimer;
     private boolean walkingRight;
-    private float avoidFirstHitTimer; //for debug
-
     private Array<TextureRegion> frames;
-    DinoRaider.State currentState;
-    DinoRaider.State previousState;
+    private Alien.State currentState,previousState;
 
     public Alien(PlayScreen screen, float x, float y) {
         super(screen, x, y);
         stateTimer = 0;
         shootingTimer =0;
         walkingRight = true;
-
-        frames = new Array<TextureRegion>();
-        for(int i = 0; i<4 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("allienwalk"), i *106,0,106,103));
-
-
-
-        flyAnimation = new Animation(0.2f,frames);
-
-        frames.clear();
-
-        for(int i = 0; i<5 ; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("allienhit"), i *93,0,93,105));
-        shootAnimation = new Animation(0.2f,frames);
+        getAndSetAnimations();
 
 
         stateTime = 0;
@@ -56,27 +36,16 @@ public class Alien extends Enemy{
         removed = false;
         gotHit = false;
         avoidFirstHitTimer= 0;
-
-
     }
-
     public void update(float dt) {
         stateTime += dt;
         shootingTimer += dt;
         avoidFirstHitTimer += dt;
-        // setRegion(getFrame(dt));
-
-       /*
-        setPosition(b2body.getPosition().x - getWidth()/2,b2body.getPosition().y - getHeight()/2);
-
-        b2body.setLinearVelocity(velocity);
-*/
 
         if (!gotHit) {
             setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
-            //setRegion((TextureRegion) flyAnimation.getKeyFrame(stateTime, true));
             setRegion(getFrame(dt));
-            if(getState()==DinoRaider.State.FIREING){
+            if(getState()==Alien.State.FIREING){
                 b2body.setLinearVelocity(velocity2);
             }
             else {
@@ -92,8 +61,6 @@ public class Alien extends Enemy{
 
         }
     }
-
-
     public TextureRegion getFrame(float dt){
         currentState = getState();
 
@@ -121,42 +88,25 @@ public class Alien extends Enemy{
         previousState = currentState;
         return region;
 
-
     }
-
-
-    public DinoRaider.State getState(){
+    public Alien.State getState(){
         shootingTimer%=4;
 
-        if(previousState == DinoRaider.State.FIREING && shootingTimer>0.02 &&shootingTimer<0.6){
-            return DinoRaider.State.FIREING;
+        if(previousState == Alien.State.FIREING && shootingTimer>0.02 &&shootingTimer<0.6){
+            return Alien.State.FIREING;
         }
 
         else if(shootingTimer <=0.02 && avoidFirstHitTimer>2){
-            return DinoRaider.State.FIREING;
+            return Alien.State.FIREING;
         }
         else{
-            return DinoRaider.State.WALKING;
+            return Alien.State.WALKING;
         }
-        /*
-        if(b2body.getLinearVelocity().x != 0 ) {
-            return State.WALKING;
-        }
-        else {
-            Gdx.app.log("state is fireing",""+shootingTimer);
-
-            shootingTimer=0;
-            return State.FIREING;
-        }
-        */
     }
     public void draw(Batch batch){
         if(!removed || stateTime < 2)
             super.draw(batch);
     }
-
-
-
     @Override
     protected void defineEnemy() {
         BodyDef bdef = new BodyDef();
@@ -172,6 +122,18 @@ public class Alien extends Enemy{
 
     }
 
+    public void getAndSetAnimations(){
+        frames = new Array<TextureRegion>();
+        for(int i = 0; i<4 ; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("allienwalk"), i *106,0,106,103));
+
+        flyAnimation = new Animation(0.2f,frames);
+        frames.clear();
+        for(int i = 0; i<5 ; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("allienhit"), i *93,0,93,105));
+        shootAnimation = new Animation(0.2f,frames);
+    }
+
     @Override
     public void onBallHit() {
         setHealthBar((float)(getHealthBar()-0.2));
@@ -182,10 +144,10 @@ public class Alien extends Enemy{
         }
     }
 
-
     @Override
     public float getTimer() {
         return stateTime;
     }
+
 }
 
