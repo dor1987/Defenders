@@ -17,11 +17,8 @@ public abstract class Ball extends Sprite {
     protected PlayScreen screen;
     public Body b2body;
     public Vector2 velocity;
-    public float ballAngle;
-    public float ballVelocity;
-    public boolean removed;
-    public boolean hitedTheVillage;
-
+    public float ballAngle,ballVelocity;
+    public boolean removed,hitedTheVillage;
     private BodyUserData bodyUserData;
 
     public Ball(PlayScreen screen, float x, float y){
@@ -32,13 +29,9 @@ public abstract class Ball extends Sprite {
         velocity = new Vector2(0,0); //starting Speed
         ballAngle = (float) (Math.random()*-0.8*Math.PI);//stating angle
         ballVelocity = 1;
-
-        //Testing for collision
         bodyUserData = new BodyUserData();
         bodyUserData.collisionType = BodyUserData.CollisionType.BALL;
         b2body.setUserData(bodyUserData);
-        ///////////////////////////////////////
-
     }
 
     protected abstract void defineBall();
@@ -46,14 +39,10 @@ public abstract class Ball extends Sprite {
     public abstract void hitTheVillage();
     public abstract void update(float dt);
     public void reverseVelocity(boolean x,boolean y){
-        Gdx.app.log("Inside reverseVelocity","");
-
         if(x) {
-            //ballAngle*=-0.5;
             velocity.x = -velocity.x;
         }
         if(y) {
-            //ballAngle*=-0.5;
             velocity.y = -velocity.y;
         }
     }
