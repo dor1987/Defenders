@@ -259,10 +259,11 @@ public class PlayScreen implements Screen {
 
         //render the game map
         renderer.render();
-        controller.draw();
         game.batch.setProjectionMatrix(gameCam.combined);
         gamePlayRender();
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        controller.draw();
+
         hud.stage.draw();
         endGameIfOver(delta);
         handlePause(delta);
